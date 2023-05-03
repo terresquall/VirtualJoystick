@@ -11,6 +11,7 @@ namespace Terresquall {
         public Image control;
 
         [Header("Settings")]
+        [Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
         public Rect bounds;
@@ -67,6 +68,12 @@ namespace Terresquall {
             desiredPosition = transform.position;
             control.color = originalColor;
             currentPointerId = -2;
+
+            //Snaps the joystick back to its original position
+            if (snapToOrigin && (Vector2)transform.position != origin) {
+                transform.position = origin;
+                SetPosition(transform.position);
+            }
         }
 
         protected void SetPosition(Vector2 position) {
@@ -210,6 +217,5 @@ namespace Terresquall {
             data.pointerId = newPointerId;
             OnPointerDown(data);
         }
-
     }
 }
