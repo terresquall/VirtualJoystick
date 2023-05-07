@@ -608,11 +608,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 100
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -639,12 +639,16 @@ PrefabInstance:
       value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: directions
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: sensitivity
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.width
-      value: 1000
+      value: 1300
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: snapToOrigin
@@ -652,7 +656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.height
-      value: 1000
+      value: 1300
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: UITextPrintAxis

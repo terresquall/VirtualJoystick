@@ -15,6 +15,9 @@ namespace Terresquall {
         public float sensitivity = 2f;
         public float radius = 30f;
         public Rect bounds;
+        [Tooltip("Number of directions of the joystick. " +
+            "\nKeep at 0 for a free joystick. " +
+            "\nKeep the number even for best results")] [Range(0, 16)] public int directions = 0;
 
         [Header("UI")]
         public Color dragColor = new Color(0.9f,0.9f,0.9f,1f);
@@ -81,14 +84,54 @@ namespace Terresquall {
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
-            // If the difference is greater than radius, that means
-            // we are going too far.
-            if(diff.magnitude > radius) {
+            //if no directions to snap to, joystick moves freely.
+            if(directions <= 0){
                 // Clamp the desired position within the radius.
                 desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, radius);
             } else {
-                desiredPosition = position;
+                // calculate nearest snap directional vectors
+                Vector2 vector = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
+                if (diff.magnitude > radius) {
+                    // Clamp the desired position within the radius and snapped to directional vector
+                    desiredPosition = (Vector2)transform.position + vector * radius;
+                }
+                else {
+                    // Snaps to directional vector within the magnitude of the input position and the joystick
+                    desiredPosition = (Vector2)transform.position + vector * diff.magnitude;
+                }
             }
+        }
+
+        // Calculates nearest directional snap vector to the actual directional vector of the joystick
+        private Vector2 SnapDirection(Vector2 vector, int directions, float symmetryAngle) {
+            //Gets the line of symmetry between 2 snap directions
+            Vector2 symmetryLine = new (Mathf.Cos(symmetryAngle), Mathf.Sin(symmetryAngle));
+
+            //Gets the angle between the joystick dir and the nearest snap dir
+            float angle = Vector2.SignedAngle(symmetryLine, vector);
+
+            // Divides the angle by the step size between directions, which is 180f / directions.
+            // The result is that the angle is now expressed as a multiple of the step size between directions.
+            angle /= 180f / directions;
+
+            // Angle is then rounded to the nearest whole number so that it corresponds to one of the possible directions.
+            angle = (angle >= 0f) ? Mathf.Floor(angle) : Mathf.Ceil(angle);
+
+            // Checks if angle is odd
+            if ((int)Mathf.Abs(angle) % 2 == 1) {
+                // Adds or subtracts 1 to ensure that angle is always even.
+                angle += (angle >= 0f) ? 1 : -1;
+            }
+
+            // Scale angle back to original scale as we divided it too make a multiple before.
+            angle *= 180f / directions;
+            angle *= Mathf.Deg2Rad;
+
+            // Gets directional vector nearest to the joystick dir with a magnitude of 1.
+            // Then multiplies it by the magnitude of the joytick vector.
+            Vector2 result = new (Mathf.Cos(angle + symmetryAngle), Mathf.Sin(angle + symmetryAngle));
+            result *= vector.magnitude;
+            return result;
         }
 
         // Loops through children to find an appropriate component to put in.
