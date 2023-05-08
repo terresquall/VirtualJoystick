@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -9,22 +10,30 @@ namespace Terresquall {
     public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         public Image control;
+        public RectTransform rectTransform;
+        [Header("UI")]
+        public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
+
+        [Header("Debug")]
+        public bool consolePrintAxis = false;
+        public Text UITextPrintAxis;
 
         [Header("Settings")]
         [Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
         public Rect bounds;
+        [Tooltip("Does not change after game starts")] public float joystickScale;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
             "\nKeep the number even for best results")] [Range(0, 16)] public int directions = 0;
-
-        [Header("UI")]
-        public Color dragColor = new Color(0.9f,0.9f,0.9f,1f);
-
-        [Header("Debug")]
-        public bool consolePrintAxis = false;
-        public Text UITextPrintAxis;
+        public enum DeadZoneType { 
+            Area, //0
+            Value //1
+        }
+        public DeadZoneType deadZoneType;
+        [HideInInspector] public float deadZoneArea = 10f;
+        [HideInInspector] public float deadZoneValue = 0.3f;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -90,14 +99,14 @@ namespace Terresquall {
                 desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, radius);
             } else {
                 // calculate nearest snap directional vectors
-                Vector2 vector = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
+                Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
                 if (diff.magnitude > radius) {
                     // Clamp the desired position within the radius and snapped to directional vector
-                    desiredPosition = (Vector2)transform.position + vector * radius;
+                    desiredPosition = (Vector2)transform.position + snapDirection * radius;
                 }
                 else {
                     // Snaps to directional vector within the magnitude of the input position and the joystick
-                    desiredPosition = (Vector2)transform.position + vector * diff.magnitude;
+                    desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
                 }
             }
         }
@@ -170,11 +179,16 @@ namespace Terresquall {
                 Gizmos.DrawLine(c, d);
                 Gizmos.DrawLine(d, a);
             }
+
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireSphere(transform.position, deadZoneArea);
         }
 
         void Start() {
             origin = desiredPosition = transform.position;
             originalColor = control.color;
+
+            rectTransform = rectTransform.GetComponent<RectTransform>();
 
             // Add this instance to the List.
             instances.Insert(0, this);
@@ -205,7 +219,17 @@ namespace Terresquall {
             control.transform.position = Vector2.MoveTowards(control.transform.position, desiredPosition, sensitivity);
 
             // Also update the axis value.
-            axis = (control.transform.position - transform.position) / radius;
+            if(deadZoneType == DeadZoneType.Area) {
+                float magnitude = (control.transform.position - transform.position).magnitude;
+
+                // If distance of the joystick away from the centre is more than the deadzone radius then update axis.
+                // Else set axis to 0
+                axis = (magnitude > deadZoneArea) ? (control.transform.position - transform.position) / radius : Vector2.zero;
+
+            } else if(deadZoneType == DeadZoneType.Value) {
+                axis = (control.transform.position - transform.position) / radius;
+                if (Mathf.Round((Mathf.Abs(axis.x) + Mathf.Abs(axis.y)) * 100f) / 100f <= deadZoneValue) axis = Vector2.zero;               
+            }
 
             // If debug is on, output to selected channel.
             string output = string.Format("Virtual Joystick: {0}", axis);
@@ -259,6 +283,43 @@ namespace Terresquall {
             data.position = newPos;
             data.pointerId = newPointerId;
             OnPointerDown(data);
+        }
+    }
+
+    [CustomEditor(typeof(VirtualJoystick))]
+    public class VirtualJoystickEditor : Editor
+    {
+        override public void OnInspectorGUI()
+        {
+            DrawDefaultInspector();
+
+            var virtualJoystick = target as VirtualJoystick;
+
+            switch(virtualJoystick.deadZoneType) {
+
+                case VirtualJoystick.DeadZoneType.Area:
+                    virtualJoystick.deadZoneArea = EditorGUILayout.FloatField("Dead Zone Area:", virtualJoystick.deadZoneArea);
+                    break;
+
+                case VirtualJoystick.DeadZoneType.Value:
+                    virtualJoystick.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value:", virtualJoystick.deadZoneValue);
+                    break;
+            }
+
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
+                virtualJoystick.rectTransform.sizeDelta += new Vector2(10,10);
+                virtualJoystick.control.rectTransform.sizeDelta += new Vector2(7,7);
+                virtualJoystick.radius += 16;
+                virtualJoystick.deadZoneArea += 3;
+            }
+            if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
+                virtualJoystick.rectTransform.sizeDelta -= new Vector2(10, 10);
+                virtualJoystick.control.rectTransform.sizeDelta -= new Vector2(7, 7);
+                virtualJoystick.radius -= 16;
+                virtualJoystick.deadZoneArea -= 3;
+            }
+            GUILayout.EndHorizontal();
         }
     }
 }

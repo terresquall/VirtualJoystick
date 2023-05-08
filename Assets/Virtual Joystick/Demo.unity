@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 1034323178}
   - component: {fileID: 1034323177}
   m_Layer: 5
-  m_Name: Joysticl Axes Values
+  m_Name: Joystick Axes Values
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -626,9 +626,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: radius
-      value: 170
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.x
@@ -639,16 +643,32 @@ PrefabInstance:
       value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: deadZone
+      value: 75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: directions
-      value: 4
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: sensitivity
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.width
       value: 1300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: deadZoneArea
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: deadZoneType
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: snapToOrigin
@@ -659,8 +679,28 @@ PrefabInstance:
       value: 1300
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: deadZoneValue
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: joystickScale
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: rectTransform
+      value: 
+      objectReference: {fileID: 1217317789}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: deadZoneByArea
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: UITextPrintAxis
       value: 
       objectReference: {fileID: 1034323177}
+    - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
+      propertyPath: consolePrintAxis
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
