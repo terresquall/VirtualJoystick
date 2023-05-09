@@ -114,7 +114,7 @@ namespace Terresquall {
         // Calculates nearest directional snap vector to the actual directional vector of the joystick
         private Vector2 SnapDirection(Vector2 vector, int directions, float symmetryAngle) {
             //Gets the line of symmetry between 2 snap directions
-            Vector2 symmetryLine = new (Mathf.Cos(symmetryAngle), Mathf.Sin(symmetryAngle));
+            Vector2 symmetryLine = new Vector2(Mathf.Cos(symmetryAngle), Mathf.Sin(symmetryAngle));
 
             //Gets the angle between the joystick dir and the nearest snap dir
             float angle = Vector2.SignedAngle(symmetryLine, vector);
@@ -138,7 +138,7 @@ namespace Terresquall {
 
             // Gets directional vector nearest to the joystick dir with a magnitude of 1.
             // Then multiplies it by the magnitude of the joytick vector.
-            Vector2 result = new (Mathf.Cos(angle + symmetryAngle), Mathf.Sin(angle + symmetryAngle));
+            Vector2 result = new Vector2(Mathf.Cos(angle + symmetryAngle), Mathf.Sin(angle + symmetryAngle));
             result *= vector.magnitude;
             return result;
         }
@@ -224,7 +224,7 @@ namespace Terresquall {
 
                 // If distance of the joystick away from the centre is more than the deadzone radius then update axis.
                 // Else set axis to 0
-                axis = (magnitude > deadZoneArea) ? (control.transform.position - transform.position) / radius : Vector2.zero;
+                axis = (magnitude > deadZoneArea) ? (Vector2)(control.transform.position - transform.position) / radius : Vector2.zero;
 
             } else if(deadZoneType == DeadZoneType.Value) {
                 axis = (control.transform.position - transform.position) / radius;
