@@ -23,16 +23,15 @@ namespace Terresquall {
         public float sensitivity = 2f;
         public float radius = 30f;
         public Rect bounds;
-        [Tooltip("Does not change after game starts")] public float joystickScale;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
             "\nKeep the number even for best results")] [Range(0, 16)] public int directions = 0;
         public enum DeadZoneType { 
-            Area, //0
+            Radius, //0
             Value //1
         }
         public DeadZoneType deadZoneType;
-        [HideInInspector] public float deadZoneArea = 10f;
+        [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
 
         // Private variables.
@@ -181,7 +180,8 @@ namespace Terresquall {
             }
 
             Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, deadZoneArea);
+            if(deadZoneType == DeadZoneType.Radius)
+                Gizmos.DrawWireSphere(transform.position, deadZoneRadius);
         }
 
         void Start() {
@@ -219,12 +219,12 @@ namespace Terresquall {
             control.transform.position = Vector2.MoveTowards(control.transform.position, desiredPosition, sensitivity);
 
             // Also update the axis value.
-            if(deadZoneType == DeadZoneType.Area) {
+            if(deadZoneType == DeadZoneType.Radius) {
                 float magnitude = (control.transform.position - transform.position).magnitude;
 
                 // If distance of the joystick away from the centre is more than the deadzone radius then update axis.
                 // Else set axis to 0
-                axis = (magnitude > deadZoneArea) ? (Vector2)(control.transform.position - transform.position) / radius : Vector2.zero;
+                axis = (magnitude > deadZoneRadius) ? (Vector2)(control.transform.position - transform.position) / radius : Vector2.zero;
 
             } else if(deadZoneType == DeadZoneType.Value) {
                 axis = (control.transform.position - transform.position) / radius;
@@ -297,8 +297,8 @@ namespace Terresquall {
 
             switch(virtualJoystick.deadZoneType) {
 
-                case VirtualJoystick.DeadZoneType.Area:
-                    virtualJoystick.deadZoneArea = EditorGUILayout.FloatField("Dead Zone Area:", virtualJoystick.deadZoneArea);
+                case VirtualJoystick.DeadZoneType.Radius:
+                    virtualJoystick.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area:", virtualJoystick.deadZoneRadius);
                     break;
 
                 case VirtualJoystick.DeadZoneType.Value:
@@ -310,14 +310,14 @@ namespace Terresquall {
             if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
                 virtualJoystick.rectTransform.sizeDelta += new Vector2(10,10);
                 virtualJoystick.control.rectTransform.sizeDelta += new Vector2(7,7);
-                virtualJoystick.radius += 16;
-                virtualJoystick.deadZoneArea += 3;
+                virtualJoystick.radius += 10;
+                virtualJoystick.deadZoneRadius += 3;
             }
             if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
                 virtualJoystick.rectTransform.sizeDelta -= new Vector2(10, 10);
                 virtualJoystick.control.rectTransform.sizeDelta -= new Vector2(7, 7);
-                virtualJoystick.radius -= 16;
-                virtualJoystick.deadZoneArea -= 3;
+                virtualJoystick.radius -= 10;
+                virtualJoystick.deadZoneRadius -= 3;
             }
             GUILayout.EndHorizontal();
         }
