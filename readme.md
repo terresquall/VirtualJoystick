@@ -12,11 +12,10 @@ To use the Virtual Joystick, drag the Virtual Joystick prefab from the Prefabs f
 2. You can also use `VirtualJoystick.GetAxis()` to get a `Vector2` containing the horizontal and vertical inputs.
 3. You can have multiple joysticks on your Canvas. In the case of multiple joysticks, you will need to specify an index behind `GetAxis()`, like so: `VirtualJoystick.GetAxis("Horizontal", 1)`. In this case, the code will give you the horizontal input of the 2nd joystick on the Scene (the first joystick is index 0).
 4. Some mobile games have joysticks that will shift to the player's finger. To enable this feature on your virtual joystick instance, set the **W** and **H** properties in the **Bounds** property and this will denote the area where the joystick can move around in.
-5. To create joystick dead zones, select the type (value or radius) in the inspector and adjust the corresponding variable. Radius dead zone registers no input in a certain radius, while the value dead zone registers no input if the value of the axis is lower than it.
-6. The increase and decrease buttons in the inspector change the size of the joystick, control stick, dead zone radius, and control stick radius.
-7. The "Directions" variable is the number of directions that the joystick can snap to. Keep this value at 0 to make this joystick a free one.
 
 Other properties
 ----------------
 - **Radius:** You can set the radius property to set how far away from the joystick base the control stick can move away from.
 - **Sensitivity:** This is the limit to how fast the control stick of the joystick can move to the position where your finger is.
+- **Deadzones:** You can set Deadzones on the joystick either using a radius or a value. This axis will return as 0 while the control stick is either in the radius or is returning a value less than or equal to the Deadzone value
+- **Scaling:** You can increae or decrease the size of the joystick, control stick, radius, and deadzone radius by pressing the increase and deacrease button respectively.

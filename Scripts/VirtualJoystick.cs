@@ -25,7 +25,7 @@ namespace Terresquall {
         public Rect bounds;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
-            "\nKeep the number even for best results")] [Range(0, 16)] public int directions = 0;
+            "\nWorks best with multiples of 4")] [Range(0, 16)] public int directions = 0;
         public enum DeadZoneType { 
             Radius, //0
             Value //1

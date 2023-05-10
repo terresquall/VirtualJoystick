@@ -532,11 +532,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8834734169634807593, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 70
+      value: 77
       objectReference: {fileID: 0}
     - target: {fileID: 8834734169634807593, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 77
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175512, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_Name
@@ -572,11 +572,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 100
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 100
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -640,7 +640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.y
-      value: 130
+      value: 77.8
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: deadZone
@@ -652,7 +652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: directions
-      value: 0
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: sensitivity
@@ -660,7 +660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.width
-      value: 1300
+      value: 931.88
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: deadZoneArea
@@ -676,7 +676,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: bounds.height
-      value: 1300
+      value: 828.3
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: deadZoneValue
@@ -684,7 +684,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: joystickScale
-      value: 0
+      value: -14.34
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 575a6401365a1604c8aa7fa10a660bb7, type: 3}
       propertyPath: rectTransform
