@@ -66,7 +66,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 4aea1d2f1560b5841bee9fa64990240b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 8834734170784175524}
   - component: {fileID: 8834734170784175514}
   m_Layer: 5
-  m_Name: Virtual Joystick
+  m_Name: Eight Directional Joystick
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -144,7 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: accbe45d4a1d94448aeb955aaca34e90, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -178,7 +178,7 @@ MonoBehaviour:
   boundsPosition: {x: 0, y: 0}
   boundsWidth: 0
   boundsHeight: 0
-  directions: 0
-  deadZoneType: 0
-  deadZoneRadius: 10
+  directions: 8
+  deadZoneType: 1
+  deadZoneRadius: 15
   deadZoneValue: 0.3

@@ -10,7 +10,9 @@ namespace Terresquall {
     public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
         public Image control;
+        public Image image;
         public RectTransform rectTransform;
+
         [Header("UI")]
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
 
@@ -22,7 +24,9 @@ namespace Terresquall {
         [Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
-        public Rect bounds;
+        public Vector2 boundsPosition;
+        [Range(0, 1)] public float boundsWidth;
+        [Range(0, 1)] public float boundsHeight;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
             "\nWorks best with multiples of 4")] [Range(0, 16)] public int directions = 0;
@@ -155,24 +159,23 @@ namespace Terresquall {
         }
 
         // Function for us to modify the bounds value in future.
-        Rect GetBounds() {
-            return new Rect(origin - bounds.size / 2, bounds.size);
+        public Rect GetBounds() {
+            return new Rect(boundsPosition.x, boundsPosition.y, Screen.width * boundsWidth, Screen.height * boundsHeight);
         }
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position,radius);
 
-            if(bounds.size.sqrMagnitude > 0) {
+            if(GetBounds().size.sqrMagnitude > 0) {
                 // Draw the lines of the bounds.
                 Gizmos.color = Color.yellow;
-                float hw = bounds.width * 0.5f, hh = bounds.height * 0.5f;
 
                 // Get the 4 points in the bounds.
-                Vector3 a = transform.position + new Vector3(bounds.x - hw, bounds.y - hh),
-                        b = transform.position + new Vector3(bounds.x + hw, bounds.y - hh),
-                        c = transform.position + new Vector3(bounds.x + hw, bounds.y + hh),
-                        d = transform.position + new Vector3(bounds.x - hw, bounds.y + hh);
+                Vector3 a = new Vector3(boundsPosition.x, boundsPosition.y),
+                        b = new Vector3(boundsPosition.x, boundsPosition.y + Screen.currentResolution.height * boundsHeight),
+                        c = new Vector2(boundsPosition.x + Screen.currentResolution.width * boundsWidth, boundsPosition.y + Screen.currentResolution.height * boundsHeight),
+                        d = new Vector3(boundsPosition.x + Screen.currentResolution.width * boundsWidth, boundsPosition.y);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawLine(b, c);
                 Gizmos.DrawLine(c, d);
@@ -187,8 +190,6 @@ namespace Terresquall {
         void Start() {
             origin = desiredPosition = transform.position;
             originalColor = control.color;
-
-            rectTransform = rectTransform.GetComponent<RectTransform>();
 
             // Add this instance to the List.
             instances.Insert(0, this);
@@ -293,31 +294,59 @@ namespace Terresquall {
         {
             DrawDefaultInspector();
 
-            var virtualJoystick = target as VirtualJoystick;
+            var myScript = target as VirtualJoystick;
 
-            switch(virtualJoystick.deadZoneType) {
+            //myScript.ScaleBounds();
 
+            //Changes whether the deadzone is calculated based on Value or Radius
+            switch (myScript.deadZoneType) {
                 case VirtualJoystick.DeadZoneType.Radius:
-                    virtualJoystick.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area:", virtualJoystick.deadZoneRadius);
+                    myScript.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area:", myScript.deadZoneRadius);
                     break;
 
                 case VirtualJoystick.DeadZoneType.Value:
-                    virtualJoystick.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value:", virtualJoystick.deadZoneValue);
+                    myScript.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value:", myScript.deadZoneValue);
                     break;
             }
 
+            //Increase Decrease buttons
+            EditorGUILayout.LabelField("Joystick Size:", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
-                virtualJoystick.rectTransform.sizeDelta += new Vector2(10,10);
-                virtualJoystick.control.rectTransform.sizeDelta += new Vector2(7,7);
-                virtualJoystick.radius += 10;
-                virtualJoystick.deadZoneRadius += 3;
+                myScript.rectTransform.sizeDelta += new Vector2(10,10);
+                myScript.control.rectTransform.sizeDelta += new Vector2(7,7);
+                myScript.radius += 10;
+                myScript.deadZoneRadius += 3;
             }
             if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
-                virtualJoystick.rectTransform.sizeDelta -= new Vector2(10, 10);
-                virtualJoystick.control.rectTransform.sizeDelta -= new Vector2(7, 7);
-                virtualJoystick.radius -= 10;
-                virtualJoystick.deadZoneRadius -= 3;
+                myScript.rectTransform.sizeDelta -= new Vector2(10, 10);
+                myScript.control.rectTransform.sizeDelta -= new Vector2(7, 7);
+                myScript.radius -= 10;
+                myScript.deadZoneRadius -= 3;
+            }
+            GUILayout.EndHorizontal();            
+            
+            //Bounds Anchor buttons
+            EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft)) {
+
+            }
+            if (GUILayout.Button("Top Right", EditorStyles.miniButtonRight)) {
+ 
+            }
+            GUILayout.EndHorizontal();
+
+            if (GUILayout.Button("Middle")) {
+
+            }
+            
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Bottom Left", EditorStyles.miniButtonLeft)) {
+
+            }
+            if (GUILayout.Button("Bottom Right", EditorStyles.miniButtonRight)) {
+
             }
             GUILayout.EndHorizontal();
         }
