@@ -27,6 +27,7 @@ namespace Terresquall {
         public Vector2 boundsPosition;
         [Range(0, 1)] public float boundsWidth;
         [Range(0, 1)] public float boundsHeight;
+        [Tooltip("Joystick only snaps when at the edge")]public bool edgeSnap;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
             "\nWorks best with multiples of 4")] [Range(0, 16)] public int directions = 0;
@@ -106,6 +107,9 @@ namespace Terresquall {
                 if (diff.magnitude > radius) {
                     // Clamp the desired position within the radius and snapped to directional vector
                     desiredPosition = (Vector2)transform.position + snapDirection * radius;
+                }
+                else if (edgeSnap) {
+                    desiredPosition = position;
                 }
                 else {
                     // Snaps to directional vector within the magnitude of the input position and the joystick
@@ -295,8 +299,6 @@ namespace Terresquall {
             DrawDefaultInspector();
 
             var myScript = target as VirtualJoystick;
-
-            //myScript.ScaleBounds();
 
             //Changes whether the deadzone is calculated based on Value or Radius
             switch (myScript.deadZoneType) {
