@@ -178,7 +178,7 @@ MonoBehaviour:
   boundsPosition: {x: 0, y: 0}
   boundsWidth: 0
   boundsHeight: 0
-  edgeSnap: 1
+  edgeSnap: 0
   directions: 8
   deadZoneType: 1
   deadZoneRadius: 15
