@@ -20,6 +20,7 @@ namespace Terresquall
         public float tmpTime;
 
         int minutes, seconds;
+        float miliseconds;
 
         public TextMeshProUGUI timeText;
         public TextMeshProUGUI endText;
@@ -58,12 +59,16 @@ namespace Terresquall
 
                 seconds = (int)tmpTime % 60;
 
-                timeText.text = string.Format("{00:00}:{01:00}", minutes, seconds);
+                miliseconds = tmpTime * 1000;
+
+                miliseconds = miliseconds % 1000;
+
+                timeText.text = string.Format("{00:00}:{01:00}:{02:000}", minutes, seconds, miliseconds);
             }
             else
             {
                 endScreen.SetActive(true);
-                endText.text = "You Survived: " + string.Format("{00:00}:{01:00}", minutes, seconds);
+                endText.text = "You Survived: " + string.Format("{00:00}:{01:00}:{2:000}", minutes, seconds, miliseconds);
             }
         }
 
