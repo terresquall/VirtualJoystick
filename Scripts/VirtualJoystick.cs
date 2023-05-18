@@ -21,7 +21,7 @@ namespace Terresquall {
         public Text UITextPrintAxis;
 
         [Header("Settings")]
-        [Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
+        //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
         public Vector2 boundsPosition;
@@ -86,10 +86,10 @@ namespace Terresquall {
             currentPointerId = -2;
 
             //Snaps the joystick back to its original position
-            if (snapToOrigin && (Vector2)transform.position != origin) {
+            /*if (snapToOrigin && (Vector2)transform.position != origin) {
                 transform.position = origin;
-                SetPosition(transform.position);
-            }
+                SetPosition(origin);
+            }*/
         }
 
         protected void SetPosition(Vector2 position) {
