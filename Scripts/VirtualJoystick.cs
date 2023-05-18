@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -9,28 +8,24 @@ namespace Terresquall {
     [RequireComponent(typeof(Image),typeof(RectTransform))]
     public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 
-        public Image control;
-        public Image image;
-        public RectTransform rectTransform;
+        public Image controlStick;
 
         [Header("UI")]
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-
-        [Header("Debug")]
-        public bool consolePrintAxis = false;
-        public Text UITextPrintAxis;
+        public Vector2 boundsPosition;
+        [Range(0, 1)] public float boundsWidth;
+        [Range(0, 1)] public float boundsHeight;
 
         [Header("Settings")]
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
-        public Vector2 boundsPosition;
-        [Range(0, 1)] public float boundsWidth;
-        [Range(0, 1)] public float boundsHeight;
-        [Tooltip("Joystick only snaps when at the edge")]public bool edgeSnap;
+        [Tooltip("Joystick only snaps when at the edge")] 
+        public bool edgeSnap;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
-            "\nWorks best with multiples of 4")] [Range(0, 16)] public int directions = 0;
+            "\nWorks best with multiples of 4")]
+        [Range(0, 16)] public int directions = 0;
         public enum DeadZoneType { 
             Radius, //0
             Value //1
@@ -38,6 +33,10 @@ namespace Terresquall {
         public DeadZoneType deadZoneType;
         [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
+
+        [Header("Debug")]
+        public bool consolePrintAxis = false;
+        public Text UITextPrintAxis;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -76,13 +75,13 @@ namespace Terresquall {
         public void OnPointerDown(PointerEventData data) {
             currentPointerId = data.pointerId;
             SetPosition(data.position);
-            control.color = dragColor;
+            controlStick.color = dragColor;
         }
 
         // Hook this to the EndDrag event of an EventTrigger.
         public void OnPointerUp(PointerEventData data) {
             desiredPosition = transform.position;
-            control.color = originalColor;
+            controlStick.color = originalColor;
             currentPointerId = -2;
 
             //Snaps the joystick back to its original position
@@ -156,7 +155,7 @@ namespace Terresquall {
                 // Once we find an appropriate Image component, abort.
                 Image img = transform.GetChild(i).GetComponent<Image>();
                 if(img) {
-                    control = img;
+                    controlStick = img;
                     break;
                 }
             }
@@ -193,7 +192,7 @@ namespace Terresquall {
 
         void Start() {
             origin = desiredPosition = transform.position;
-            originalColor = control.color;
+            originalColor = controlStick.color;
 
             // Add this instance to the List.
             instances.Insert(0, this);
@@ -221,18 +220,18 @@ namespace Terresquall {
             }
 
             // Update the position of the joystick.
-            control.transform.position = Vector2.MoveTowards(control.transform.position, desiredPosition, sensitivity);
+            controlStick.transform.position = Vector2.MoveTowards(controlStick.transform.position, desiredPosition, sensitivity);
 
             // Also update the axis value.
             if(deadZoneType == DeadZoneType.Radius) {
-                float magnitude = (control.transform.position - transform.position).magnitude;
+                float magnitude = (controlStick.transform.position - transform.position).magnitude;
 
                 // If distance of the joystick away from the centre is more than the deadzone radius then update axis.
                 // Else set axis to 0
-                axis = (magnitude > deadZoneRadius) ? (Vector2)(control.transform.position - transform.position) / radius : Vector2.zero;
+                axis = (magnitude > deadZoneRadius) ? (Vector2)(controlStick.transform.position - transform.position) / radius : Vector2.zero;
 
             } else if(deadZoneType == DeadZoneType.Value) {
-                axis = (control.transform.position - transform.position) / radius;
+                axis = (controlStick.transform.position - transform.position) / radius;
                 if (Mathf.Round((Mathf.Abs(axis.x) + Mathf.Abs(axis.y)) * 100f) / 100f <= deadZoneValue) axis = Vector2.zero;               
             }
 
@@ -291,66 +290,5 @@ namespace Terresquall {
         }
     }
 
-    [CustomEditor(typeof(VirtualJoystick))]
-    public class VirtualJoystickEditor : Editor
-    {
-        override public void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-
-            var myScript = target as VirtualJoystick;
-
-            //Changes whether the deadzone is calculated based on Value or Radius
-            switch (myScript.deadZoneType) {
-                case VirtualJoystick.DeadZoneType.Radius:
-                    myScript.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area:", myScript.deadZoneRadius);
-                    break;
-
-                case VirtualJoystick.DeadZoneType.Value:
-                    myScript.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value:", myScript.deadZoneValue);
-                    break;
-            }
-
-            //Increase Decrease buttons
-            EditorGUILayout.LabelField("Joystick Size:", EditorStyles.boldLabel);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
-                myScript.rectTransform.sizeDelta += new Vector2(10,10);
-                myScript.control.rectTransform.sizeDelta += new Vector2(7,7);
-                myScript.radius += 10;
-                myScript.deadZoneRadius += 3;
-            }
-            if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
-                myScript.rectTransform.sizeDelta -= new Vector2(10, 10);
-                myScript.control.rectTransform.sizeDelta -= new Vector2(7, 7);
-                myScript.radius -= 10;
-                myScript.deadZoneRadius -= 3;
-            }
-            GUILayout.EndHorizontal();            
-            
-            //Bounds Anchor buttons
-            EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft)) {
-
-            }
-            if (GUILayout.Button("Top Right", EditorStyles.miniButtonRight)) {
- 
-            }
-            GUILayout.EndHorizontal();
-
-            if (GUILayout.Button("Middle")) {
-
-            }
-            
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Bottom Left", EditorStyles.miniButtonLeft)) {
-
-            }
-            if (GUILayout.Button("Bottom Right", EditorStyles.miniButtonRight)) {
-
-            }
-            GUILayout.EndHorizontal();
-        }
-    }
+    
 }
