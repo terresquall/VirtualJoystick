@@ -31,7 +31,7 @@ namespace Terresquall
 
                 timer = 0;
 
-                spawnTime = Random.Range(0, 1.5f);
+                spawnTime = Random.Range(0, spawnTime + 0.25f);
             }
         }
 
