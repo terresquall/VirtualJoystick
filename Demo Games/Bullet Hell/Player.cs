@@ -1,32 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TMPro;
 
 namespace Terresquall
 {
     public class Player : MonoBehaviour
     {
+
         //Movement
         public float moveSpeed;
-        [HideInInspector]
-        public Vector2 moveDir;
-        [HideInInspector]
-        public float lastHorizontalVector;
-        [HideInInspector]
-        public float lastVerticalVector;
-
         public float tmpTime;
 
-        int minutes, seconds;
-        float miliseconds;
-
-        public TextMeshProUGUI timeText;
+        public TextMeshProUGUI scoreText;
         public TextMeshProUGUI endText;
-        public GameObject endScreen;
 
-        public bool dead = false;
+        public GameObject endScreen;
+        public GameObject playerBullet;
+
+        public Transform gunPivot;
+
+        public bool asteroidGame = false;
+
+        public int points = 0;
+
+        int minutes, seconds;
+        float miliseconds, gunTimer;
+        bool dead = false;
         Rigidbody2D rb;
 
         void Start()
@@ -36,7 +35,7 @@ namespace Terresquall
 
         void Update()
         {
-            DisplayTimer();
+            DisplayUI();
         }
 
         void FixedUpdate()
@@ -49,26 +48,63 @@ namespace Terresquall
             rb.velocity = new Vector2(VirtualJoystick.GetAxis("Horizontal") * moveSpeed, VirtualJoystick.GetAxis("Vertical") * moveSpeed);
         }
 
-        void DisplayTimer()
+        void DisplayUI()
         {
-            if (!dead)
+            if (!asteroidGame)
             {
-                tmpTime += Time.deltaTime;
+                if (!dead)
+                {
+                    tmpTime += Time.deltaTime;
 
-                minutes = (int)tmpTime / 60;
+                    minutes = (int)tmpTime / 60;
 
-                seconds = (int)tmpTime % 60;
+                    seconds = (int)tmpTime % 60;
 
-                miliseconds = tmpTime * 1000;
+                    miliseconds = tmpTime * 1000;
 
-                miliseconds = miliseconds % 1000;
+                    miliseconds = miliseconds % 1000;
 
-                timeText.text = string.Format("{00:00}:{01:00}:{02:000}", minutes, seconds, miliseconds);
+                    scoreText.text = string.Format("{00:00}:{01:00}:{02:000}", minutes, seconds, miliseconds);
+                }
+                else
+                {
+                    endScreen.SetActive(true);
+                    endText.text = "You Survived: " + string.Format("{00:00}:{01:00}:{2:000}", minutes, seconds, miliseconds);
+                }
             }
             else
             {
-                endScreen.SetActive(true);
-                endText.text = "You Survived: " + string.Format("{00:00}:{01:00}:{2:000}", minutes, seconds, miliseconds);
+                if (!dead)
+                {
+                    Shoot();
+                    scoreText.text = points.ToString();
+                }
+                else
+                {
+                    endScreen.SetActive(true);
+                    endText.text = "You Scored " + points.ToString() + " Points";
+                }                
+            }
+            
+        }
+
+        void Shoot()
+        {
+            gunPivot.eulerAngles = new Vector3(gunPivot.rotation.x, gunPivot.rotation.y, 
+                -Mathf.Atan2(VirtualJoystick.GetAxis("Horizontal", 1), VirtualJoystick.GetAxis("Vertical", 1)) * Mathf.Rad2Deg);
+
+            if (gunTimer < 0.5f)
+            {
+                gunTimer += Time.deltaTime;
+            }
+            else
+            {
+                gunTimer = 0;
+
+                if(VirtualJoystick.GetAxis(1) != Vector2.zero)
+                {
+                    Instantiate(playerBullet, gunPivot.position, gunPivot.rotation);
+                }
             }
         }
 

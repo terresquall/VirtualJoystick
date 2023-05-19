@@ -10,6 +10,10 @@ namespace Terresquall {
 
         public Image controlStick;
 
+        [Header("Debug")]
+        public bool consolePrintAxis = false;
+        public Text UITextPrintAxis;
+
         [Header("UI")]
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         public Vector2 boundsPosition;
@@ -33,10 +37,6 @@ namespace Terresquall {
         public DeadZoneType deadZoneType;
         [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
-
-        [Header("Debug")]
-        public bool consolePrintAxis = false;
-        public Text UITextPrintAxis;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
