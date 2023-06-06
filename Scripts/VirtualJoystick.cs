@@ -14,13 +14,8 @@ namespace Terresquall {
         public bool consolePrintAxis = false;
         public Text UITextPrintAxis;
 
-        [Header("UI")]
-        public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
-        public Vector2 boundsPosition;
-        [Range(0, 1)] public float boundsWidth;
-        [Range(0, 1)] public float boundsHeight;
-
         [Header("Settings")]
+        public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         public float radius = 30f;
@@ -37,6 +32,14 @@ namespace Terresquall {
         public DeadZoneType deadZoneType;
         [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
+
+        [Header("Boundaries")]
+        public bool snapsToTouch = false;
+        public Vector2 boundsPosition;
+        public Vector2 boundaries;
+        public Vector2 boundariesWH;
+        [Range(0, 1)] public float boundsWidth;
+        [Range(0, 1)] public float boundsHeight;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
