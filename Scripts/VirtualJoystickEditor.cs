@@ -19,11 +19,11 @@ namespace Terresquall {
             //Changes whether the deadzone is calculated based on Value or Radius
             switch (joystick.deadZoneType) {
                 case VirtualJoystick.DeadZoneType.Radius:
-                    joystick.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area:", joystick.deadZoneRadius);
+                    joystick.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area", joystick.deadZoneRadius);
                     break;
 
                 case VirtualJoystick.DeadZoneType.Value:
-                    joystick.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value:", joystick.deadZoneValue);
+                    joystick.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value", joystick.deadZoneValue);
                     break;
             }
 
