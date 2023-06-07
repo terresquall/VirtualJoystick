@@ -1078,7 +1078,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 2327cd1b7ca31bc4d8345a1fd0ff44b7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1143,15 +1143,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5
-  moveDir: {x: 0, y: 0}
-  lastHorizontalVector: 0
-  lastVerticalVector: 0
   tmpTime: 0
-  timeText: {fileID: 1600913632}
+  scoreText: {fileID: 0}
   endText: {fileID: 191755766}
   endScreen: {fileID: 330131886}
-  dead: 0
+  playerBullet: {fileID: 0}
+  gunPivot: {fileID: 0}
   asteroidGame: 0
+  points: 0
 --- !u!50 &1856651186
 Rigidbody2D:
   serializedVersion: 4
