@@ -1078,7 +1078,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 2327cd1b7ca31bc4d8345a1fd0ff44b7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7a567721a2969034d9d01b78ac73ebc5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1117,18 +1117,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.01936841, y: -0.20336819}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 3.125, y: 2.125}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 2.3170505, y: 1.4067364}
   m_EdgeRadius: 0
 --- !u!114 &1856651185
 MonoBehaviour:
@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   tmpTime: 0
-  scoreText: {fileID: 0}
+  scoreText: {fileID: 191755766}
   endText: {fileID: 191755766}
   endScreen: {fileID: 330131886}
   playerBullet: {fileID: 0}
