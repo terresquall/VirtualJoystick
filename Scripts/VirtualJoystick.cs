@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Terresquall {
 
+    [System.Serializable]
     [RequireComponent(typeof(Image),typeof(RectTransform))]
     public class VirtualJoystick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
 

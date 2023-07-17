@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace Terresquall {
     [CustomEditor(typeof(VirtualJoystick))]
@@ -7,6 +9,8 @@ namespace Terresquall {
         // Links to the script object.
         VirtualJoystick joystick;
         RectTransform rectTransform;
+
+        private int scaleFactor;
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
@@ -28,20 +32,24 @@ namespace Terresquall {
             }
 
             //Increase Decrease buttons
+            EditorGUI.BeginChangeCheck();
             GUILayout.Space(12);
             EditorGUILayout.LabelField("Joystick Size:", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
+            int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x, (int)joystick.radius, (int)joystick.deadZoneRadius));
             if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
-                rectTransform.sizeDelta += new Vector2(10,10);
-                joystick.controlStick.rectTransform.sizeDelta += new Vector2(7,7);
-                joystick.radius += 10;
-                joystick.deadZoneRadius += 3;
+                RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
+                rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                joystick.radius +=joystick.radius / gcd;
+                joystick.deadZoneRadius += joystick.deadZoneRadius/gcd;
             }
             if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
-                rectTransform.sizeDelta -= new Vector2(10, 10);
-                rectTransform.sizeDelta -= new Vector2(7, 7);
-                joystick.radius -= 10;
-                joystick.deadZoneRadius -= 3;
+                RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
+                rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                joystick.radius -= joystick.radius / gcd;
+                joystick.deadZoneRadius -= joystick.deadZoneRadius / gcd;
             }
             GUILayout.EndHorizontal();            
             
@@ -69,6 +77,43 @@ namespace Terresquall {
 
             }
             GUILayout.EndHorizontal();
+
+            if (EditorGUI.EndChangeCheck())
+            {
+
+            }
+        }
+
+        // Function to return gcd of a and b
+        int GCD(int a, int b)
+        {
+            if (a == 0)
+                return b;
+            return GCD(b % a, a);
+        }
+
+        // Function to find gcd of array of numbers
+        int FindGCD(params int[] numbers)
+        {
+            int result = numbers[0];
+            for (int i = 1; i < numbers.Length; i++)
+            {
+                result = GCD(numbers[i], result);
+
+                if (result == 1)
+                {
+                    return 1;
+                }
+            }
+            return result;
+        }
+
+        void RecordSizeChangeUndo(params Object[] arguments)
+        {
+            for(int i = 0; i < arguments.Length; i++)
+            {
+                Undo.RecordObject(arguments[i], "Undo Stuff");
+            }
         }
     }
 }
