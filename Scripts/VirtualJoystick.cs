@@ -11,11 +11,11 @@ namespace Terresquall {
 
         public Image controlStick;
 
-        [Header("Debug")]
+        [Header("Debug:")]
         public bool consolePrintAxis = false;
         public Text UITextPrintAxis;
 
-        [Header("Settings")]
+        [Header("Settings:")]
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
@@ -34,13 +34,9 @@ namespace Terresquall {
         [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
 
-        [Header("Boundaries")]
-        public bool snapsToTouch = false;
-        public Vector2 boundsPosition;
-        public Vector2 boundaries;
-        public Vector2 boundariesWH;
-        [Range(0, 1)] public float boundsWidth;
-        [Range(0, 1)] public float boundsHeight;
+        [HideInInspector] public bool snapsToTouch = false;
+        [HideInInspector] public Vector2 boundsPosition;
+        [HideInInspector] public Vector2 boundariesWH;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -167,7 +163,7 @@ namespace Terresquall {
 
         // Function for us to modify the bounds value in future.
         public Rect GetBounds() {
-            return new Rect(boundsPosition.x, boundsPosition.y, Screen.width * boundsWidth, Screen.height * boundsHeight);
+            return new Rect(boundsPosition.x, boundsPosition.y, Screen.width * boundariesWH.x, Screen.height * boundariesWH.y);
         }
 
         void OnDrawGizmosSelected() {
@@ -180,9 +176,9 @@ namespace Terresquall {
 
                 // Get the 4 points in the bounds.
                 Vector3 a = new Vector3(boundsPosition.x, boundsPosition.y),
-                        b = new Vector3(boundsPosition.x, boundsPosition.y + Screen.currentResolution.height * boundsHeight),
-                        c = new Vector2(boundsPosition.x + Screen.currentResolution.width * boundsWidth, boundsPosition.y + Screen.currentResolution.height * boundsHeight),
-                        d = new Vector3(boundsPosition.x + Screen.currentResolution.width * boundsWidth, boundsPosition.y);
+                        b = new Vector3(boundsPosition.x, boundsPosition.y + Screen.currentResolution.height * boundariesWH.y),
+                        c = new Vector2(boundsPosition.x + Screen.currentResolution.width * boundariesWH.x, boundsPosition.y + Screen.currentResolution.height * boundariesWH.y),
+                        d = new Vector3(boundsPosition.x + Screen.currentResolution.width * boundariesWH.x, boundsPosition.y);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawLine(b, c);
                 Gizmos.DrawLine(c, d);

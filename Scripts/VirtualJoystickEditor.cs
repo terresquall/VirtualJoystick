@@ -31,30 +31,49 @@ namespace Terresquall {
                     break;
             }
 
+
             //Increase Decrease buttons
             EditorGUI.BeginChangeCheck();
-            GUILayout.Space(12);
-            EditorGUILayout.LabelField("Joystick Size:", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Joystick Size:");
             GUILayout.BeginHorizontal();
             int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x, (int)joystick.radius, (int)joystick.deadZoneRadius));
-            if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
+            if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft))
+            {
                 RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
                 rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
                 joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                joystick.radius +=joystick.radius / gcd;
-                joystick.deadZoneRadius += joystick.deadZoneRadius/gcd;
+                joystick.radius += joystick.radius / gcd;
+                joystick.deadZoneRadius += joystick.deadZoneRadius / gcd;
             }
-            if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
+            if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight))
+            {
                 RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
                 rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
                 joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
                 joystick.radius -= joystick.radius / gcd;
                 joystick.deadZoneRadius -= joystick.deadZoneRadius / gcd;
             }
-            GUILayout.EndHorizontal();            
-            
+            GUILayout.EndHorizontal();
+
+
+            //Boundaries Stuff
+            GUILayout.Space(15);
+            EditorGUILayout.LabelField("Boundaries:", EditorStyles.boldLabel);
+
+            joystick.snapsToTouch = EditorGUILayout.Toggle("Snap to Touch", joystick.snapsToTouch);
+            GUILayout.BeginHorizontal();
+            joystick.boundsPosition.x = EditorGUILayout.Slider("X", joystick.boundsPosition.x, 0, 1);
+            joystick.boundsPosition.y = EditorGUILayout.Slider("Y", joystick.boundsPosition.y, 0, 1);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            joystick.boundariesWH.x = EditorGUILayout.Slider("W", joystick.boundariesWH.x, 0, 1);
+            joystick.boundariesWH.y = EditorGUILayout.Slider("H", joystick.boundariesWH.y, 0, 1);
+            GUILayout.EndHorizontal();
+
+           
             //Bounds Anchor buttons
-            GUILayout.Space(12);
+            GUILayout.Space(3);
             EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft)) {

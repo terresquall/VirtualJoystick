@@ -437,6 +437,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 2106566382}
     m_Modifications:
     - target: {fileID: 8834734169634807593, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734169634807593, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734169634807593, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -531,6 +539,14 @@ PrefabInstance:
     - target: {fileID: 8834734170784175513, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
+      propertyPath: radius
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
+      propertyPath: deadZoneRadius
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
@@ -1490,11 +1506,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: radius
-      value: 110
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: deadZoneRadius
-      value: 11
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
