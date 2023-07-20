@@ -59,16 +59,18 @@ namespace Terresquall {
             //Boundaries Stuff
             GUILayout.Space(15);
             EditorGUILayout.LabelField("Boundaries:", EditorStyles.boldLabel);
-
             joystick.snapsToTouch = EditorGUILayout.Toggle("Snap to Touch", joystick.snapsToTouch);
+
+            EditorGUILayout.LabelField("Boundaries");
+            EditorGUIUtility.labelWidth = 15;
             GUILayout.BeginHorizontal();
-            joystick.boundsPosition.x = EditorGUILayout.Slider("X", joystick.boundsPosition.x, 0, 1);
-            joystick.boundsPosition.y = EditorGUILayout.Slider("Y", joystick.boundsPosition.y, 0, 1);
+            joystick.boundaries.x = EditorGUILayout.Slider("X", joystick.boundaries.x, 0, 1);
+            joystick.boundaries.y = EditorGUILayout.Slider("Y", joystick.boundaries.y, 0, 1);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            joystick.boundariesWH.x = EditorGUILayout.Slider("W", joystick.boundariesWH.x, 0, 1);
-            joystick.boundariesWH.y = EditorGUILayout.Slider("H", joystick.boundariesWH.y, 0, 1);
+            joystick.boundaries.width = EditorGUILayout.Slider("W", joystick.boundaries.width, 0, 1);
+            joystick.boundaries.height = EditorGUILayout.Slider("H", joystick.boundaries.height, 0, 1);
             GUILayout.EndHorizontal();
 
            

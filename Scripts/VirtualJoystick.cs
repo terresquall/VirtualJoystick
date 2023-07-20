@@ -35,8 +35,7 @@ namespace Terresquall {
         [HideInInspector] public float deadZoneValue = 0.3f;
 
         [HideInInspector] public bool snapsToTouch = false;
-        [HideInInspector] public Vector2 boundsPosition;
-        [HideInInspector] public Vector2 boundariesWH;
+        [HideInInspector] public Rect boundaries;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -163,7 +162,7 @@ namespace Terresquall {
 
         // Function for us to modify the bounds value in future.
         public Rect GetBounds() {
-            return new Rect(boundsPosition.x, boundsPosition.y, Screen.width * boundariesWH.x, Screen.height * boundariesWH.y);
+            return new Rect(boundaries.x, boundaries.y, Screen.width * boundaries.width, Screen.height * boundaries.height);
         }
 
         void OnDrawGizmosSelected() {
@@ -175,10 +174,10 @@ namespace Terresquall {
                 Gizmos.color = Color.yellow;
 
                 // Get the 4 points in the bounds.
-                Vector3 a = new Vector3(boundsPosition.x, boundsPosition.y),
-                        b = new Vector3(boundsPosition.x, boundsPosition.y + Screen.currentResolution.height * boundariesWH.y),
-                        c = new Vector2(boundsPosition.x + Screen.currentResolution.width * boundariesWH.x, boundsPosition.y + Screen.currentResolution.height * boundariesWH.y),
-                        d = new Vector3(boundsPosition.x + Screen.currentResolution.width * boundariesWH.x, boundsPosition.y);
+                Vector3 a = new Vector3(boundaries.x, boundaries.y),
+                        b = new Vector3(boundaries.x, boundaries.y + Screen.currentResolution.height * boundaries.height),
+                        c = new Vector2(boundaries.x + Screen.currentResolution.width * boundaries.width, boundaries.y + Screen.currentResolution.height * boundaries.y),
+                        d = new Vector3(boundaries.x + Screen.currentResolution.width * boundaries.width, boundaries.y);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawLine(b, c);
                 Gizmos.DrawLine(c, d);
