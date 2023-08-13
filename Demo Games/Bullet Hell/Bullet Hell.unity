@@ -1144,7 +1144,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   tmpTime: 0
-  scoreText: {fileID: 191755766}
+  scoreText: {fileID: 1600913632}
   endText: {fileID: 191755766}
   endScreen: {fileID: 330131886}
   playerBullet: {fileID: 0}

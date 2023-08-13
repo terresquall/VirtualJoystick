@@ -108,9 +108,7 @@ namespace Terresquall {
         // Function to return gcd of a and b
         int GCD(int a, int b)
         {
-            if (a == 0)
-                return b;
-            return GCD(b % a, a);
+            return (a == 0 || b == 0) ? a | b : GCD(Mathf.Min(a, b), Mathf.Max(a, b) % Mathf.Min(a, b));
         }
 
         // Function to find gcd of array of numbers
@@ -124,6 +122,11 @@ namespace Terresquall {
                 if (result == 1)
                 {
                     return 1;
+                }
+
+                if(result <= 0)
+                {
+                    Debug.LogError("The size value for one or more of the Joystick elements is not more than 0");
                 }
             }
             return result;

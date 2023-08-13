@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Split Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -236,6 +240,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crosshair Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -337,6 +345,10 @@ PrefabInstance:
     - target: {fileID: 8834734170784175512, guid: f4774a46ce6054e4888eef4db3aeca01, type: 3}
       propertyPath: m_Name
       value: Ball Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: f4774a46ce6054e4888eef4db3aeca01, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: f4774a46ce6054e4888eef4db3aeca01, type: 3}
       propertyPath: m_Pivot.x
@@ -456,6 +468,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Octogon Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 1f7c30398fa65804abb2e5926a0c2c34, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -566,6 +582,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Eight Directional Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: e413dcc0d68bbc14ea10e46f75b4eab6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: e413dcc0d68bbc14ea10e46f75b4eab6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -668,6 +688,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 8Bit Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 9dcbe2c264ed9e64f916cbdf3a9ffd1a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 9dcbe2c264ed9e64f916cbdf3a9ffd1a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -769,6 +793,10 @@ PrefabInstance:
     - target: {fileID: 8834734170784175512, guid: 34c3d58ae9e53f546a7260f15ea5a70d, type: 3}
       propertyPath: m_Name
       value: Arrow Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 34c3d58ae9e53f546a7260f15ea5a70d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 34c3d58ae9e53f546a7260f15ea5a70d, type: 3}
       propertyPath: m_Pivot.x
@@ -1098,6 +1126,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Sun Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: f5af2b8814d44514e910d8ca4b3ca8ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: f5af2b8814d44514e910d8ca4b3ca8ae, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1199,6 +1231,10 @@ PrefabInstance:
     - target: {fileID: 8834734170784175512, guid: e84740716e7831a4ca74f1c3d921a993, type: 3}
       propertyPath: m_Name
       value: 8Bit Dash Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: e84740716e7831a4ca74f1c3d921a993, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: e84740716e7831a4ca74f1c3d921a993, type: 3}
       propertyPath: m_Pivot.x
@@ -1302,6 +1338,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rose Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 226a0a5b52246174b8ae06328304d86b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 226a0a5b52246174b8ae06328304d86b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1388,12 +1428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 226a0a5b52246174b8ae06328304d86b, type: 3}
---- !u!224 &1836320528 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 8834734170784175513, guid: 226a0a5b52246174b8ae06328304d86b, type: 3}
-  m_PrefabInstance: {fileID: 1689624584}
-  m_PrefabAsset: {fileID: 0}
---- !u!1001 &1872337648
+--- !u!1001 &1690320258
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1408,17 +1443,13 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 70
       objectReference: {fileID: 0}
-    - target: {fileID: 8834734169634807593, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8834734169634807593, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175512, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: m_Name
       value: Virtual Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: m_Pivot.x
@@ -1506,18 +1537,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: radius
-      value: 25
+      value: 110
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
       propertyPath: deadZoneRadius
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
---- !u!224 &1872337649 stripped
+--- !u!224 &1690320259 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8834734170784175513, guid: 5c2cb823f1af59541974bd4a360355f6, type: 3}
-  m_PrefabInstance: {fileID: 1872337648}
+  m_PrefabInstance: {fileID: 1690320258}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &1836320528 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8834734170784175513, guid: 226a0a5b52246174b8ae06328304d86b, type: 3}
+  m_PrefabInstance: {fileID: 1689624584}
   m_PrefabAsset: {fileID: 0}
 --- !u!224 &1876740114 stripped
 RectTransform:
@@ -1617,7 +1653,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1034323176}
-  - {fileID: 1872337649}
+  - {fileID: 1690320259}
   - {fileID: 630671542}
   - {fileID: 955704695}
   - {fileID: 8834734169526411576}
@@ -1644,6 +1680,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2106566382}
     m_Modifications:
+    - target: {fileID: 59747419918701992, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 59747419918701992, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 40
+      objectReference: {fileID: 0}
     - target: {fileID: 59747420917866264, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1731,6 +1775,22 @@ PrefabInstance:
     - target: {fileID: 59747420917866265, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
       propertyPath: m_Name
       value: C-Stick Joystick
+      objectReference: {fileID: 0}
+    - target: {fileID: 59747420917866265, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 59747420917866267, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: radius
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 59747420917866267, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: deadZoneType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 59747420917866267, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}
+      propertyPath: deadZoneRadius
+      value: 30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4002bc53397bc38419c6b51fa8537b36, type: 3}

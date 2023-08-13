@@ -175,9 +175,9 @@ namespace Terresquall {
 
                 // Get the 4 points in the bounds.
                 Vector3 a = new Vector3(boundaries.x, boundaries.y),
-                        b = new Vector3(boundaries.x, boundaries.y + Screen.currentResolution.height * boundaries.height),
-                        c = new Vector2(boundaries.x + Screen.currentResolution.width * boundaries.width, boundaries.y + Screen.currentResolution.height * boundaries.y),
-                        d = new Vector3(boundaries.x + Screen.currentResolution.width * boundaries.width, boundaries.y);
+                        b = new Vector3(boundaries.x, boundaries.y + Screen.height * boundaries.height),
+                        c = new Vector2(boundaries.x + Screen.width * boundaries.width, boundaries.y + Screen.height * boundaries.y),
+                        d = new Vector3(boundaries.x + Screen.width * boundaries.width, boundaries.y);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawLine(b, c);
                 Gizmos.DrawLine(c, d);
