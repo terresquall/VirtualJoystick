@@ -55,56 +55,56 @@ namespace Terresquall {
 
 
             ////Boundaries Stuff
-            GUILayout.Space(15);
-            EditorGUILayout.LabelField("Boundaries:", EditorStyles.boldLabel);
-            joystick.snapsToTouch = EditorGUILayout.Toggle("Snap to Touch", joystick.snapsToTouch);
+            //GUILayout.Space(15);
+            //EditorGUILayout.LabelField("Boundaries:", EditorStyles.boldLabel);
+            //joystick.snapsToTouch = EditorGUILayout.Toggle("Snap to Touch", joystick.snapsToTouch);
 
-            EditorGUILayout.LabelField("Boundaries");
-            EditorGUIUtility.labelWidth = 15;
-            GUILayout.BeginHorizontal();
-            joystick.boundaries.x = EditorGUILayout.Slider("X", joystick.boundaries.x, 0, 1);
-            joystick.boundaries.y = EditorGUILayout.Slider("Y", joystick.boundaries.y, 0, 1);
-            GUILayout.EndHorizontal();
+            //EditorGUILayout.LabelField("Boundaries");
+            //EditorGUIUtility.labelWidth = 15;
+            //GUILayout.BeginHorizontal();
+            //joystick.boundaries.x = EditorGUILayout.Slider("X", joystick.boundaries.x, 0, 1);
+            //joystick.boundaries.y = EditorGUILayout.Slider("Y", joystick.boundaries.y, 0, 1);
+            //GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            joystick.boundaries.width = EditorGUILayout.Slider("W", joystick.boundaries.width, 0, 1);
-            joystick.boundaries.height = EditorGUILayout.Slider("H", joystick.boundaries.height, 0, 1);
-            GUILayout.EndHorizontal();
+            //GUILayout.BeginHorizontal();
+            //joystick.boundaries.width = EditorGUILayout.Slider("W", joystick.boundaries.width, 0, 1);
+            //joystick.boundaries.height = EditorGUILayout.Slider("H", joystick.boundaries.height, 0, 1);
+            //GUILayout.EndHorizontal();
 
-            //Bounds Anchor buttons
-            GUILayout.Space(3);
-            EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft))
-            {
+            ////Bounds Anchor buttons
+            //GUILayout.Space(3);
+            //EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
+            //GUILayout.BeginHorizontal();
+            //if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft))
+            //{
 
-            }
-            if (GUILayout.Button("Top Right", EditorStyles.miniButtonRight))
-            {
+            //}
+            //if (GUILayout.Button("Top Right", EditorStyles.miniButtonRight))
+            //{
 
-            }
-            GUILayout.EndHorizontal();
+            //}
+            //GUILayout.EndHorizontal();
 
-            if (GUILayout.Button("Middle"))
-            {
+            //if (GUILayout.Button("Middle"))
+            //{
 
-            }
+            //}
 
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Bottom Left", EditorStyles.miniButtonLeft))
-            {
+            //GUILayout.BeginHorizontal();
+            //if (GUILayout.Button("Bottom Left", EditorStyles.miniButtonLeft))
+            //{
 
-            }
-            if (GUILayout.Button("Bottom Right", EditorStyles.miniButtonRight))
-            {
+            //}
+            //if (GUILayout.Button("Bottom Right", EditorStyles.miniButtonRight))
+            //{
 
-            }
-            GUILayout.EndHorizontal();
+            //}
+            //GUILayout.EndHorizontal();
 
-            if (EditorGUI.EndChangeCheck())
-            {
+            //if (EditorGUI.EndChangeCheck())
+            //{
 
-            }
+            //}
         }
 
         // Function to return gcd of a and b

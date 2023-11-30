@@ -11,11 +11,11 @@ namespace Terresquall {
 
         public Image controlStick;
 
-        [Header("Debug:")]
+        [Header("Debug")]
         public bool consolePrintAxis = false;
         public Text UITextPrintAxis;
 
-        [Header("Settings:")]
+        [Header("Settings")]
         public bool onlyOnMobile = true;
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
@@ -27,6 +27,10 @@ namespace Terresquall {
             "\nKeep at 0 for a free joystick. " +
             "\nWorks best with multiples of 4")]
         [Range(0, 16)] public int directions = 0;
+
+        public bool snapsToTouch = false;
+        public Rect boundaries;
+
         public enum DeadZoneType { 
             Radius, //0
             Value //1
@@ -34,9 +38,6 @@ namespace Terresquall {
         public DeadZoneType deadZoneType;
         [HideInInspector] public float deadZoneRadius = 10f;
         [HideInInspector] public float deadZoneValue = 0.3f;
-
-        [HideInInspector] public bool snapsToTouch = false;
-        [HideInInspector] public Rect boundaries;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -188,7 +189,7 @@ namespace Terresquall {
                 // Get the 4 points in the bounds.
                 Vector3 a = new Vector3(boundaries.x, boundaries.y),
                         b = new Vector3(boundaries.x, boundaries.y + Screen.height * boundaries.height),
-                        c = new Vector2(boundaries.x + Screen.width * boundaries.width, boundaries.y + Screen.height * boundaries.y),
+                        c = new Vector2(boundaries.x + Screen.width * boundaries.width, boundaries.y + Screen.height * boundaries.height),
                         d = new Vector3(boundaries.x + Screen.width * boundaries.width, boundaries.y);
                 Gizmos.DrawLine(a, b);
                 Gizmos.DrawLine(b, c);
@@ -202,6 +203,7 @@ namespace Terresquall {
         }
 
         void Start() {
+
             // If we are not on mobile, and this is mobile only, disable.
             if (!Application.isMobilePlatform && onlyOnMobile)
                 gameObject.SetActive(false);
