@@ -16,6 +16,7 @@ namespace Terresquall {
         public Text UITextPrintAxis;
 
         [Header("Settings:")]
+        public bool onlyOnMobile = true;
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
@@ -47,6 +48,15 @@ namespace Terresquall {
         public const string VERSION = "0.2.0";
         public const string DATE = "30 April 2023";
 
+        // Gets us the number of active joysticks on the screen.
+        public static int CountActiveInstances() {
+            int count = 0;
+            foreach(VirtualJoystick j in instances) {
+                if (j.isActiveAndEnabled) count++;
+            }
+            return count;
+        }
+
         public static float GetAxis(string axe, int index = 0) {
             switch(axe.ToLower()) {
                 case "horizontal": case "h": case "x":
@@ -60,13 +70,15 @@ namespace Terresquall {
         public static Vector2 GetAxis(int index = 0) { return instances[index].axis; }
 
         public static float GetAxisRaw(string axe, int index = 0) {
+            float f = GetAxis(axe, index);
+            if (Mathf.Approximately(f, 0)) return 0;
             return Mathf.Sign(GetAxis(axe,index));
         }
 
         public static Vector2 GetAxisRaw(int index = 0) {
             return new Vector2(
-                Mathf.Sign(instances[index].axis.x),
-                Mathf.Sign(instances[index].axis.y)
+                Mathf.Approximately(instances[index].axis.x, 0) ? 0 : Mathf.Sign(instances[index].axis.x),
+                Mathf.Approximately(instances[index].axis.y, 0) ? 0 : Mathf.Sign(instances[index].axis.y)
             );
         }
 
@@ -190,6 +202,10 @@ namespace Terresquall {
         }
 
         void Start() {
+            // If we are not on mobile, and this is mobile only, disable.
+            if (!Application.isMobilePlatform && onlyOnMobile)
+                gameObject.SetActive(false);
+
             origin = desiredPosition = transform.position;
             originalColor = controlStick.color;
 
