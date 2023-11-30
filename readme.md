@@ -6,7 +6,7 @@ This repo contains only a folder in the Assets folder instead of the entire Unit
 
 How to use
 ----------
-To use the Virtual Joystick, drag the Virtual Joystick prefab from the Prefabs folder into your Scene's HUD Canvas and it should be ready to roll.
+To use the Virtual Joystick, pick one of the prefabs from the `VirtualJoystick/Prefabs` folder into your Scene's HUD Canvas and it should be ready to roll.
 
 1. To retrieve input data from the Joystick, use `VirtualJoystick.GetAxis("Horizontal")` to get movement on the x-axis, and `VirtualJoystick.GetAxis("Vertical")` to get movement on the y-axis.
 2. You can also use `VirtualJoystick.GetAxis()` to get a `Vector2` containing the horizontal and vertical inputs.
@@ -15,7 +15,4 @@ To use the Virtual Joystick, drag the Virtual Joystick prefab from the Prefabs f
 
 Other properties
 ----------------
-- **Radius:** You can set the radius property to set how far away from the joystick base the control stick can move away from.
-- **Sensitivity:** This is the limit to how fast the control stick of the joystick can move to the position where your finger is.
-- **Deadzones:** You can set Deadzones on the joystick either using a radius or a value. This axis will return as 0 while the control stick is either in the radius or is returning a value less than or equal to the Deadzone value
-- **Scaling:** You can increae or decrease the size of the joystick, control stick, radius, and deadzone radius by pressing the increase and deacrease button respectively.
+To see a comprehensive list of properties, go here: terresquall.com/games/virtual-joystick-pack/#guide
