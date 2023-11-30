@@ -20,7 +20,8 @@ namespace Terresquall {
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
-        public float radius = 30f;
+        [Range(0,2)] public float radius = 0.7f;
+
         [Tooltip("Joystick only snaps when at the edge")] 
         public bool edgeSnap;
         [Tooltip("Number of directions of the joystick. " +
@@ -83,6 +84,13 @@ namespace Terresquall {
             );
         }
 
+        // Get the radius of this joystick.
+        public float GetRadius() {
+            RectTransform t = transform as RectTransform;
+            if(t) return radius * t.rect.width * 0.5f;
+            return radius;
+        }
+
         // Hook this function to the Drag event of an EventTrigger.
         public void OnPointerDown(PointerEventData data) {
             currentPointerId = data.pointerId;
@@ -111,13 +119,13 @@ namespace Terresquall {
             //if no directions to snap to, joystick moves freely.
             if(directions <= 0){
                 // Clamp the desired position within the radius.
-                desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, radius);
+                desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
             } else {
                 // calculate nearest snap directional vectors
                 Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
-                if (diff.magnitude > radius) {
+                if (diff.magnitude > GetRadius()) {
                     // Clamp the desired position within the radius and snapped to directional vector
-                    desiredPosition = (Vector2)transform.position + snapDirection * radius;
+                    desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
                 }
                 else if (edgeSnap) {
                     desiredPosition = position;
@@ -180,7 +188,7 @@ namespace Terresquall {
 
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position,radius);
+            Gizmos.DrawWireSphere(transform.position, GetRadius());
 
             if(GetBounds().size.sqrMagnitude > 0) {
                 // Draw the lines of the bounds.
