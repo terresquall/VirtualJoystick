@@ -20,36 +20,20 @@ namespace Terresquall {
         override public void OnInspectorGUI() {
             DrawDefaultInspector();
 
-            //Changes whether the deadzone is calculated based on Value or Radius
-            switch (joystick.deadZoneType) {
-                case VirtualJoystick.DeadZoneType.Radius:
-                    joystick.deadZoneRadius = EditorGUILayout.FloatField("Dead Zone Area", joystick.deadZoneRadius);
-                    break;
-
-                case VirtualJoystick.DeadZoneType.Value:
-                    joystick.deadZoneValue = EditorGUILayout.FloatField("Dead Zone Value", joystick.deadZoneValue);
-                    break;
-            }
-
-
             //Increase Decrease buttons
             EditorGUI.BeginChangeCheck();
-            EditorGUILayout.LabelField("Joystick Size:");
+            EditorGUILayout.LabelField("Size Adjustments");
             GUILayout.BeginHorizontal();
-            int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x, (int)joystick.radius, (int)joystick.deadZoneRadius));
+            int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
             if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
                 RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
                 rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
                 joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                joystick.radius += joystick.radius / gcd;
-                joystick.deadZoneRadius += joystick.deadZoneRadius / gcd;
             }
             if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
                 RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
                 rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
                 joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                joystick.radius -= joystick.radius / gcd;
-                joystick.deadZoneRadius -= joystick.deadZoneRadius / gcd;
             }
             GUILayout.EndHorizontal();
 

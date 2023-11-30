@@ -21,6 +21,7 @@ namespace Terresquall {
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
         public float sensitivity = 2f;
         [Range(0,2)] public float radius = 0.7f;
+        [Range(0,1)] public float deadzone = 0.3f;
 
         [Tooltip("Joystick only snaps when at the edge")] 
         public bool edgeSnap;
@@ -31,14 +32,6 @@ namespace Terresquall {
 
         public bool snapsToTouch = false;
         public Rect boundaries;
-
-        public enum DeadZoneType { 
-            Radius, //0
-            Value //1
-        }
-        public DeadZoneType deadZoneType;
-        [HideInInspector] public float deadZoneRadius = 10f;
-        [HideInInspector] public float deadZoneValue = 0.3f;
 
         // Private variables.
         Vector2 desiredPosition, axis, origin;
@@ -123,14 +116,12 @@ namespace Terresquall {
             } else {
                 // calculate nearest snap directional vectors
                 Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
-                if (diff.magnitude > GetRadius()) {
+                if ((diff / GetRadius()).magnitude > deadzone) {
                     // Clamp the desired position within the radius and snapped to directional vector
                     desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
-                }
-                else if (edgeSnap) {
+                } else if (!edgeSnap) {
                     desiredPosition = position;
-                }
-                else {
+                } else {
                     // Snaps to directional vector within the magnitude of the input position and the joystick
                     desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
                 }
@@ -206,8 +197,6 @@ namespace Terresquall {
             }
 
             Gizmos.color = Color.green;
-            if(deadZoneType == DeadZoneType.Radius)
-                Gizmos.DrawWireSphere(transform.position, deadZoneRadius);
         }
 
         void Start() {
@@ -247,18 +236,9 @@ namespace Terresquall {
             // Update the position of the joystick.
             controlStick.transform.position = Vector2.MoveTowards(controlStick.transform.position, desiredPosition, sensitivity);
 
-            // Also update the axis value.
-            if(deadZoneType == DeadZoneType.Radius) {
-                float magnitude = (controlStick.transform.position - transform.position).magnitude;
-
-                // If distance of the joystick away from the centre is more than the deadzone radius then update axis.
-                // Else set axis to 0
-                axis = (magnitude > deadZoneRadius) ? (Vector2)(controlStick.transform.position - transform.position) / radius : Vector2.zero;
-
-            } else if(deadZoneType == DeadZoneType.Value) {
-                axis = (controlStick.transform.position - transform.position) / radius;
-                if (Mathf.Round((Mathf.Abs(axis.x) + Mathf.Abs(axis.y)) * 100f) / 100f <= deadZoneValue) axis = Vector2.zero;               
-            }
+            // If the joystick is moved less than the dead zone amount, it won't register.
+            axis = (controlStick.transform.position - transform.position) / GetRadius();
+            if (axis.magnitude < deadzone) axis = Vector2.zero;               
 
             // If debug is on, output to selected channel.
             string output = string.Format("Virtual Joystick: {0}", axis);
