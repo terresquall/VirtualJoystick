@@ -38,10 +38,10 @@ namespace Terresquall {
         Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
 
-        public static List<VirtualJoystick> instances = new List<VirtualJoystick>();
+        private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
-        public const string VERSION = "0.2.0";
-        public const string DATE = "30 April 2023";
+        public const string VERSION = "0.3.0";
+        public const string DATE = "22 January 2024";
 
         // Gets us the number of active joysticks on the screen.
         public static int CountActiveInstances() {
@@ -199,17 +199,26 @@ namespace Terresquall {
             Gizmos.color = Color.green;
         }
 
-        void Start() {
+        void OnEnable() {
 
             // If we are not on mobile, and this is mobile only, disable.
             if (!Application.isMobilePlatform && onlyOnMobile)
+            {
                 gameObject.SetActive(false);
+                return;
+            }
 
             origin = desiredPosition = transform.position;
             originalColor = controlStick.color;
 
             // Add this instance to the List.
             instances.Insert(0, this);
+        }
+
+        void OnDisable()
+        {
+            print(instances.Contains(this) + " | " + instances.Count);
+            instances.Remove(this);
         }
 
         void Update() {
