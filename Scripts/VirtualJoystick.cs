@@ -43,6 +43,8 @@ namespace Terresquall {
         public const string VERSION = "1.0.2";
         public const string DATE = "3 April 2024";
 
+        Vector2Int lastScreen;
+
         // Gets us the number of active joysticks on the screen.
         public static int CountActiveInstances() {
             int count = 0;
@@ -212,7 +214,12 @@ namespace Terresquall {
             }
 
             origin = desiredPosition = transform.position;
+            StartCoroutine(Activate());
             originalColor = controlStick.color;
+
+            // Record the screen's attributes so we can detect changes to screen size,
+            // such a phone changing orientations.
+            lastScreen = new Vector2Int(Screen.width, Screen.height);
 
             // Add this instance to the List.
             instances.Insert(0, this);
@@ -221,11 +228,7 @@ namespace Terresquall {
         // Added in Version 1.0.2.
         // Resets the position of the joystick again 1 frame after the game starts.
         // This is because the Canvas gets rescaled after the game starts, and this affects
-        // how the position is calculated.
-        void Start() {
-            StartCoroutine(Activate());
-        }
-        
+        // how the position is calculated.        
         IEnumerator Activate() {
             yield return new WaitForEndOfFrame();
             origin = desiredPosition = transform.position;
@@ -238,6 +241,12 @@ namespace Terresquall {
 
         void Update() {
             PositionUpdate();
+
+            // If the screen has changed, reset the joystick.
+            if(lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
+                lastScreen = new Vector2Int(Screen.width, Screen.height);
+                OnEnable();
+            }
 
             // If the currentPointerId > -2, we are being dragged.
             if(currentPointerId > -2) {
