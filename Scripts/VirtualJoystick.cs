@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +14,6 @@ namespace Terresquall {
 
         [Header("Debug")]
         public bool consolePrintAxis = false;
-        public Text UITextPrintAxis;
 
         [Header("Settings")]
         public bool onlyOnMobile = true;
@@ -40,8 +40,8 @@ namespace Terresquall {
 
         private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
-        public const string VERSION = "0.3.0";
-        public const string DATE = "22 January 2024";
+        public const string VERSION = "1.0.2";
+        public const string DATE = "3 April 2024";
 
         // Gets us the number of active joysticks on the screen.
         public static int CountActiveInstances() {
@@ -105,6 +105,7 @@ namespace Terresquall {
         }
 
         protected void SetPosition(Vector2 position) {
+            
             // Gets the difference in position between where we want to be,
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
@@ -177,6 +178,7 @@ namespace Terresquall {
             return new Rect(boundaries.x, boundaries.y, Screen.width * boundaries.width, Screen.height * boundaries.height);
         }
 
+#if UNITY_EDITOR
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, GetRadius());
@@ -198,6 +200,7 @@ namespace Terresquall {
 
             Gizmos.color = Color.green;
         }
+#endif
 
         void OnEnable() {
 
@@ -215,9 +218,21 @@ namespace Terresquall {
             instances.Insert(0, this);
         }
 
+        // Added in Version 1.0.2.
+        // Resets the position of the joystick again 1 frame after the game starts.
+        // This is because the Canvas gets rescaled after the game starts, and this affects
+        // how the position is calculated.
+        void Start() {
+            StartCoroutine(Activate());
+        }
+        
+        IEnumerator Activate() {
+            yield return new WaitForEndOfFrame();
+            origin = desiredPosition = transform.position;
+        }
+
         void OnDisable()
         {
-            print(instances.Contains(this) + " | " + instances.Count);
             instances.Remove(this);
         }
 
@@ -249,10 +264,11 @@ namespace Terresquall {
             axis = (controlStick.transform.position - transform.position) / GetRadius();
             if (axis.magnitude < deadzone) axis = Vector2.zero;               
 
-            // If debug is on, output to selected channel.
-            string output = string.Format("Virtual Joystick: {0}", axis);
-            if(consolePrintAxis) Debug.Log(output);
-            if(UITextPrintAxis) UITextPrintAxis.text = output;
+            // If a joystick is toggled and we are debugging, output to console.
+            if(axis.sqrMagnitude > 0) {
+                string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
+               if(consolePrintAxis) Debug.Log(output);
+            }
         }
 
         void PositionUpdate() {
