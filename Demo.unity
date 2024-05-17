@@ -228,7 +228,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: radius
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: playAudio
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: dragColor.b
@@ -250,6 +254,10 @@ PrefabInstance:
       propertyPath: deadZoneRadius
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: edgeReachedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2d78ffdfb0e517d44b8599cd4fd3b09d, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
 --- !u!224 &3563803 stripped
@@ -455,6 +463,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -595,6 +604,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
@@ -627,6 +637,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
@@ -639,6 +650,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 2106566382}
     m_Modifications:
     - target: {fileID: 1086950226863598689, guid: f891ceeb95ad9ad44899137377e4b5b1, type: 3}
+      propertyPath: playAudio
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1086950226863598689, guid: f891ceeb95ad9ad44899137377e4b5b1, type: 3}
       propertyPath: dragColor.b
       value: 1
       objectReference: {fileID: 0}
@@ -650,6 +665,10 @@ PrefabInstance:
       propertyPath: dragColor.r
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1086950226863598689, guid: f891ceeb95ad9ad44899137377e4b5b1, type: 3}
+      propertyPath: edgeReachedSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 2d78ffdfb0e517d44b8599cd4fd3b09d, type: 3}
     - target: {fileID: 1086950226863598690, guid: f891ceeb95ad9ad44899137377e4b5b1, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1034,6 +1053,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1309154845}
   - {fileID: 3563803}

@@ -30,6 +30,15 @@ namespace Terresquall {
             "\nWorks best with multiples of 4")]
         [Range(0, 16)] public int directions = 0;
 
+        [Tooltip("Button can be pressed when within Press range")]
+        public bool pressableButton;
+        [Tooltip("Set maximum range for pressing button")]
+        [Range(0, 1)] public float pressRange = 0.5f;
+        public int pressTimeLeniance;
+
+        public bool playAudio = false;
+        public AudioClip edgeReachedSound;
+
         public bool snapsToTouch = false;
         public Rect boundaries;
 
@@ -37,6 +46,7 @@ namespace Terresquall {
         Vector2 desiredPosition, axis, origin;
         Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
+        bool audioPlayed = false;
 
         private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
@@ -99,6 +109,9 @@ namespace Terresquall {
             controlStick.color = originalColor;
             currentPointerId = -2;
 
+            // Reset audiplayed to false when joystick is let go.
+            audioPlayed = false;
+
             //Snaps the joystick back to its original position
             /*if (snapToOrigin && (Vector2)transform.position != origin) {
                 transform.position = origin;
@@ -128,6 +141,23 @@ namespace Terresquall {
                     // Snaps to directional vector within the magnitude of the input position and the joystick
                     desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
                 }
+            }
+
+            // If joystick touches edge or snaps to edge, play an audio clip if it has not already played and if playAudio is set to true.
+            if ((diff / GetRadius()).magnitude >= 1 && !audioPlayed && playAudio || edgeSnap && (diff / GetRadius()).magnitude >= deadzone && !audioPlayed && playAudio)
+            {
+                // Only play audio clip when there is an Audio Source. Prevents Console errors.
+                if (GetComponent<AudioSource>())
+                {
+                    // audioPlayed keeps track of whether the audio is already played.
+                    GetComponent<AudioSource>().PlayOneShot(edgeReachedSound);
+                    audioPlayed = true;
+                }
+            }
+            // When is moved nearer to origin and is inside the deadzone, reset audioPlayed to false.
+            if ((diff / GetRadius()).magnitude < deadzone && playAudio)
+            {
+                audioPlayed = false;
             }
         }
 
