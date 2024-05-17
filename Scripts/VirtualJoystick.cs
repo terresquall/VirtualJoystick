@@ -33,8 +33,9 @@ namespace Terresquall {
         [Tooltip("Button can be pressed when within Press range")]
         public bool pressableButton;
         [Tooltip("Set maximum range for pressing button")]
-        [Range(0, 1)] public float pressRange = 0.5f;
-        public int pressTimeLeniance;
+        [Range(0, 1)] public float pressableRange = 0.5f;
+        [Tooltip("How long before pressing the button becomes dragging the Joystick on interaction")]
+        [Range(0, 1)] public float pressTimeLeniance;
 
         public bool playAudio = false;
         public AudioClip edgeReachedSound;
@@ -46,7 +47,9 @@ namespace Terresquall {
         Vector2 desiredPosition, axis, origin;
         Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
-        bool audioPlayed = false;
+        bool audioPlayed = false; // Keeps track of whether the edgeReachedSound audio clip has already played.
+        bool triggerPressCountdown; // Starts pressTimeCountdown in Update().
+        float pressTimeCountdown; // Times how long before press time ends.
 
         private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
@@ -109,6 +112,14 @@ namespace Terresquall {
             controlStick.color = originalColor;
             currentPointerId = -2;
 
+            // If within presstime and not dragging joystick, trigger OnPressEvent() 
+            if (triggerPressCountdown && pressableButton && pressTimeCountdown < pressTimeLeniance)
+            {
+                OnPressEvent();
+            }
+
+            pressTimeCountdown = 0;
+
             // Reset audiplayed to false when joystick is let go.
             audioPlayed = false;
 
@@ -119,27 +130,54 @@ namespace Terresquall {
             }*/
         }
 
+
+        // Add functions to trigger when the button is pressed.
+        public void OnPressEvent()
+        {
+            triggerPressCountdown = false;
+        }
+
         protected void SetPosition(Vector2 position) {
             
             // Gets the difference in position between where we want to be,
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
-            //if no directions to snap to, joystick moves freely.
-            if(directions <= 0){
-                // Clamp the desired position within the radius.
-                desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
-            } else {
-                // calculate nearest snap directional vectors
-                Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
-                if ((diff / GetRadius()).magnitude > deadzone) {
-                    // Clamp the desired position within the radius and snapped to directional vector
-                    desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
-                } else if (!edgeSnap) {
-                    desiredPosition = position;
-                } else {
-                    // Snaps to directional vector within the magnitude of the input position and the joystick
-                    desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
+            // If joystick is pressed within pressableRange and pressTimeCountdown is within pressTimeLeniance range,
+            // start the pressTimeCountdown & stop minor movement within the pressableRange.
+            if ((diff / GetRadius()).magnitude < pressableRange && pressableButton && pressTimeCountdown < pressTimeLeniance)
+            {
+                triggerPressCountdown = true;
+            }
+            else 
+            {
+                // Stops pressTimeCountdown if outside range and pressTimeLeniance
+                triggerPressCountdown = false;
+
+                //if no directions to snap to, joystick moves freely.
+                if (directions <= 0)
+                {
+                    // Clamp the desired position within the radius.
+                    desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
+                }
+                else
+                {
+                    // calculate nearest snap directional vectors
+                    Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
+                    if ((diff / GetRadius()).magnitude > deadzone)
+                    {
+                        // Clamp the desired position within the radius and snapped to directional vector
+                        desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
+                    }
+                    else if (!edgeSnap)
+                    {
+                        desiredPosition = position;
+                    }
+                    else
+                    {
+                        // Snaps to directional vector within the magnitude of the input position and the joystick
+                        desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
+                    }
                 }
             }
 
@@ -307,6 +345,12 @@ namespace Terresquall {
             if(axis.sqrMagnitude > 0) {
                 string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
                if(consolePrintAxis) Debug.Log(output);
+            }
+
+            // Start the pressTimeCountdown increase
+            if (triggerPressCountdown)
+            {
+                pressTimeCountdown += Time.unscaledDeltaTime;
             }
         }
 
