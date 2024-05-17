@@ -235,6 +235,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: pressRange
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: dragColor.b
       value: 0.5294118
       objectReference: {fileID: 0}
