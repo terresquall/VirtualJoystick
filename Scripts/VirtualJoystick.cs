@@ -35,7 +35,7 @@ namespace Terresquall {
         [Tooltip("Set maximum range for pressing button")]
         [Range(0, 1)] public float pressableRange = 0.5f;
         [Tooltip("How long before pressing the button becomes dragging the Joystick on interaction")]
-        [Range(0, 1)] public float pressTimeLeniance;
+        [Range(0, 1)] public float pressTimeLenience;
 
         public bool playAudio = false;
         public AudioClip edgeReachedSound;
@@ -54,7 +54,7 @@ namespace Terresquall {
         private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
         public const string VERSION = "1.0.2";
-        public const string DATE = "3 April 2024";
+        public const string DATE = "19 May 2024";
 
         Vector2Int lastScreen;
 
@@ -113,7 +113,7 @@ namespace Terresquall {
             currentPointerId = -2;
 
             // If within presstime and not dragging joystick, trigger OnPressEvent() 
-            if (triggerPressCountdown && pressableButton && pressTimeCountdown < pressTimeLeniance)
+            if (triggerPressCountdown && pressableButton && pressTimeCountdown < pressTimeLenience)
             {
                 OnPressEvent();
             }
@@ -143,15 +143,15 @@ namespace Terresquall {
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
-            // If joystick is pressed within pressableRange and pressTimeCountdown is within pressTimeLeniance range,
+            // If joystick is pressed within pressableRange and pressTimeCountdown is within pressTimeLenience range,
             // start the pressTimeCountdown & stop minor movement within the pressableRange.
-            if ((diff / GetRadius()).magnitude < pressableRange && pressableButton && pressTimeCountdown < pressTimeLeniance)
+            if ((diff / GetRadius()).magnitude < pressableRange && pressableButton && pressTimeCountdown < pressTimeLenience)
             {
                 triggerPressCountdown = true;
             }
             else 
             {
-                // Stops pressTimeCountdown if outside range and pressTimeLeniance
+                // Stops pressTimeCountdown if outside range and pressTimeLenience
                 triggerPressCountdown = false;
 
                 //if no directions to snap to, joystick moves freely.
