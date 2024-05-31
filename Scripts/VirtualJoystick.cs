@@ -30,28 +30,18 @@ namespace Terresquall {
             "\nWorks best with multiples of 4")]
         [Range(0, 16)] public int directions = 0;
 
-        [Tooltip("Button can be pressed when within Press range")]
-        public bool pressableButton;
-        [Tooltip("Set maximum range for pressing button")]
-        [Range(0, 1)] public float pressableRange = 0.5f;
-        [Tooltip("How long before pressing the button becomes dragging the Joystick on interaction")]
-        [Range(0, 1)] public float pressTimeLenience;
-
-        public bool playAudio = false;
-        public AudioClip edgeReachedSound;
+        // If there is an AudioSource, play a sound when the joystick touches the edge.
+        AudioSource audioSource;
 
         public bool snapsToTouch = false;
         public Rect boundaries;
 
         // Private variables.
-        Vector2 desiredPosition, axis, origin;
-        Color originalColor; // Stores the original color of the Joystick.
+        internal Vector2 desiredPosition, axis, origin, lastAxis;
+        internal Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
-        bool audioPlayed = false; // Keeps track of whether the edgeReachedSound audio clip has already played.
-        bool triggerPressCountdown; // Starts pressTimeCountdown in Update().
-        float pressTimeCountdown; // Times how long before press time ends.
 
-        private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
+        internal static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
         public const string VERSION = "1.0.2";
         public const string DATE = "19 May 2024";
@@ -77,12 +67,20 @@ namespace Terresquall {
             return 0;
         }
 
+        public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
+        public static Vector2 GetAxisDelta(int index = 0) { return instances[index].GetAxisDelta(); }
+
+        public Vector2 GetAxis() { return axis; }
         public static Vector2 GetAxis(int index = 0) { return instances[index].axis; }
 
-        public static float GetAxisRaw(string axe, int index = 0) {
-            float f = GetAxis(axe, index);
+        public float GetAxisRaw(string axe) {
+            float f = GetAxis(axe);
             if (Mathf.Approximately(f, 0)) return 0;
-            return Mathf.Sign(GetAxis(axe,index));
+            return Mathf.Sign(GetAxis(axe));
+        }
+
+        public static float GetAxisRaw(string axe, int index = 0) {
+            return instances[index].GetAxisRaw(axe);
         }
 
         public static Vector2 GetAxisRaw(int index = 0) {
@@ -99,29 +97,18 @@ namespace Terresquall {
             return radius;
         }
 
-        // Hook this function to the Drag event of an EventTrigger.
+        // What happens when we press down on the element.
         public void OnPointerDown(PointerEventData data) {
             currentPointerId = data.pointerId;
             SetPosition(data.position);
             controlStick.color = dragColor;
         }
 
-        // Hook this to the EndDrag event of an EventTrigger.
+        // What happens when we stop pressing down on the element.
         public void OnPointerUp(PointerEventData data) {
             desiredPosition = transform.position;
             controlStick.color = originalColor;
             currentPointerId = -2;
-
-            // If within presstime and not dragging joystick, trigger OnPressEvent() 
-            if (triggerPressCountdown && pressableButton && pressTimeCountdown < pressTimeLenience)
-            {
-                OnPressEvent();
-            }
-
-            pressTimeCountdown = 0;
-
-            // Reset audiplayed to false when joystick is let go.
-            audioPlayed = false;
 
             //Snaps the joystick back to its original position
             /*if (snapToOrigin && (Vector2)transform.position != origin) {
@@ -130,72 +117,29 @@ namespace Terresquall {
             }*/
         }
 
-
-        // Add functions to trigger when the button is pressed.
-        public void OnPressEvent()
-        {
-            triggerPressCountdown = false;
-        }
-
         protected void SetPosition(Vector2 position) {
             
             // Gets the difference in position between where we want to be,
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
-            // If joystick is pressed within pressableRange and pressTimeCountdown is within pressTimeLenience range,
-            // start the pressTimeCountdown & stop minor movement within the pressableRange.
-            if ((diff / GetRadius()).magnitude < pressableRange && pressableButton && pressTimeCountdown < pressTimeLenience)
-            {
-                triggerPressCountdown = true;
-            }
-            else 
-            {
-                // Stops pressTimeCountdown if outside range and pressTimeLenience
-                triggerPressCountdown = false;
-
-                //if no directions to snap to, joystick moves freely.
-                if (directions <= 0)
-                {
-                    // Clamp the desired position within the radius.
-                    desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
+            
+            // If no directions to snap to, joystick moves freely.
+            if (directions <= 0) {
+                // Clamp the desired position within the radius.
+                desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
+            } else {
+                // calculate nearest snap directional vectors
+                Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
+                if ((diff / GetRadius()).magnitude > deadzone) {
+                    // Clamp the desired position within the radius and snapped to directional vector
+                    desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
+                } else if (!edgeSnap) {
+                    desiredPosition = position;
+                } else {
+                    // Snaps to directional vector within the magnitude of the input position and the joystick
+                    desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
                 }
-                else
-                {
-                    // calculate nearest snap directional vectors
-                    Vector2 snapDirection = SnapDirection(diff.normalized, directions, 360 / directions * Mathf.Deg2Rad);
-                    if ((diff / GetRadius()).magnitude > deadzone)
-                    {
-                        // Clamp the desired position within the radius and snapped to directional vector
-                        desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
-                    }
-                    else if (!edgeSnap)
-                    {
-                        desiredPosition = position;
-                    }
-                    else
-                    {
-                        // Snaps to directional vector within the magnitude of the input position and the joystick
-                        desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
-                    }
-                }
-            }
-
-            // If joystick touches edge or snaps to edge, play an audio clip if it has not already played and if playAudio is set to true.
-            if ((diff / GetRadius()).magnitude >= 1 && !audioPlayed && playAudio || edgeSnap && (diff / GetRadius()).magnitude >= deadzone && !audioPlayed && playAudio)
-            {
-                // Only play audio clip when there is an Audio Source. Prevents Console errors.
-                if (GetComponent<AudioSource>())
-                {
-                    // audioPlayed keeps track of whether the audio is already played.
-                    GetComponent<AudioSource>().PlayOneShot(edgeReachedSound);
-                    audioPlayed = true;
-                }
-            }
-            // When is moved nearer to origin and is inside the deadzone, reset audioPlayed to false.
-            if ((diff / GetRadius()).magnitude < deadzone && playAudio)
-            {
-                audioPlayed = false;
             }
         }
 
@@ -275,8 +219,7 @@ namespace Terresquall {
         void OnEnable() {
 
             // If we are not on mobile, and this is mobile only, disable.
-            if (!Application.isMobilePlatform && onlyOnMobile)
-            {
+            if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
                 return;
             }
@@ -291,6 +234,9 @@ namespace Terresquall {
 
             // Add this instance to the List.
             instances.Insert(0, this);
+
+            // Finds any AudioSource attached.
+            audioSource = GetComponent<AudioSource>();
         }
 
         // Added in Version 1.0.2.
@@ -302,8 +248,7 @@ namespace Terresquall {
             origin = desiredPosition = transform.position;
         }
 
-        void OnDisable()
-        {
+        void OnDisable() {
             instances.Remove(this);
         }
 
@@ -334,6 +279,10 @@ namespace Terresquall {
                 }
             }
 
+            // Record the last axis value before we update.
+            // For calculating GetAxisDelta().
+            lastAxis = axis;
+
             // Update the position of the joystick.
             controlStick.transform.position = Vector2.MoveTowards(controlStick.transform.position, desiredPosition, sensitivity);
 
@@ -345,12 +294,6 @@ namespace Terresquall {
             if(axis.sqrMagnitude > 0) {
                 string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
                if(consolePrintAxis) Debug.Log(output);
-            }
-
-            // Start the pressTimeCountdown increase
-            if (triggerPressCountdown)
-            {
-                pressTimeCountdown += Time.unscaledDeltaTime;
             }
         }
 
@@ -402,6 +345,4 @@ namespace Terresquall {
             OnPointerDown(data);
         }
     }
-
-    
 }
