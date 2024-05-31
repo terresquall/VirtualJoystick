@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -13,7 +14,6 @@ namespace Terresquall {
 
         [Header("Debug")]
         public bool consolePrintAxis = false;
-        public Text UITextPrintAxis;
 
         [Header("Settings")]
         public bool onlyOnMobile = true;
@@ -30,18 +30,23 @@ namespace Terresquall {
             "\nWorks best with multiples of 4")]
         [Range(0, 16)] public int directions = 0;
 
+        // If there is an AudioSource, play a sound when the joystick touches the edge.
+        AudioSource audioSource;
+
         public bool snapsToTouch = false;
         public Rect boundaries;
 
         // Private variables.
-        Vector2 desiredPosition, axis, origin;
-        Color originalColor; // Stores the original color of the Joystick.
+        internal Vector2 desiredPosition, axis, origin, lastAxis;
+        internal Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
 
-        private static List<VirtualJoystick> instances = new List<VirtualJoystick>();
+        internal static List<VirtualJoystick> instances = new List<VirtualJoystick>();
 
-        public const string VERSION = "0.3.0";
-        public const string DATE = "22 January 2024";
+        public const string VERSION = "1.0.2";
+        public const string DATE = "19 May 2024";
+
+        Vector2Int lastScreen;
 
         // Gets us the number of active joysticks on the screen.
         public static int CountActiveInstances() {
@@ -62,12 +67,20 @@ namespace Terresquall {
             return 0;
         }
 
+        public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
+        public static Vector2 GetAxisDelta(int index = 0) { return instances[index].GetAxisDelta(); }
+
+        public Vector2 GetAxis() { return axis; }
         public static Vector2 GetAxis(int index = 0) { return instances[index].axis; }
 
-        public static float GetAxisRaw(string axe, int index = 0) {
-            float f = GetAxis(axe, index);
+        public float GetAxisRaw(string axe) {
+            float f = GetAxis(axe);
             if (Mathf.Approximately(f, 0)) return 0;
-            return Mathf.Sign(GetAxis(axe,index));
+            return Mathf.Sign(GetAxis(axe));
+        }
+
+        public static float GetAxisRaw(string axe, int index = 0) {
+            return instances[index].GetAxisRaw(axe);
         }
 
         public static Vector2 GetAxisRaw(int index = 0) {
@@ -84,14 +97,14 @@ namespace Terresquall {
             return radius;
         }
 
-        // Hook this function to the Drag event of an EventTrigger.
+        // What happens when we press down on the element.
         public void OnPointerDown(PointerEventData data) {
             currentPointerId = data.pointerId;
             SetPosition(data.position);
             controlStick.color = dragColor;
         }
 
-        // Hook this to the EndDrag event of an EventTrigger.
+        // What happens when we stop pressing down on the element.
         public void OnPointerUp(PointerEventData data) {
             desiredPosition = transform.position;
             controlStick.color = originalColor;
@@ -105,12 +118,14 @@ namespace Terresquall {
         }
 
         protected void SetPosition(Vector2 position) {
+            
             // Gets the difference in position between where we want to be,
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
-            //if no directions to snap to, joystick moves freely.
-            if(directions <= 0){
+            
+            // If no directions to snap to, joystick moves freely.
+            if (directions <= 0) {
                 // Clamp the desired position within the radius.
                 desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff, GetRadius());
             } else {
@@ -177,6 +192,7 @@ namespace Terresquall {
             return new Rect(boundaries.x, boundaries.y, Screen.width * boundaries.width, Screen.height * boundaries.height);
         }
 
+#if UNITY_EDITOR
         void OnDrawGizmosSelected() {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, GetRadius());
@@ -198,31 +214,52 @@ namespace Terresquall {
 
             Gizmos.color = Color.green;
         }
+#endif
 
         void OnEnable() {
 
             // If we are not on mobile, and this is mobile only, disable.
-            if (!Application.isMobilePlatform && onlyOnMobile)
-            {
+            if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
                 return;
             }
 
             origin = desiredPosition = transform.position;
+            StartCoroutine(Activate());
             originalColor = controlStick.color;
+
+            // Record the screen's attributes so we can detect changes to screen size,
+            // such a phone changing orientations.
+            lastScreen = new Vector2Int(Screen.width, Screen.height);
 
             // Add this instance to the List.
             instances.Insert(0, this);
+
+            // Finds any AudioSource attached.
+            audioSource = GetComponent<AudioSource>();
         }
 
-        void OnDisable()
-        {
-            print(instances.Contains(this) + " | " + instances.Count);
+        // Added in Version 1.0.2.
+        // Resets the position of the joystick again 1 frame after the game starts.
+        // This is because the Canvas gets rescaled after the game starts, and this affects
+        // how the position is calculated.        
+        IEnumerator Activate() {
+            yield return new WaitForEndOfFrame();
+            origin = desiredPosition = transform.position;
+        }
+
+        void OnDisable() {
             instances.Remove(this);
         }
 
         void Update() {
             PositionUpdate();
+
+            // If the screen has changed, reset the joystick.
+            if(lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
+                lastScreen = new Vector2Int(Screen.width, Screen.height);
+                OnEnable();
+            }
 
             // If the currentPointerId > -2, we are being dragged.
             if(currentPointerId > -2) {
@@ -242,6 +279,10 @@ namespace Terresquall {
                 }
             }
 
+            // Record the last axis value before we update.
+            // For calculating GetAxisDelta().
+            lastAxis = axis;
+
             // Update the position of the joystick.
             controlStick.transform.position = Vector2.MoveTowards(controlStick.transform.position, desiredPosition, sensitivity);
 
@@ -249,10 +290,11 @@ namespace Terresquall {
             axis = (controlStick.transform.position - transform.position) / GetRadius();
             if (axis.magnitude < deadzone) axis = Vector2.zero;               
 
-            // If debug is on, output to selected channel.
-            string output = string.Format("Virtual Joystick: {0}", axis);
-            if(consolePrintAxis) Debug.Log(output);
-            if(UITextPrintAxis) UITextPrintAxis.text = output;
+            // If a joystick is toggled and we are debugging, output to console.
+            if(axis.sqrMagnitude > 0) {
+                string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
+               if(consolePrintAxis) Debug.Log(output);
+            }
         }
 
         void PositionUpdate() {
@@ -303,6 +345,4 @@ namespace Terresquall {
             OnPointerDown(data);
         }
     }
-
-    
 }
