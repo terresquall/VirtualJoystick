@@ -16,3 +16,25 @@ To use the Virtual Joystick, pick one of the prefabs from the `VirtualJoystick/P
 Other properties
 ----------------
 To see a comprehensive list of properties, go here: terresquall.com/games/virtual-joystick-pack/#guide
+
+ChangeLog
+----------------
+**Version 1.0.3**
+
+Added two mechanics.
+- When reaching the edge of the joystick radius, the joystick will play a sound clip only if there is an Audio Source.
+- The joystick can be pressed like a button if clicked in the middle and calls a seperate method to activate pressed functions.
+
+To make use of the pressable joystick mechanic, set your functions that you want to activate inside of the new method `OnPressEvent()`.
+
+Added three variables for playing audio
+- public bool playAudio   //Sets whether the joystick will play a sound when touching radius.
+- public AudioClip edgeReachedSound   //Audio clip played when touching radius.
+- bool audioPlayed   // Keeps track of whether the edgeReachedSound audio clip has already played.
+
+Added five variables for pressing joystick
+- public bool pressableButton   //Set whether the button can be pressed.
+- [Range(0, 1)] public float pressableRange   //The range determining whether a joystick is pressed on the button
+- [Range(0, 1)] public float pressTimeLenience;   //How long a joystick can be held down before the action is considered a drag.
+- bool triggerPressCountdown   // Starts pressTimeCountdown in Update().
+- float pressTimeCountdown   // Times how long before press time ends.

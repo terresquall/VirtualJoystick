@@ -28,6 +28,7 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8834734170784175513}
   m_RootOrder: 0
@@ -104,6 +105,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8834734169634807593}
   m_Father: {fileID: 0}
@@ -166,11 +168,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlStick: {fileID: 8834734169634807594}
   consolePrintAxis: 0
-  UITextPrintAxis: {fileID: 0}
   onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000
   radius: 1
+  deadzone: 0.3
   edgeSnap: 0
   directions: 0
   snapsToTouch: 0
@@ -180,6 +182,3 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
-  deadZoneType: 0
-  deadZoneRadius: 10
-  deadZoneValue: 0.3
