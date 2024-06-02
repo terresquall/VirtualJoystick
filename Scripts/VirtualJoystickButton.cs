@@ -7,7 +7,7 @@ namespace Terresquall {
 
     [RequireComponent(typeof(VirtualJoystick))]
     public class VirtualJoystickButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
-
+        
         [Tooltip("How long you have to hold the button to register a button press.")]
         [Min(0)] public float holdDuration = 0.3f;
         [Tooltip("How much movement can you make to deregister the button press.")]
@@ -30,16 +30,19 @@ namespace Terresquall {
         internal static List<VirtualJoystickButton> instances = new List<VirtualJoystickButton>();
 
         void OnEnable() {
+
+            // Tries to find the Joystick.
+            joystick = GetComponent<VirtualJoystick>();
+            if(!joystick) {
+                enabled = false;
+                Debug.LogError("Disabled the Virtual Joystick Button as the Virtual Joystick component is not found.");
+            }
+
             instances.Insert(0, this);
         }
         void OnDisable()
         {
             instances.Remove(this);
-        }
-
-        // Start is called before the first frame update
-        void Start() {
-            joystick = GetComponent<VirtualJoystick>();
         }
 
         // Update is called once per frame

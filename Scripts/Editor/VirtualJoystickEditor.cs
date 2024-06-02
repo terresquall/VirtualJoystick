@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEditor;
-using System.Linq;
-using System.Collections.Generic;
 
 namespace Terresquall {
     [CustomEditor(typeof(VirtualJoystick))]
@@ -9,34 +7,74 @@ namespace Terresquall {
 
         VirtualJoystick joystick;
         RectTransform rectTransform;
+        Canvas canvas;
 
         private int scaleFactor;
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
+            canvas = joystick.GetComponentInParent<Canvas>();
         }
 
         override public void OnInspectorGUI() {
+
+            // Show an error text box if the new Input System is being used.
+            try {
+                Vector2 v = Input.mousePosition;
+            } catch(System.InvalidOperationException e) {
+
+                Texture2D icon = EditorGUIUtility.Load("icons/console.erroricon.png") as Texture2D;
+
+                // Create a horizontal layout for the icon and text
+                GUILayout.BeginHorizontal(EditorStyles.helpBox);
+                {
+                    // Display the icon
+                    GUILayout.Label(icon, GUILayout.Width(40), GUILayout.Height(40));
+
+                    // Display the text
+                    GUIStyle ts = new GUIStyle(EditorStyles.label);
+                    ts.wordWrap = true;
+                    ts.richText = true;
+                    ts.alignment = TextAnchor.MiddleLeft;
+                    ts.fontSize = EditorStyles.helpBox.fontSize;
+                    GUILayout.Label("<b>This component does not work with the new Input System.</b> You will need to re-enable the old Input System by going to <b>Project Settings > Player > Other Settings > Active Input Handling</b> and selecting <b>Both</b>.", ts);
+                }
+                GUILayout.EndHorizontal();
+            }
+
+            // Draw a help text box if this is not attached to a Canvas.
+            if(!canvas) {
+                EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
+            }
+
             DrawDefaultInspector();
 
             //Increase Decrease buttons
-            EditorGUI.BeginChangeCheck();
-            EditorGUILayout.LabelField("Size Adjustments");
-            GUILayout.BeginHorizontal();
-            int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
-            if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
-                RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
-                rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-            }
-            if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
-                RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
-                rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-            }
-            GUILayout.EndHorizontal();
+            if(joystick) {
 
+                if(!joystick.controlStick) {
+                    EditorGUILayout.HelpBox("There is no Control Stick assigned. This joystick won't work.", MessageType.Warning);
+                    return;
+                }
+
+                // Print out the Increase / Decrease Size buttons.
+                EditorGUI.BeginChangeCheck();
+                EditorGUILayout.LabelField("Size Adjustments");
+                GUILayout.BeginHorizontal();
+                int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
+                if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
+                    RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
+                    rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                    joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                }
+                if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
+                    RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
+                    rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                    joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
+                }
+                GUILayout.EndHorizontal();
+            }
 
             ////Boundaries Stuff
             //GUILayout.Space(15);

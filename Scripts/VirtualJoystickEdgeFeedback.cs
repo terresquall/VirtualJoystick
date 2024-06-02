@@ -16,10 +16,15 @@ namespace Terresquall {
         [Tooltip("Does the feedback include vibration?")]
         public bool hasVibration = false;
 
-        // Start is called before the first frame update
-        void Start() {
+        void OnEnable() {
             audioSource = GetComponent<AudioSource>();
+            
+            // Tries to find the Joystick.
             joystick = GetComponent<VirtualJoystick>();
+            if(!joystick) {
+                enabled = false;
+                Debug.LogError("Disabled the Virtual Joystick Button as the Virtual Joystick component is not found.");
+            }
         }
 
         // Update is called once per frame
