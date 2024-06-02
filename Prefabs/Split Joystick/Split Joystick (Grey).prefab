@@ -192,11 +192,6 @@ MonoBehaviour:
   deadzone: 0.3
   edgeSnap: 1
   directions: 4
-  pressableButton: 0
-  pressableRange: 0.5
-  pressTimeLeniance: 0
-  playAudio: 0
-  edgeReachedSound: {fileID: 8300000, guid: 2d78ffdfb0e517d44b8599cd4fd3b09d, type: 3}
   snapsToTouch: 0
   boundaries:
     serializedVersion: 2

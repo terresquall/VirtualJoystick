@@ -331,11 +331,11 @@ namespace Terresquall {
             List<RaycastResult> results = new List<RaycastResult>();
             GraphicRaycaster raycaster = canvas.GetComponent<GraphicRaycaster>();
             raycaster.Raycast(data, results);
-
+            
             // Go through the results, and compare it to 
             foreach (RaycastResult result in results) {
                 // Check if the hit GameObject is the control stick or one of its children
-                if (IsGameObjectOrChild(result.gameObject, controlStick.gameObject)) {
+                if (IsGameObjectOrChild(result.gameObject, gameObject)) {
                     // Start dragging the joystick
                     OnPointerDown(data);
                     break;
