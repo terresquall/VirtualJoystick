@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Split Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -220,7 +224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: radius
-      value: 70
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: boundsWidth
@@ -232,6 +236,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
       propertyPath: deadZoneType
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: bd6372cac36cf86438b3d3537ac67e40, type: 3}
+      propertyPath: onlyOnMobile
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -471,6 +479,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crosshair Joystick
       objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175512, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175513, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -557,7 +569,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175514, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
       propertyPath: radius
-      value: 70
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8834734170784175514, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
+      propertyPath: onlyOnMobile
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8834734170784175524, guid: 2e6cb5c7486b00f4a9846ffefc0083f6, type: 3}
       propertyPath: m_Sprite
@@ -1219,6 +1235,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f231c4fb786f3946a6b90b886c48677, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_SendPointerHoverToParent: 1
   m_HorizontalAxis: Horizontal
   m_VerticalAxis: Vertical
   m_SubmitButton: Submit
