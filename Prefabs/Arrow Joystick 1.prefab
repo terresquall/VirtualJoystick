@@ -168,11 +168,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlStick: {fileID: 2047079543492407292}
   consolePrintAxis: 0
-  UITextPrintAxis: {fileID: 0}
   onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000
-  radius: 2
+  radius: 0.96
   deadzone: 0.5
   edgeSnap: 0
   directions: 8

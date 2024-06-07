@@ -91,6 +91,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 281146753297635187, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2428b3141e8c1d84c9dc883a9900318e, type: 3}
     - target: {fileID: 281146753297635190, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_Name
       value: Crystal Joystick (Green)

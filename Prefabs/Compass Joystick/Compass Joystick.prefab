@@ -221,7 +221,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -2413806693520163455, guid: e527ec2aa144d1744af7bd280542be59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2428b3141e8c1d84c9dc883a9900318e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -245,7 +245,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   controlStick: {fileID: 6018016469365879483}
   consolePrintAxis: 0
-  UITextPrintAxis: {fileID: 0}
   onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000

@@ -19,6 +19,10 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627780, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 2428b3141e8c1d84c9dc883a9900318e, type: 3}
     - target: {fileID: 7064127838881627785, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Name
       value: Radar Joystick (Red)

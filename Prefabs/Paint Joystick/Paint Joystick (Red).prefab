@@ -7,9 +7,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2775290071626495117, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3537736
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775290071626495117, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.3537736
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775290071626495117, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2775290071626495118, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
       propertyPath: m_Name
-      value: Paint Joystick
+      value: Paint Joystick (Red)
       objectReference: {fileID: 0}
     - target: {fileID: 2775290071626495119, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
       propertyPath: m_Pivot.x
@@ -94,6 +106,18 @@ PrefabInstance:
     - target: {fileID: 2775290071626495119, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775290072519332551, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.b
+      value: 0.3537736
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775290072519332551, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.g
+      value: 0.3537736
+      objectReference: {fileID: 0}
+    - target: {fileID: 2775290072519332551, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
+      propertyPath: m_Color.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c6d0f236d7e2b3469aab28ed6bd609e, type: 3}
