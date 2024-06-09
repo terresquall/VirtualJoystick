@@ -172,7 +172,7 @@ MonoBehaviour:
   onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000
-  radius: 1
+  radius: 1.3
   deadzone: 0.4
   edgeSnap: 0
   directions: 8
