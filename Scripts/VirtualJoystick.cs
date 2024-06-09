@@ -194,6 +194,7 @@ namespace Terresquall {
 
         // Function for us to modify the bounds value in future.
         public Rect GetBounds() {
+            if(!snapsToTouch) return new Rect(0,0,0,0);
             return new Rect(boundaries.x,boundaries.y,Screen.width * boundaries.width,Screen.height * boundaries.height);
         }
 

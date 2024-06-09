@@ -39,6 +39,7 @@ namespace Terresquall {
                     ts.alignment = TextAnchor.MiddleLeft;
                     ts.fontSize = EditorStyles.helpBox.fontSize;
                     GUILayout.Label("<b>This component does not work with the new Input System.</b> You will need to re-enable the old Input System by going to <b>Project Settings > Player > Other Settings > Active Input Handling</b> and selecting <b>Both</b>.", ts);
+                    Debug.LogWarning(e.Message, this);
                 }
                 GUILayout.EndHorizontal();
             }
@@ -48,7 +49,29 @@ namespace Terresquall {
                 EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
             }
 
-            DrawDefaultInspector();
+            // Draw all the inspector properties.
+            serializedObject.Update();
+            SerializedProperty property = serializedObject.GetIterator();
+            bool snapsToTouch = true;
+            if (property.NextVisible(true)) {
+                do {
+                    // If the property name is snapsToTouch, record its value.
+                    switch(property.name) {
+                        case "snapsToTouch":
+                            snapsToTouch = property.boolValue;
+                            break;
+                    }
+
+                    // Hide the boundaries attribute if snapsToTouch is off.
+                    if(property.name != "boundaries" || snapsToTouch) {
+                        EditorGUI.BeginChangeCheck();
+                        EditorGUILayout.PropertyField(property, true);
+                        EditorGUI.EndChangeCheck();
+                    }
+                    
+                } while (property.NextVisible(false));
+            }
+            serializedObject.ApplyModifiedProperties();
 
             //Increase Decrease buttons
             if(joystick) {
@@ -58,22 +81,36 @@ namespace Terresquall {
                     return;
                 }
 
-                // Print out the Increase / Decrease Size buttons.
+                // Add the heading for the size adjustments.
                 EditorGUI.BeginChangeCheck();
                 EditorGUILayout.LabelField("Size Adjustments");
                 GUILayout.BeginHorizontal();
-                int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
-                if (GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft)) {
-                    RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
-                    rectTransform.sizeDelta += rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                    joystick.controlStick.rectTransform.sizeDelta += joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
+
+                // Create the Increase / Decrease Size buttons and code the actions.
+                bool increaseSize = GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft),
+                     decreaseSize = GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight);
+
+                if(increaseSize || decreaseSize) {
+                    // Calculate the sizes needed for the increment / decrement.
+                    int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
+                    Vector2 denominator = new Vector2(gcd, gcd);
+
+                    // Record actions for all elements.
+                    RectTransform[] affected = rectTransform.GetComponentsInChildren<RectTransform>();
+                    RecordSizeChangeUndo(affected);
+
+                    // Increase / decrease size actions.
+                    if(increaseSize) {
+                        foreach(RectTransform r in affected)
+                            r.sizeDelta += r.sizeDelta / denominator;
+                    } else if(decreaseSize) {
+                        foreach(RectTransform r in affected)
+                            r.sizeDelta -= r.sizeDelta / denominator;
+                    }
                 }
-                if (GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight)) {
-                    RecordSizeChangeUndo(rectTransform, joystick, joystick.controlStick, joystick.controlStick.rectTransform);
-                    rectTransform.sizeDelta -= rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                    joystick.controlStick.rectTransform.sizeDelta -= joystick.controlStick.rectTransform.sizeDelta / new Vector2(gcd, gcd);
-                }
+
                 GUILayout.EndHorizontal();
+                EditorGUI.EndChangeCheck();
             }
 
             ////Boundaries Stuff
@@ -158,9 +195,9 @@ namespace Terresquall {
             return result;
         }
 
-        void RecordSizeChangeUndo(params Object[] arguments) {
+        void RecordSizeChangeUndo(Object[] arguments) {
             for (int i = 0; i < arguments.Length; i++) {
-                Undo.RecordObject(arguments[i], "Undo Stuff");
+                Undo.RecordObject(arguments[i], "Undo Virtual Joystick Size Change");
             }
         }
     }
