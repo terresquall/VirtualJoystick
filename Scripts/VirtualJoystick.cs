@@ -24,13 +24,17 @@ namespace Terresquall {
         [Range(0,2)] public float radius = 0.7f;
         [Range(0,1)] public float deadzone = 0.3f;
 
-        [Tooltip("Joystick only snaps when at the edge")]
+        [Tooltip("Joystick automatically snaps to the edge when outside the deadzone.")]
         public bool edgeSnap;
         [Tooltip("Number of directions of the joystick. " +
             "\nKeep at 0 for a free joystick. " +
             "\nWorks best with multiples of 4")]
-        [Range(0,16)] public int directions = 0;
+        [Range(0,20)] public int directions = 0;
 
+        [Tooltip("Use this to adjust the angle that the directions are pointed towards.")]
+        public float angleOffset = 0;
+
+        [Tooltip("Snaps the joystick to wherever the finger is within a certain boundary.")]
         public bool snapsToTouch = false;
         public Rect boundaries;
 
@@ -129,21 +133,29 @@ namespace Terresquall {
             // and the center of the joystick.
             Vector2 diff = position - (Vector2)transform.position;
 
+            // Other variables needed for various functionalities.
+            float radius = GetRadius();
+            bool snapToEdge = edgeSnap && (diff / radius).magnitude > deadzone;
+
             // If no directions to snap to, joystick moves freely.
             if(directions <= 0) {
-                // Clamp the desired position within the radius.
-                desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff,GetRadius());
-            } else {
-                // calculate nearest snap directional vectors
-                Vector2 snapDirection = SnapDirection(diff.normalized,directions,360 / directions * Mathf.Deg2Rad);
-                if((diff / GetRadius()).magnitude > deadzone) {
-                    // Clamp the desired position within the radius and snapped to directional vector
-                    desiredPosition = (Vector2)transform.position + snapDirection * GetRadius();
-                } else if(!edgeSnap) {
-                    desiredPosition = position;
+                // If edge snap is on, it will always snap to the edge when outside of the deadzone.
+                if(snapToEdge) {
+                    desiredPosition = (Vector2)transform.position + diff.normalized * radius;
                 } else {
-                    // Snaps to directional vector within the magnitude of the input position and the joystick
-                    desiredPosition = (Vector2)transform.position + snapDirection * diff.magnitude;
+                    // Clamp the desired position within the radius.
+                    desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(diff,radius);
+                }
+            } else {
+                // Calculate nearest snap directional vectors
+                Vector2 snapDirection = SnapDirection(diff.normalized, directions, ((360f / directions) + angleOffset) * Mathf.Deg2Rad);
+                
+                // Do we snap to the edge outside of the deadzone?
+                if(snapToEdge) {
+                    // Snap to the edge if we are beyond the deadzone.
+                    desiredPosition = (Vector2)transform.position + snapDirection * radius;
+                } else {
+                    desiredPosition = (Vector2)transform.position + Vector2.ClampMagnitude(snapDirection * diff.magnitude, radius);
                 }
             }
         }
@@ -152,7 +164,7 @@ namespace Terresquall {
         private Vector2 SnapDirection(Vector2 vector,int directions,float symmetryAngle) {
             //Gets the line of symmetry between 2 snap directions
             Vector2 symmetryLine = new Vector2(Mathf.Cos(symmetryAngle),Mathf.Sin(symmetryAngle));
-
+            
             //Gets the angle between the joystick dir and the nearest snap dir
             float angle = Vector2.SignedAngle(symmetryLine,vector);
 
@@ -197,30 +209,6 @@ namespace Terresquall {
             if(!snapsToTouch) return new Rect(0,0,0,0);
             return new Rect(boundaries.x,boundaries.y,Screen.width * boundaries.width,Screen.height * boundaries.height);
         }
-
-#if UNITY_EDITOR
-        void OnDrawGizmosSelected() {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position,GetRadius());
-
-            if(GetBounds().size.sqrMagnitude > 0) {
-                // Draw the lines of the bounds.
-                Gizmos.color = Color.yellow;
-
-                // Get the 4 points in the bounds.
-                Vector3 a = new Vector3(boundaries.x,boundaries.y),
-                        b = new Vector3(boundaries.x,boundaries.y + Screen.height * boundaries.height),
-                        c = new Vector2(boundaries.x + Screen.width * boundaries.width,boundaries.y + Screen.height * boundaries.height),
-                        d = new Vector3(boundaries.x + Screen.width * boundaries.width,boundaries.y);
-                Gizmos.DrawLine(a,b);
-                Gizmos.DrawLine(b,c);
-                Gizmos.DrawLine(c,d);
-                Gizmos.DrawLine(d,a);
-            }
-
-            Gizmos.color = Color.green;
-        }
-#endif
 
         void OnEnable() {
 

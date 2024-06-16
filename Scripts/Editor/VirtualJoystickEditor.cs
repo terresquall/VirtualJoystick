@@ -53,24 +53,44 @@ namespace Terresquall {
             serializedObject.Update();
             SerializedProperty property = serializedObject.GetIterator();
             bool snapsToTouch = true;
+            int directions = 0;
             if (property.NextVisible(true)) {
                 do {
                     // If the property name is snapsToTouch, record its value.
                     switch(property.name) {
+                        case "m_Script":
+                            continue;
                         case "snapsToTouch":
                             snapsToTouch = property.boolValue;
                             break;
+                        case "directions":
+                            directions = property.intValue;
+                            break;
+                        case "boundaries":
+                            // If snapsToTouch is off, don't render boundaries.
+                            if(!snapsToTouch) continue;
+                            break;
+                        case "angleOffset":
+                            if(directions <= 0) continue;
+                            break;
                     }
 
-                    // Hide the boundaries attribute if snapsToTouch is off.
-                    if(property.name != "boundaries" || snapsToTouch) {
-                        EditorGUI.BeginChangeCheck();
+                    
+                    EditorGUI.BeginChangeCheck();
+
+                    // Print different properties based on what the property is.
+                    if(property.name == "angleOffset") {
+                        float maxAngleOffset = 360f / directions / 2;
+                        EditorGUILayout.Slider(property, -maxAngleOffset, maxAngleOffset, new GUIContent("Angle Offset"));
+                    } else {
                         EditorGUILayout.PropertyField(property, true);
-                        EditorGUI.EndChangeCheck();
                     }
+
+                    EditorGUI.EndChangeCheck();
                     
                 } while (property.NextVisible(false));
             }
+
             serializedObject.ApplyModifiedProperties();
 
             //Increase Decrease buttons
@@ -164,6 +184,50 @@ namespace Terresquall {
             //{
 
             //}
+        }
+
+        void OnSceneGUI() {
+
+            VirtualJoystick vj = (VirtualJoystick)target;
+
+            float radius = vj.GetRadius();
+
+            // Draw the radius of the joystick.
+            Handles.color = new Color(0, 1, 0, 0.1f);
+            Handles.DrawSolidArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius);
+            Handles.color = new Color(0, 1, 0, 0.5f);
+            Handles.DrawWireArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius, 3f);
+            
+            // Draw the deadzone.
+            Handles.color = new Color(1, 0, 0, 0.2f);
+            Handles.DrawSolidArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius * vj.deadzone);
+            Handles.color = new Color(1, 0, 0, 0.5f);
+            Handles.DrawWireArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius * vj.deadzone, 3f);
+
+            // Draw the boundaries of the joystick.
+            if(vj.GetBounds().size.sqrMagnitude > 0) {
+                // Draw the lines of the bounds.
+                Handles.color = Color.yellow;
+
+                // Get the 4 points in the bounds.
+                Vector3 a = new Vector3(vj.boundaries.x, vj.boundaries.y),
+                        b = new Vector3(vj.boundaries.x, vj.boundaries.y + Screen.height * vj.boundaries.height),
+                        c = new Vector2(vj.boundaries.x + Screen.width * vj.boundaries.width, vj.boundaries.y + Screen.height * vj.boundaries.height),
+                        d = new Vector3(vj.boundaries.x + Screen.width * vj.boundaries.width, vj.boundaries.y);
+                Handles.DrawLine(a,b);
+                Handles.DrawLine(b,c);
+                Handles.DrawLine(c,d);
+                Handles.DrawLine(d,a);
+            }
+
+            // Draw the direction anchors of the joystick.
+            if(vj.directions > 0) {
+                Handles.color = Color.blue;
+                float partition = 360f / vj.directions;
+                for(int i = 0; i < vj.directions;i++) {
+                    Handles.DrawLine(vj.transform.position, vj.transform.position + Quaternion.Euler(0,0,i*partition + vj.angleOffset) * Vector2.right * radius, 2f);
+                }
+            }
         }
 
         // Function to return gcd of a and b
