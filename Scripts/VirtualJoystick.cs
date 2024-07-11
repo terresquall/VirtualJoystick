@@ -62,7 +62,14 @@ namespace Terresquall {
         }
 
         public static float GetAxis(string axe,int index = 0) {
-            switch(axe.ToLower()) {
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0)
+            {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return 0;
+            }
+
+            switch (axe.ToLower()) {
                 case "horizontal":
                 case "h":
                 case "x":
@@ -76,27 +83,63 @@ namespace Terresquall {
         }
 
         public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
-        public static Vector2 GetAxisDelta(int index = 0) { return instances[index].GetAxisDelta(); }
+        public static Vector2 GetAxisDelta(int index = 0) {
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0)
+            {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return Vector2.zero;
+            }
+
+            return instances[index].GetAxisDelta();
+        }
 
         public Vector2 GetAxis() { return axis; }
-        public static Vector2 GetAxis(int index = 0) { return instances[index].axis; }
+        public static Vector2 GetAxis(int index = 0) {
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0)
+            {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return Vector2.zero;
+            }
+            
+            return instances[index].axis;
+        }
+
+        public Vector2 GetAxisRaw() { 
+            return new Vector2(
+                Mathf.Abs(axis.x) < deadzone || Mathf.Approximately(axis.x, 0) ? 0 : Mathf.Sign(axis.x),
+                Mathf.Abs(axis.y) < deadzone || Mathf.Approximately(axis.y, 0) ? 0 : Mathf.Sign(axis.y)
+            );
+        }
 
         public float GetAxisRaw(string axe) {
             float f = GetAxis(axe);
-            if(Mathf.Approximately(f,0))
+            if(Mathf.Abs(f) < deadzone || Mathf.Approximately(f, 0))
                 return 0;
             return Mathf.Sign(GetAxis(axe));
         }
 
         public static float GetAxisRaw(string axe,int index = 0) {
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0)
+            {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return 0;
+            }
+
             return instances[index].GetAxisRaw(axe);
         }
 
         public static Vector2 GetAxisRaw(int index = 0) {
-            return new Vector2(
-                Mathf.Approximately(instances[index].axis.x,0) ? 0 : Mathf.Sign(instances[index].axis.x),
-                Mathf.Approximately(instances[index].axis.y,0) ? 0 : Mathf.Sign(instances[index].axis.y)
-            );
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0)
+            {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return Vector2.zero;
+            }
+
+            return instances[index].GetAxisRaw();
         }
 
         // Get the radius of this joystick.
