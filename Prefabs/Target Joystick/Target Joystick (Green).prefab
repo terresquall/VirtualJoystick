@@ -31,6 +31,18 @@ PrefabInstance:
       propertyPath: m_Color.r
       value: 0.10715558
       objectReference: {fileID: 0}
+    - target: {fileID: 6478334016696817192, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
+      propertyPath: dragColor.b
+      value: 0.3432398
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478334016696817192, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
+      propertyPath: dragColor.g
+      value: 0.3490566
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478334016696817192, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
+      propertyPath: dragColor.r
+      value: 0.06421325
+      objectReference: {fileID: 0}
     - target: {fileID: 6478334016696817194, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
       propertyPath: m_Name
       value: Target Joystick (Green)

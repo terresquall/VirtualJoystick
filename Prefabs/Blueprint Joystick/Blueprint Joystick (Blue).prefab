@@ -262,9 +262,9 @@ MonoBehaviour:
   controlStick: {fileID: 9006759865050106148}
   consolePrintAxis: 0
   onlyOnMobile: 0
-  dragColor: {r: 0.7877358, g: 0.87079567, b: 1, a: 1}
+  dragColor: {r: 0.75725347, g: 0.79677755, b: 0.8584906, a: 1}
   sensitivity: 1000
-  radius: 1.5
+  radius: 1.02
   deadzone: 0.3
   edgeSnap: 0
   directions: 0

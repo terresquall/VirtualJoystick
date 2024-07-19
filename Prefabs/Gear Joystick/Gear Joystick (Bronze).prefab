@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6376737615793747658
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8933934339283967397, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.b
+      value: 0.21181916
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934339283967397, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.g
+      value: 0.2705719
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934339283967397, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5283019
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597584, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.b
+      value: 0.38848346
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597584, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.g
+      value: 0.4841427
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597584, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Color.r
+      value: 0.8490566
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 324.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 283
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597586, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597587, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: dragColor.b
+      value: 0.2009167
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597587, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: dragColor.g
+      value: 0.22852091
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597587, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: dragColor.r
+      value: 0.4056604
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933934340220597597, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}
+      propertyPath: m_Name
+      value: Gear Joystick (Bronze)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 615a68ffe011230458a2b4dbf20507e0, type: 3}

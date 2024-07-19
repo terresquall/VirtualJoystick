@@ -177,7 +177,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3946040331127602665, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
       propertyPath: m_Name
-      value: Neon Joystick (Pink) 1
+      value: Neon Joystick (Gradient 2)
       objectReference: {fileID: 0}
     - target: {fileID: 3946040331127602666, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
       propertyPath: m_Color.b
@@ -190,6 +190,18 @@ PrefabInstance:
     - target: {fileID: 3946040331127602666, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
       propertyPath: m_Color.r
       value: 0.13207549
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946040331127602667, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
+      propertyPath: dragColor.b
+      value: 0.2244171
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946040331127602667, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
+      propertyPath: dragColor.g
+      value: 0.16522783
+      objectReference: {fileID: 0}
+    - target: {fileID: 3946040331127602667, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
+      propertyPath: dragColor.r
+      value: 0.745283
       objectReference: {fileID: 0}
     - target: {fileID: 8262230449489958668, guid: 497419fdf622e964dbf674db0afd6e53, type: 3}
       propertyPath: m_Color.b

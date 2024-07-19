@@ -7,22 +7,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3027327767235569413, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3027327767235569413, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5645766
+      objectReference: {fileID: 0}
+    - target: {fileID: 3027327767235569413, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5080664515605925421, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Color.b
-      value: 0.4198113
+      value: 0.29363605
       objectReference: {fileID: 0}
     - target: {fileID: 5080664515605925421, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Color.g
-      value: 0.4373943
+      value: 0.26717696
       objectReference: {fileID: 0}
     - target: {fileID: 5080664515605925421, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.7169812
       objectReference: {fileID: 0}
     - target: {fileID: 7064127838881627780, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 2428b3141e8c1d84c9dc883a9900318e, type: 3}
+    - target: {fileID: 7064127838881627780, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627780, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627780, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7064127838881627785, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_Name
       value: Radar Joystick (Red)
@@ -110,6 +134,18 @@ PrefabInstance:
     - target: {fileID: 7064127838881627786, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627787, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: dragColor.b
+      value: 0.6273585
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627787, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: dragColor.g
+      value: 0.8819318
+      objectReference: {fileID: 0}
+    - target: {fileID: 7064127838881627787, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}
+      propertyPath: dragColor.r
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3409f4fccf0ad1c4b8b432b3acbbc653, type: 3}

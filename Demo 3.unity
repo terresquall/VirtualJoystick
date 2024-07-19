@@ -171,18 +171,6 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -229,10 +217,6 @@ PrefabInstance:
     - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33d4f7e7852d9624487190f6e0024b66, type: 3}
@@ -799,18 +783,6 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -857,10 +829,6 @@ PrefabInstance:
     - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6976567794599287015, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5b46798ccc119044dbb47c27cba00c90, type: 3}
@@ -1205,18 +1173,6 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1263,10 +1219,6 @@ PrefabInstance:
     - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6478334016696817195, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e941fbdace9b8b4419b7a007942ae747, type: 3}
