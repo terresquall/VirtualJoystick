@@ -4,13 +4,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
-
+using System.Linq;
 namespace Terresquall {
 
     [System.Serializable]
     [RequireComponent(typeof(Image),typeof(RectTransform))]
     public class VirtualJoystick:MonoBehaviour {
-
+        [Tooltip("The unique tooltip for this joystick. Needs to be unique.")]
+        public int ID;
         public Image controlStick;
 
         [Header("Debug")]
@@ -43,25 +44,48 @@ namespace Terresquall {
         internal Color originalColor; // Stores the original color of the Joystick.
         int currentPointerId = -2;
 
-        internal static List<VirtualJoystick> instances = new List<VirtualJoystick>();
+        internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
-        public const string VERSION = "1.0.3";
-        public const string DATE = "2 June 2024";
+        public const string VERSION = "1.0.6";
+        public const string DATE = "26 September 2024";
 
         Vector2Int lastScreen;
         Canvas canvas;
 
+        // Get an existing instance of a joystick.
+		public static VirtualJoystick GetInstance(int id = 0) {
+			// Display an error if an invalid ID is used.
+			if(!instances.ContainsKey(id)) {
+				// If used without any arguments, but no item has an ID of 0,
+                // we get the first item in the dictionary.
+				if(id == 0) {
+					if(instances.Count > 0)
+						id = instances.Keys.First();
+					else {
+						Debug.LogError("There are no Virtual Joysticks in the Scene!");
+						return null;
+					}
+				} else {
+					Debug.LogError($"Virtual Joystick ID '{id}' does not exist!");
+					return null;
+				}
+			}
+			
+			// If the code gets here, we can get and return an instance.
+			return instances[id];
+		}
+
         // Gets us the number of active joysticks on the screen.
         public static int CountActiveInstances() {
             int count = 0;
-            foreach(VirtualJoystick j in instances) {
-                if(j.isActiveAndEnabled)
+            foreach(KeyValuePair<int,VirtualJoystick> j in instances) {
+                if(j.Value.isActiveAndEnabled)
                     count++;
             }
             return count;
         }
 
-        public static float GetAxis(string axe,int index = 0) {
+        public static float GetAxis(string axe, int id = 0) {
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
@@ -73,37 +97,36 @@ namespace Terresquall {
                 case "horizontal":
                 case "h":
                 case "x":
-                    return instances[index].axis.x;
+                    return GetInstance(id).axis.x;
                 case "vertical":
                 case "v":
                 case "y":
-                    return instances[index].axis.y;
+                    return GetInstance(id).axis.y;
             }
             return 0;
         }
 
         public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
-        public static Vector2 GetAxisDelta(int index = 0) {
+        public static Vector2 GetAxisDelta(int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
+            if (instances.Count <= 0) {
                 Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
-            return instances[index].GetAxisDelta();
+            return GetInstance(id).GetAxisDelta();
         }
 
         public Vector2 GetAxis() { return axis; }
-        public static Vector2 GetAxis(int index = 0) {
+        public static Vector2 GetAxis(int id = 0) {
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return Vector2.zero;
             }
             
-            return instances[index].axis;
+            return GetInstance(id).axis;
         }
 
         public Vector2 GetAxisRaw() { 
@@ -120,18 +143,18 @@ namespace Terresquall {
             return Mathf.Sign(GetAxis(axe));
         }
 
-        public static float GetAxisRaw(string axe,int index = 0) {
+        public static float GetAxisRaw(string axe, int id = 0) {
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return 0;
             }
 
-            return instances[index].GetAxisRaw(axe);
+            return GetInstance(id).GetAxisRaw(axe);
         }
 
-        public static Vector2 GetAxisRaw(int index = 0) {
+        public static Vector2 GetAxisRaw(int id = 0) {
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
@@ -139,7 +162,7 @@ namespace Terresquall {
                 return Vector2.zero;
             }
 
-            return instances[index].GetAxisRaw();
+            return GetInstance(id).GetAxisRaw();
         }
 
         // Get the radius of this joystick.
@@ -288,7 +311,10 @@ namespace Terresquall {
             lastScreen = new Vector2Int(Screen.width,Screen.height);
 
             // Add this instance to the List.
-            instances.Insert(0,this);
+			if(!instances.ContainsKey(ID))
+				instances.Add(ID, this);
+			else
+				Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
         }
 
         // Added in Version 1.0.2.
@@ -301,7 +327,10 @@ namespace Terresquall {
         }
 
         void OnDisable() {
-            instances.Remove(this);
+			if(instances.ContainsKey(ID))
+				instances.Remove(ID);
+            else
+				Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
         }
 
         void Update() {

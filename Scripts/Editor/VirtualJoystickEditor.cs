@@ -1,20 +1,78 @@
 ﻿using UnityEngine;
 using UnityEditor;
-
+using System.Collections.Generic;
 namespace Terresquall {
     [CustomEditor(typeof(VirtualJoystick))]
-    public class VirtualJoystickEditor : Editor {    //    // Links to the script object.
+    [CanEditMultipleObjects]
+    public class VirtualJoystickEditor : Editor {
 
         VirtualJoystick joystick;
         RectTransform rectTransform;
         Canvas canvas;
 
         private int scaleFactor;
+        private static readonly List<int> usedIDs = new List<int>();
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
             canvas = joystick.GetComponentInParent<Canvas>();
+
+            // Generate a unique ID for this.
+            joystick.ID = FindObjectsOfType<VirtualJoystick>().Length + 1;
+            if(!HasUniqueID(joystick)) {
+                ReassignThisID(joystick);
+            }
+        }
+
+        // Does the passed joystick have an ID that is unique to itself?
+        bool HasUniqueID(VirtualJoystick vj) {
+            foreach(VirtualJoystick v in FindObjectsOfType<VirtualJoystick>()) {
+                if(v == vj) continue;
+                if(v.ID == vj.ID) return false;
+            }
+            return true;
+        }
+
+        // Is a given ID value already used by another joystick?
+        bool IsAvailableID(int id) {
+            foreach(VirtualJoystick v in FindObjectsOfType<VirtualJoystick>()) {
+                if(v.ID == id) return false;
+            }
+            return true;
+        }
+
+        // Do all the joysticks have unique IDs.
+        bool HasRepeatIDs() {
+            usedIDs.Clear();
+            foreach(VirtualJoystick vj in FindObjectsOfType<VirtualJoystick>()) {
+                if(usedIDs.Contains(vj.ID)) return true;
+                usedIDs.Add(vj.ID);
+            }
+            return false;
+        }
+
+        // Reassign all IDs for all Joysticks.
+        void ReassignAllIDs(VirtualJoystick exception = null) {
+            foreach(VirtualJoystick vj in FindObjectsOfType<VirtualJoystick>()) {
+                // Ignore joysticks that are already unique.
+                if(exception == vj || HasUniqueID(vj)) continue;
+                ReassignThisID(vj);
+            }
+        }
+
+        // Reassign the ID for this Joystick only.
+        void ReassignThisID(VirtualJoystick vj) {
+            VirtualJoystick[] joysticks = FindObjectsOfType<VirtualJoystick>();
+            for(int i = 0; i < joysticks.Length; i++) {
+                if(IsAvailableID(i)) {
+                    vj.ID = i; // If we find an unused ID, use it.
+                    return;
+                }
+            }
+
+            // If all of the IDs are used, we will have to use length + 1 as the ID.
+            vj.ID = joysticks.Length + 1;
         }
 
         override public void OnInspectorGUI() {
@@ -87,6 +145,23 @@ namespace Terresquall {
                     }
 
                     EditorGUI.EndChangeCheck();
+
+                    // If the property is an ID, show a button allowing us to reassign the IDs.
+                    if(property.name == "ID") {
+                        if(!HasUniqueID(joystick)) {
+                            EditorGUILayout.HelpBox("This Virtual Joystick doesn't have a unique ID. Please assign a unique ID or click on the button below.", MessageType.Warning);
+                            if(GUILayout.Button("Generate Unique Joystick ID")) {
+                                ReassignThisID(joystick);
+                            }
+                            EditorGUILayout.Space();
+                        } else if(HasRepeatIDs()) {
+                            EditorGUILayout.HelpBox("Some of your other Virtual Joysticks don't have unique IDs. Please regenerate the joystick IDs with the button below.", MessageType.Warning);
+                            if(GUILayout.Button("Regenerate All Joystick IDs")) {
+                                ReassignAllIDs(joystick);
+                            }
+                            EditorGUILayout.Space();
+                        }
+                    }
                     
                 } while (property.NextVisible(false));
             }
