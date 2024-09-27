@@ -17,12 +17,6 @@ namespace Terresquall {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
             canvas = joystick.GetComponentInParent<Canvas>();
-
-            // Generate a unique ID for this.
-            joystick.ID = FindObjectsOfType<VirtualJoystick>().Length + 1;
-            if(!HasUniqueID(joystick)) {
-                ReassignThisID(joystick);
-            }
         }
 
         // Does the passed joystick have an ID that is unique to itself?
@@ -155,10 +149,7 @@ namespace Terresquall {
                             }
                             EditorGUILayout.Space();
                         } else if(HasRepeatIDs()) {
-                            EditorGUILayout.HelpBox("Some of your other Virtual Joysticks don't have unique IDs. Please regenerate the joystick IDs with the button below.", MessageType.Warning);
-                            if(GUILayout.Button("Regenerate All Joystick IDs")) {
-                                ReassignAllIDs(joystick);
-                            }
+                            EditorGUILayout.HelpBox("At least one of your Virtual Joysticks don't have a unique ID. Please ensure that all of them have unique IDs, or they may not be able to collect input.", MessageType.Warning);
                             EditorGUILayout.Space();
                         }
                     }
