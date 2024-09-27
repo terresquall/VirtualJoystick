@@ -57,16 +57,23 @@ namespace Terresquall {
 
         // Reassign the ID for this Joystick only.
         void ReassignThisID(VirtualJoystick vj) {
+
+            // Save the action in the History.
+            Undo.RecordObject(vj, "Generate Unique Joystick ID");
+
+            // Get all joysticks so that we can check against it if the ID is valid.
             VirtualJoystick[] joysticks = FindObjectsOfType<VirtualJoystick>();
             for(int i = 0; i < joysticks.Length; i++) {
                 if(IsAvailableID(i)) {
                     vj.ID = i; // If we find an unused ID, use it.
+                    EditorUtility.SetDirty(vj);
                     return;
                 }
             }
 
             // If all of the IDs are used, we will have to use length + 1 as the ID.
-            vj.ID = joysticks.Length + 1;
+            vj.ID = joysticks.Length;
+            EditorUtility.SetDirty(vj);
         }
 
         override public void OnInspectorGUI() {
@@ -97,7 +104,7 @@ namespace Terresquall {
             }
 
             // Draw a help text box if this is not attached to a Canvas.
-            if(!canvas) {
+            if(!canvas && !EditorUtility.IsPersistent(target)) {
                 EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
             }
 
@@ -141,7 +148,7 @@ namespace Terresquall {
                     EditorGUI.EndChangeCheck();
 
                     // If the property is an ID, show a button allowing us to reassign the IDs.
-                    if(property.name == "ID") {
+                    if(property.name == "ID" && !EditorUtility.IsPersistent(target)) {
                         if(!HasUniqueID(joystick)) {
                             EditorGUILayout.HelpBox("This Virtual Joystick doesn't have a unique ID. Please assign a unique ID or click on the button below.", MessageType.Warning);
                             if(GUILayout.Button("Generate Unique Joystick ID")) {
@@ -149,7 +156,7 @@ namespace Terresquall {
                             }
                             EditorGUILayout.Space();
                         } else if(HasRepeatIDs()) {
-                            EditorGUILayout.HelpBox("At least one of your Virtual Joysticks don't have a unique ID. Please ensure that all of them have unique IDs, or they may not be able to collect input.", MessageType.Warning);
+                            EditorGUILayout.HelpBox("At least one of your Virtual Joysticks doesn't have a unique ID. Please ensure that all of them have unique IDs, or they may not be able to collect input properly.", MessageType.Warning);
                             EditorGUILayout.Space();
                         }
                     }

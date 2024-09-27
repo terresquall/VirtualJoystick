@@ -59,9 +59,10 @@ namespace Terresquall {
 				// If used without any arguments, but no item has an ID of 0,
                 // we get the first item in the dictionary.
 				if(id == 0) {
-					if(instances.Count > 0)
+					if(instances.Count > 0) {
 						id = instances.Keys.First();
-					else {
+                        Debug.LogWarning($"You are reading Joystick input without specifying an ID, so joystick ID {id} is being used instead.");
+                    } else {
 						Debug.LogError("There are no Virtual Joysticks in the Scene!");
 						return null;
 					}
@@ -281,6 +282,7 @@ namespace Terresquall {
             // If we are not on mobile, and this is mobile only, disable.
             if(!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
+                Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
                 return;
             }
 
@@ -288,7 +290,7 @@ namespace Terresquall {
             canvas = GetComponentInParent<Canvas>();
             if(!canvas) {
                 Debug.LogError(
-                    string.Format("Your Virtual Joystick ({0}) is not attached to a Canvas, so it won't work. It has been disabled.", name),
+                    $"Your Virtual Joystick \"{name})\" is not attached to a Canvas, so it won't work. It has been disabled.",
                     gameObject
                 );
                 enabled = false;

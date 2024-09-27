@@ -183,15 +183,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f9ac44728580c41ad91debed290eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 0
   controlStick: {fileID: 8834734169634807594}
   consolePrintAxis: 0
-  onlyOnMobile: 1
+  onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000
   radius: 1
   deadzone: 0.3
   edgeSnap: 1
   directions: 4
+  angleOffset: 0
   snapsToTouch: 0
   boundaries:
     serializedVersion: 2

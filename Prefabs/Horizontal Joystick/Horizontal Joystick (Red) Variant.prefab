@@ -130,7 +130,12 @@ PrefabInstance:
     - target: {fileID: 7639772507816949197, guid: 214483bf533d14249aadd4dbf67ed3d0,
         type: 3}
       propertyPath: m_Name
-      value: Horizontal Joystick (Red)
+      value: Horizontal Joystick (Red) Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 7639772507816949199, guid: 214483bf533d14249aadd4dbf67ed3d0,
+        type: 3}
+      propertyPath: ID
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7639772507816949199, guid: 214483bf533d14249aadd4dbf67ed3d0,
         type: 3}

@@ -182,6 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f9ac44728580c41ad91debed290eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 0
   controlStick: {fileID: 6557345171777269625}
   consolePrintAxis: 0
   onlyOnMobile: 0
