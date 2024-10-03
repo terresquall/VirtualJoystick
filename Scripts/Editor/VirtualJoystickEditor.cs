@@ -173,6 +173,12 @@ namespace Terresquall {
                     EditorGUILayout.HelpBox("There is no Control Stick assigned. This joystick won't work.", MessageType.Warning);
                     return;
                 }
+                
+                if (!joystick.controlStick.transform.IsChildOf(joystick.transform))
+                {
+                    EditorGUILayout.HelpBox("The control stick of this joystick is not a child of this joystick.", MessageType.Warning);
+                    return;
+                } 
 
                 // Add the heading for the size adjustments.
                 EditorGUI.BeginChangeCheck();
