@@ -12,17 +12,24 @@ namespace Terresquall {
     public class VirtualJoystick:MonoBehaviour {
         [Tooltip("The unique tooltip for this joystick. Needs to be unique.")]
         public int ID;
+        [Tooltip("The component that the user will drag around for joystick input.")]
         public Image controlStick;
 
         [Header("Debug")]
+        [Tooltip("Prints to the console the control stick's direction within the joystick.")]
         public bool consolePrintAxis = false;
 
         [Header("Settings")]
+        [Tooltip("Disables the joystick if not on a mobile platform.")]
         public bool onlyOnMobile = true;
+        [Tooltip("Colour of the control stick while it is being dragged.")]
         public Color dragColor = new Color(0.9f,0.9f,0.9f,1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
+        [Tooltip("How responsive the control stick is to dragging.")]
         public float sensitivity = 2f;
+        [Tooltip("How far you can drag the control stick away from the joystick's centre.")]
         [Range(0,2)] public float radius = 0.7f;
+        [Tooltip("How far must you drag the control stick from the joystick's centre before it registers input")]
         [Range(0,1)] public float deadzone = 0.3f;
 
         [Tooltip("Joystick automatically snaps to the edge when outside the deadzone.")]
