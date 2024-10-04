@@ -11,6 +11,7 @@ namespace Terresquall {
         Canvas canvas;
 
         private int scaleFactor;
+        private bool onlyNewInputSystem = false;
         private static readonly List<int> usedIDs = new List<int>();
 
         void OnEnable() {
@@ -77,12 +78,15 @@ namespace Terresquall {
         }
 
         override public void OnInspectorGUI() {
-
-            // Show an error text box if the new Input System is being used.
+            // Check if the new input system has replaced the old one.
             try {
                 Vector2 v = Input.mousePosition;
-            } catch(System.InvalidOperationException e) {
+            } catch {
 
+                onlyNewInputSystem = true;
+
+                /* Commented out since the new Input System has been given support
+                //catch(System.InvalidOperationException e)
                 Texture2D icon = EditorGUIUtility.Load("icons/console.erroricon.png") as Texture2D;
 
                 // Create a horizontal layout for the icon and text
@@ -100,11 +104,12 @@ namespace Terresquall {
                     GUILayout.Label("<b>This component does not work with the new Input System.</b> You will need to re-enable the old Input System by going to <b>Project Settings > Player > Other Settings > Active Input Handling</b> and selecting <b>Both</b>.", ts);
                     Debug.LogWarning(e.Message, this);
                 }
-                GUILayout.EndHorizontal();
+                GUILayout.EndHorizontal();*/
             }
 
+
             // Draw a help text box if this is not attached to a Canvas.
-            if(!canvas && !EditorUtility.IsPersistent(target)) {
+            if (!canvas && !EditorUtility.IsPersistent(target)) {
                 EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
             }
 
@@ -119,6 +124,9 @@ namespace Terresquall {
                     switch(property.name) {
                         case "m_Script":
                             continue;
+                        case "useNewInputSystem":
+                            if (onlyNewInputSystem) continue;
+                            break;
                         case "snapsToTouch":
                             snapsToTouch = property.boolValue;
                             break;

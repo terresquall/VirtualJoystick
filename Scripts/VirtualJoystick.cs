@@ -2,9 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+#if ENABLE_INPUT_SYSTEM
+    using UnityEngine.InputSystem;
+    using UnityEngine.InputSystem.EnhancedTouch;
+#endif
+
 using UnityEngine.UI;
 using System;
 using System.Linq;
+
 namespace Terresquall {
 
     [System.Serializable]
@@ -18,6 +25,21 @@ namespace Terresquall {
         [Header("Debug")]
         [Tooltip("Prints to the console the control stick's direction within the joystick.")]
         public bool consolePrintAxis = false;
+
+        // Checks whether the Input System Package is installed, and whether you've set the active input handling to:
+        // Both, New Input System Only, Or the Old Input Manager.
+        #if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
+            [Header("Input System Handling")]
+            [Tooltip("Use the new input system for this joystick?")]
+            public bool useNewInputSystem = true;
+        #elif ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+            [HideInInspector]
+            private bool useNewInputSystem = true;
+        #else
+            [HideInInspector]
+            private bool useNewInputSystem = false;
+        #endif
+
 
         [Header("Settings")]
         [Tooltip("Disables the joystick if not on a mobile platform.")]
@@ -285,9 +307,11 @@ namespace Terresquall {
         }
 
         void OnEnable() {
-
+            #if ENABLE_INPUT_SYSTEM
+            EnhancedTouchSupport.Enable();
+            #endif
             // If we are not on mobile, and this is mobile only, disable.
-            if(!Application.isMobilePlatform && onlyOnMobile) {
+            if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
                 Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
                 return;
@@ -302,7 +326,7 @@ namespace Terresquall {
                 );
                 enabled = false;
             }
-
+            /*
             // If the old input system does not exist, print an error message.
             try {
                 Vector2 v = Input.mousePosition;
@@ -310,7 +334,7 @@ namespace Terresquall {
                 enabled = false;
                 Debug.LogError("The Virtual Joystick will not work because the old Input system is not available. Please enable it by going to Project Settings > Player > Other Settings > Active Input Handling and setting it to Both.", this);
             }
-
+            */
             origin = desiredPosition = transform.position;
             StartCoroutine(Activate());
             originalColor = controlStick.color;
@@ -336,38 +360,31 @@ namespace Terresquall {
         }
 
         void OnDisable() {
-			if(instances.ContainsKey(ID))
+            #if ENABLE_INPUT_SYSTEM
+            EnhancedTouchSupport.Disable();
+            #endif
+            if (instances.ContainsKey(ID))
 				instances.Remove(ID);
             else
 				Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
         }
 
         void Update() {
-            PositionUpdate();
-            
-            // If the screen has changed, reset the joystick.
-            if(lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
-                lastScreen = new Vector2Int(Screen.width,Screen.height);
-                OnEnable();
+            #if ENABLE_INPUT_SYSTEM
+            if (useNewInputSystem) //Toggles between the new and old input systems if 'Both' are used for input handling.
+            {
+                PositionUpdateInputSystem();
+                CheckForDragInputSystem();
             }
-
-            // If the currentPointerId > -2, we are being dragged.
-            if(currentPointerId > -2) {
-                // If this is more than -1, the Joystick is manipulated by touch.
-                if(currentPointerId > -1) {
-                    // We need to loop through all touches to find the one we want.
-                    for(int i = 0;i < Input.touchCount;i++) {
-                        Touch t = Input.GetTouch(i);
-                        if(t.fingerId == currentPointerId) {
-                            SetPosition(t.position);
-                            break;
-                        }
-                    }
-                } else {
-                    // Otherwise, we are being manipulated by the mouse position.
-                    SetPosition(Input.mousePosition);
-                }
+            else
+            {
+                PositionUpdate();
+                CheckForDrag();
             }
+            #else
+                PositionUpdate();
+                CheckForDrag();
+            #endif
 
             // Record the last axis value before we update.
             // For calculating GetAxisDelta().
@@ -424,15 +441,77 @@ namespace Terresquall {
             return false;
         }
 
-        void PositionUpdate() {
+        void CheckForDrag() //Used if using the old Input Manager
+        {
+            // If the screen has changed, reset the joystick.
+            if (lastScreen.x != Screen.width || lastScreen.y != Screen.height)
+            {
+                lastScreen = new Vector2Int(Screen.width, Screen.height);
+                OnEnable();
+            }
 
+            // If the currentPointerId > -2, we are being dragged.
+            if (currentPointerId > -2)
+            {
+                // If this is more than -1, the Joystick is manipulated by touch.
+                if (currentPointerId > -1)
+                {
+                    // We need to loop through all touches to find the one we want.
+                    for (int i = 0; i < Input.touchCount; i++)
+                    {
+                        UnityEngine.Touch t = Input.GetTouch(i);
+                        if (t.fingerId == currentPointerId)
+                        {
+                            SetPosition(t.position);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Otherwise, we are being manipulated by the mouse position.
+                    SetPosition(Input.mousePosition);
+                }
+            }
+        }
+
+        void CheckForDragInputSystem() //Used if using the new Input System
+        {
+            #if ENABLE_INPUT_SYSTEM
+            // If the currentPointerId > -2, we are being dragged.
+            if (currentPointerId > -2)
+            {
+                // If this is more than -1, the Joystick is manipulated by touch.
+                if (currentPointerId > -1)
+                {
+                    // We need to loop through all touches to find the one we want.
+                    for (int i = 0; i < UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count; i++)
+                    {
+                        UnityEngine.InputSystem.EnhancedTouch.Touch t = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[i];
+                        if (t.finger.index == currentPointerId)
+                        {
+                            SetPosition(t.screenPosition);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    // Otherwise, we are being manipulated by the mouse position.
+                    SetPosition(Mouse.current.position.ReadValue());
+                }
+            }
+            #endif
+        }
+
+        void PositionUpdate() { //Used if using the old Input Manager
             // Handle the joystick interaction on Touch.
             if(Input.touchCount > 0) {
                 // Also detect touch events too.
                 for(int i = 0;i < Input.touchCount;i++) {
-                    Touch t = Input.GetTouch(i);
+                    UnityEngine.Touch t = Input.GetTouch(i);
                     switch(t.phase) {
-                        case TouchPhase.Began:
+                        case UnityEngine.TouchPhase.Began:
 
                             CheckForInteraction(t.position,t.fingerId);
 
@@ -445,8 +524,8 @@ namespace Terresquall {
                                 }
                             }
                             break;
-                        case TouchPhase.Ended:
-                        case TouchPhase.Canceled:
+                        case UnityEngine.TouchPhase.Ended:
+                        case UnityEngine.TouchPhase.Canceled:
                             if(currentPointerId == t.fingerId)
                                 OnPointerUp(new PointerEventData(null));
                             break;
@@ -470,6 +549,72 @@ namespace Terresquall {
             if(Input.GetMouseButtonUp(0) && currentPointerId == -1) {
                 OnPointerUp(new PointerEventData(null));
             }
+        }
+
+        void PositionUpdateInputSystem() //Used if using the new Input System
+        {
+            #if ENABLE_INPUT_SYSTEM
+            // Handle the joystick interaction on Touch.
+            if (Application.isMobilePlatform)
+            {
+                if (UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count > 0)
+                {
+                    // Also detect touch events too.
+                    for (int i = 0; i < UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count; i++)
+                    {
+                        UnityEngine.InputSystem.EnhancedTouch.Touch t = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[i];
+                        switch (t.phase)
+                        {
+                            case UnityEngine.InputSystem.TouchPhase.Began:
+
+                                CheckForInteraction(t.screenPosition, t.finger.index);
+
+                                // If currentPointerId < -1, it means this is the first frame we were
+                                // clicked on. Check if we need to Uproot().
+                                if (currentPointerId < -1)
+                                {
+                                    if (GetBounds().Contains(t.screenPosition))
+                                    {
+                                        Uproot(t.screenPosition, t.finger.index);
+                                        return;
+                                    }
+                                }
+                                break;
+                            case UnityEngine.InputSystem.TouchPhase.Ended:
+                            case UnityEngine.InputSystem.TouchPhase.Canceled:
+                                if (currentPointerId == t.finger.index)
+                                    OnPointerUp(new PointerEventData(null));
+                                break;
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                if (Mouse.current.leftButton.wasPressedThisFrame)
+                {
+                    // Checks if our Joystick is being clicked on.
+                    CheckForInteraction(Mouse.current.position.ReadValue(), -1);
+
+                    // If currentPointerId < -1, it means this is the first frame we were
+                    // clicked on. Check if we need to Uproot().
+                    if (currentPointerId < -1)
+                    {
+                        if (GetBounds().Contains(Mouse.current.position.ReadValue()))
+                        {
+                            Uproot(Mouse.current.position.ReadValue());
+                        }
+                    }
+                }
+
+                // Trigger OnPointerUp() when we release the button.
+                if (Mouse.current.leftButton.wasReleasedThisFrame && currentPointerId == -1)
+                {
+                    OnPointerUp(new PointerEventData(null));
+                }
+            }
+            #endif
         }
 
         // Roots the joystick to a new position.
