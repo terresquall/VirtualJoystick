@@ -86,27 +86,6 @@ namespace Terresquall {
             return count;
         }
 
-        public static float GetAxis(string axe, int id = 0) {
-            // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
-                return 0;
-            }
-
-            switch (axe.ToLower()) {
-                case "horizontal":
-                case "h":
-                case "x":
-                    return GetInstance(id).axis.x;
-                case "vertical":
-                case "v":
-                case "y":
-                    return GetInstance(id).axis.y;
-            }
-            return 0;
-        }
-
         public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
         public static Vector2 GetAxisDelta(int id = 0) {
             // Show an error if no joysticks are found.
@@ -119,10 +98,34 @@ namespace Terresquall {
         }
 
         public Vector2 GetAxis() { return axis; }
+
+        public float GetAxis(string axe) {
+            switch (axe.ToLower()) {
+                case "horizontal":
+                case "h":
+                case "x":
+                    return axis.x;
+                case "vertical":
+                case "v":
+                case "y":
+                    return axis.y;
+            }
+            return 0;
+        }
+
+        public static float GetAxis(string axe, int id = 0) {
+            // Show an error if no joysticks are found.
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                return 0;
+            }
+
+            return GetInstance(id).GetAxis(axe);
+        }
+
         public static Vector2 GetAxis(int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
+            if (instances.Count <= 0) {
                 Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return Vector2.zero;
             }
@@ -141,7 +144,7 @@ namespace Terresquall {
             float f = GetAxis(axe);
             if(Mathf.Abs(f) < deadzone || Mathf.Approximately(f, 0))
                 return 0;
-            return Mathf.Sign(GetAxis(axe));
+            return Mathf.Sign(f);
         }
 
         public static float GetAxisRaw(string axe, int id = 0) {
