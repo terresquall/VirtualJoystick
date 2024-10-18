@@ -13,6 +13,7 @@ namespace Terresquall {
         private int scaleFactor;
         private bool onlyNewInputSystem = false;
         private static readonly List<int> usedIDs = new List<int>();
+        private string inputSystemNamespace = "UnityEngine.InputSystem"; // New Input System namespace 
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
@@ -76,6 +77,32 @@ namespace Terresquall {
             vj.ID = joysticks.Length;
             EditorUtility.SetDirty(vj);
         }
+        
+        // Checks whether the InputSystem namespace is available (i.e. New Input System installed)
+        private bool IsNamespaceAvailable(string namespaceName)
+        {
+            // Try to find a type in the specified namespace
+            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                try
+                {
+                    var types = assembly.GetTypes();
+                    foreach (var type in types)
+                    {
+                        if (type.Namespace == namespaceName)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                catch
+                {
+                    // Handle exceptions for assemblies that can't be inspected
+                }
+            }
+            return false;
+        }
 
         override public void OnInspectorGUI() {
             // Check if the new input system has replaced the old one.
@@ -107,6 +134,21 @@ namespace Terresquall {
                 GUILayout.EndHorizontal();*/
             }
 
+            // Gives a status update on the input system, and what input handling is used
+            if (!IsNamespaceAvailable(inputSystemNamespace))
+            {
+                EditorGUILayout.HelpBox("New Input System Installed? - No. Using Old Input System",MessageType.Info);
+            }
+            else
+            {
+                #if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
+                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using Both New and Old Input System", MessageType.Info);
+                #elif ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using New Input System Only", MessageType.Info);
+                #else
+                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using Old Input System", MessageType.Info);
+                #endif
+            }
 
             // Draw a help text box if this is not attached to a Canvas.
             if (!canvas && !EditorUtility.IsPersistent(target)) {
