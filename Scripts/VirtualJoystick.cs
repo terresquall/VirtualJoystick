@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-#if ENABLE_INPUT_SYSTEM
-    using UnityEngine.InputSystem;
-    using UnityEngine.InputSystem.EnhancedTouch;
-#endif
-
 using UnityEngine.UI;
 using System;
 using System.Linq;
+#if ENABLE_INPUT_SYSTEM
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
+#endif
 
 namespace Terresquall {
 
     [System.Serializable]
     [RequireComponent(typeof(Image),typeof(RectTransform))]
     public class VirtualJoystick:MonoBehaviour {
-        [Tooltip("The unique tooltip for this joystick. Needs to be unique.")]
+
+        [Tooltip("The unique ID for this joystick. Needs to be unique.")]
         public int ID;
         [Tooltip("The component that the user will drag around for joystick input.")]
         public Image controlStick;
@@ -26,20 +25,26 @@ namespace Terresquall {
         [Tooltip("Prints to the console the control stick's direction within the joystick.")]
         public bool consolePrintAxis = false;
 
-        // Checks whether the Input System Package is installed, and whether you've set the active input handling to:
-        // Both, New Input System Only, Or the Old Input Manager.
-        #if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
-            [Header("Input System Handling")]
-            [Tooltip("Use the new input system for this joystick?")]
-            public bool useNewInputSystem = true;
-        #elif ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
-            [HideInInspector]
-            private bool useNewInputSystem = true;
-        #else
-            [HideInInspector]
-            private bool useNewInputSystem = false;
-        #endif
+        public enum InputMode { oldInputManager, newInputSystem };
+        public InputMode inputMode;
 
+        // Function to get an input mode. This is determined by which input system is
+        // enabled, or if both input systems are on, on what the user sets.
+        public InputMode GetInputMode() {
+#if ENABLE_INPUT_SYSTEM
+            EnhancedTouchSupport.Enable();
+    #if ENABLE_LEGACY_INPUT_MANAGER
+            return inputMode;
+    #else
+            return InputMode.newInputSystem;
+    #endif
+#else
+            return InputMode.oldInputManager;
+#endif
+        }
+
+        // Static version of the function for convenience.
+        public static InputMode GetInputMode(int id = 0) { return GetInstance(id).GetInputMode(); }
 
         [Header("Settings")]
         [Tooltip("Disables the joystick if not on a mobile platform.")]
@@ -310,9 +315,6 @@ namespace Terresquall {
         }
 
         void OnEnable() {
-            #if ENABLE_INPUT_SYSTEM
-            EnhancedTouchSupport.Enable();
-            #endif
             // If we are not on mobile, and this is mobile only, disable.
             if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
@@ -329,15 +331,7 @@ namespace Terresquall {
                 );
                 enabled = false;
             }
-            /*
-            // If the old input system does not exist, print an error message.
-            try {
-                Vector2 v = Input.mousePosition;
-            } catch(System.InvalidOperationException) {
-                enabled = false;
-                Debug.LogError("The Virtual Joystick will not work because the old Input system is not available. Please enable it by going to Project Settings > Player > Other Settings > Active Input Handling and setting it to Both.", this);
-            }
-            */
+
             origin = desiredPosition = transform.position;
             StartCoroutine(Activate());
             originalColor = controlStick.color;
@@ -363,9 +357,6 @@ namespace Terresquall {
         }
 
         void OnDisable() {
-            #if ENABLE_INPUT_SYSTEM
-            EnhancedTouchSupport.Disable();
-            #endif
             if (instances.ContainsKey(ID))
 				instances.Remove(ID);
             else
@@ -373,22 +364,9 @@ namespace Terresquall {
         }
 
         void Update() {
-            #if ENABLE_INPUT_SYSTEM
-            if (useNewInputSystem) //Toggles between the new and old input systems if 'Both' are used for input handling.
-            {
-                PositionUpdateInputSystem();
-                CheckForDragInputSystem();
-            }
-            else
-            {
-                PositionUpdate();
-                CheckForDrag();
-            }
-            #else
-                PositionUpdate();
-                CheckForDrag();
-            #endif
-
+            PositionUpdate();
+            CheckForDrag();
+        
             // Record the last axis value before we update.
             // For calculating GetAxisDelta().
             lastAxis = axis;
@@ -433,88 +411,43 @@ namespace Terresquall {
             }
         }
 
-        // Utility method to check if <hitObject> is <target> or its children.
-        // Used by CheckForInteraction().
-        bool IsGameObjectOrChild(GameObject hitObject, GameObject target) {
-            if (hitObject == target) return true;
-
-            foreach (Transform child in target.transform)
-                if (IsGameObjectOrChild(hitObject, child.gameObject)) return true;
-            
-            return false;
-        }
-
-        void CheckForDrag() //Used if using the old Input Manager
-        {
+        void CheckForDrag() { // Used if using the old Input Manager
             // If the screen has changed, reset the joystick.
-            if (lastScreen.x != Screen.width || lastScreen.y != Screen.height)
-            {
+            if (lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
                 lastScreen = new Vector2Int(Screen.width, Screen.height);
                 OnEnable();
             }
 
             // If the currentPointerId > -2, we are being dragged.
-            if (currentPointerId > -2)
-            {
+            if (currentPointerId > -2) {
                 // If this is more than -1, the Joystick is manipulated by touch.
-                if (currentPointerId > -1)
-                {
+                if (currentPointerId > -1) {
+
                     // We need to loop through all touches to find the one we want.
-                    for (int i = 0; i < Input.touchCount; i++)
-                    {
-                        UnityEngine.Touch t = Input.GetTouch(i);
-                        if (t.fingerId == currentPointerId)
-                        {
+                    for (int i = 0; i < GetTouchCount(ID); i++) {
+                        Touch t = GetTouch(i, ID);
+                        if (t.fingerId == currentPointerId) {
                             SetPosition(t.position);
                             break;
                         }
                     }
-                }
-                else
-                {
-                    // Otherwise, we are being manipulated by the mouse position.
-                    SetPosition(Input.mousePosition);
-                }
-            }
-        }
 
-        void CheckForDragInputSystem() //Used if using the new Input System
-        {
-            #if ENABLE_INPUT_SYSTEM
-            // If the currentPointerId > -2, we are being dragged.
-            if (currentPointerId > -2)
-            {
-                // If this is more than -1, the Joystick is manipulated by touch.
-                if (currentPointerId > -1)
-                {
-                    // We need to loop through all touches to find the one we want.
-                    for (int i = 0; i < UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count; i++)
-                    {
-                        UnityEngine.InputSystem.EnhancedTouch.Touch t = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[i];
-                        if (t.finger.index == currentPointerId)
-                        {
-                            SetPosition(t.screenPosition);
-                            break;
-                        }
-                    }
-                }
-                else
-                {
+                } else {
                     // Otherwise, we are being manipulated by the mouse position.
-                    SetPosition(Mouse.current.position.ReadValue());
+                    SetPosition(GetMousePosition(ID));
                 }
             }
-            #endif
         }
 
         void PositionUpdate() { //Used if using the old Input Manager
             // Handle the joystick interaction on Touch.
-            if(Input.touchCount > 0) {
+            int touchCount = GetTouchCount(ID);
+            if(touchCount > 0) {
                 // Also detect touch events too.
-                for(int i = 0;i < Input.touchCount;i++) {
-                    UnityEngine.Touch t = Input.GetTouch(i);
+                for(int i = 0;i < touchCount;i++) {
+                    Touch t = GetTouch(i, ID);
                     switch(t.phase) {
-                        case UnityEngine.TouchPhase.Began:
+                        case Touch.Phase.Began:
 
                             CheckForInteraction(t.position,t.fingerId);
 
@@ -527,97 +460,32 @@ namespace Terresquall {
                                 }
                             }
                             break;
-                        case UnityEngine.TouchPhase.Ended:
-                        case UnityEngine.TouchPhase.Canceled:
+                        case Touch.Phase.Ended:
+                        case Touch.Phase.Canceled:
                             if(currentPointerId == t.fingerId)
                                 OnPointerUp(new PointerEventData(null));
                             break;
                     }
                 }
 
-            } else if(Input.GetMouseButtonDown(0)) {
+            } else if(GetMouseButtonDown(0)) {
                 // Checks if our Joystick is being clicked on.
-                CheckForInteraction(Input.mousePosition, -1);
+                Vector2 mousePos = GetMousePosition(ID);
+                CheckForInteraction(mousePos, -1);
 
                 // If currentPointerId < -1, it means this is the first frame we were
                 // clicked on. Check if we need to Uproot().
                 if(currentPointerId < -1) {
-                    if(GetBounds().Contains(Input.mousePosition)) {
-                        Uproot(Input.mousePosition);
+                    if(GetBounds().Contains(mousePos)) {
+                        Uproot(mousePos);
                     }
                 }
             }
 
             // Trigger OnPointerUp() when we release the button.
-            if(Input.GetMouseButtonUp(0) && currentPointerId == -1) {
+            if(GetMouseButtonUp(0, ID) && currentPointerId == -1) {
                 OnPointerUp(new PointerEventData(null));
             }
-        }
-
-        void PositionUpdateInputSystem() //Used if using the new Input System
-        {
-            #if ENABLE_INPUT_SYSTEM
-            // Handle the joystick interaction on Touch.
-            if (Application.isMobilePlatform)
-            {
-                if (UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count > 0)
-                {
-                    // Also detect touch events too.
-                    for (int i = 0; i < UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count; i++)
-                    {
-                        UnityEngine.InputSystem.EnhancedTouch.Touch t = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[i];
-                        switch (t.phase)
-                        {
-                            case UnityEngine.InputSystem.TouchPhase.Began:
-
-                                CheckForInteraction(t.screenPosition, t.finger.index);
-
-                                // If currentPointerId < -1, it means this is the first frame we were
-                                // clicked on. Check if we need to Uproot().
-                                if (currentPointerId < -1)
-                                {
-                                    if (GetBounds().Contains(t.screenPosition))
-                                    {
-                                        Uproot(t.screenPosition, t.finger.index);
-                                        return;
-                                    }
-                                }
-                                break;
-                            case UnityEngine.InputSystem.TouchPhase.Ended:
-                            case UnityEngine.InputSystem.TouchPhase.Canceled:
-                                if (currentPointerId == t.finger.index)
-                                    OnPointerUp(new PointerEventData(null));
-                                break;
-                        }
-                    }
-
-                }
-            }
-            else
-            {
-                if (Mouse.current.leftButton.wasPressedThisFrame)
-                {
-                    // Checks if our Joystick is being clicked on.
-                    CheckForInteraction(Mouse.current.position.ReadValue(), -1);
-
-                    // If currentPointerId < -1, it means this is the first frame we were
-                    // clicked on. Check if we need to Uproot().
-                    if (currentPointerId < -1)
-                    {
-                        if (GetBounds().Contains(Mouse.current.position.ReadValue()))
-                        {
-                            Uproot(Mouse.current.position.ReadValue());
-                        }
-                    }
-                }
-
-                // Trigger OnPointerUp() when we release the button.
-                if (Mouse.current.leftButton.wasReleasedThisFrame && currentPointerId == -1)
-                {
-                    OnPointerUp(new PointerEventData(null));
-                }
-            }
-            #endif
         }
 
         // Roots the joystick to a new position.
@@ -635,6 +503,119 @@ namespace Terresquall {
             data.position = newPos;
             data.pointerId = newPointerId;
             OnPointerDown(data);
+        }
+
+        // Utility method to check if <hitObject> is <target> or its children.
+        // Used by CheckForInteraction().
+        bool IsGameObjectOrChild(GameObject hitObject, GameObject target) {
+            if (hitObject == target) return true;
+
+            foreach (Transform child in target.transform)
+                if (IsGameObjectOrChild(hitObject, child.gameObject)) return true;
+            
+            return false;
+        }
+
+        // Get the mouse position. The function automatically adapts
+        // depending on the input system used.
+        static Vector2 GetMousePosition(int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    return Mouse.current.position.ReadValue();
+            }
+
+            // Default to the old input system.
+            return Input.mousePosition;
+        }
+
+        static bool GetMouseButton(int buttonId, int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    switch(buttonId) {
+                        case 0:
+                            return Mouse.current.leftButton.isPressed;
+                        case 1:
+                            return Mouse.current.rightButton.isPressed;
+                        case 2:
+                            return Mouse.current.middleButton.isPressed;
+                    }
+                    return false;
+            }
+
+            // Default to the old input system.
+            return Input.GetMouseButton(buttonId);
+        }
+
+        static bool GetMouseButtonDown(int buttonId, int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    switch(buttonId) {
+                        case 0:
+                            return Mouse.current.leftButton.wasPressedThisFrame;
+                        case 1:
+                            return Mouse.current.rightButton.wasPressedThisFrame;
+                        case 2:
+                            return Mouse.current.middleButton.wasPressedThisFrame;
+                    }
+                    return false;
+            }
+
+            // Default to the old input system.
+            return Input.GetMouseButtonDown(buttonId);
+        }
+
+        static bool GetMouseButtonUp(int buttonId, int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    switch(buttonId) {
+                        case 0:
+                            return Mouse.current.leftButton.wasReleasedThisFrame;
+                        case 1:
+                            return Mouse.current.rightButton.wasReleasedThisFrame;
+                        case 2:
+                            return Mouse.current.middleButton.wasReleasedThisFrame;
+                    }
+                    return false;
+            }
+
+            // Default to the old input system.
+            return Input.GetMouseButtonUp(buttonId);
+        }
+
+        // Nested touch class to manage both kinds of touch.
+        public class Touch {
+            public Vector2 position;
+            public int fingerId = -1;
+            public enum Phase { None, Began, Moved, Stationary, Ended, Canceled }
+            public Phase phase = Phase.None;
+        }
+
+        static Touch GetTouch(int touchId, int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    UnityEngine.InputSystem.EnhancedTouch.Touch nt = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[touchId];
+                    return new Touch {
+                        position = nt.screenPosition, fingerId = nt.finger.index,
+                        phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), nt.phase.ToString())
+                    };
+            }
+
+            // Default to the old input system.
+            UnityEngine.Touch t = Input.GetTouch(touchId);
+            return new Touch {
+                position = t.position, fingerId = t.fingerId,
+                phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), t.phase.ToString())
+            };
+        }
+
+        static int GetTouchCount(int joyId = 0) {
+            switch(GetInputMode(joyId)) {
+                case InputMode.newInputSystem:
+                    return UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count;
+            }
+
+            // Default to the old input system.
+            return Input.touchCount;
         }
     }
 }

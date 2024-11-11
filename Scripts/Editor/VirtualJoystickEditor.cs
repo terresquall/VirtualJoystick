@@ -2,6 +2,7 @@
 using UnityEditor;
 using System.Collections.Generic;
 namespace Terresquall {
+
     [CustomEditor(typeof(VirtualJoystick))]
     [CanEditMultipleObjects]
     public class VirtualJoystickEditor : Editor {
@@ -11,9 +12,7 @@ namespace Terresquall {
         Canvas canvas;
 
         private int scaleFactor;
-        private bool onlyNewInputSystem = false;
         private static readonly List<int> usedIDs = new List<int>();
-        private string inputSystemNamespace = "UnityEngine.InputSystem"; // New Input System namespace 
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
@@ -77,78 +76,8 @@ namespace Terresquall {
             vj.ID = joysticks.Length;
             EditorUtility.SetDirty(vj);
         }
-        
-        // Checks whether the InputSystem namespace is available (i.e. New Input System installed)
-        private bool IsNamespaceAvailable(string namespaceName)
-        {
-            // Try to find a type in the specified namespace
-            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
-            foreach (var assembly in assemblies)
-            {
-                try
-                {
-                    var types = assembly.GetTypes();
-                    foreach (var type in types)
-                    {
-                        if (type.Namespace == namespaceName)
-                        {
-                            return true;
-                        }
-                    }
-                }
-                catch
-                {
-                    // Handle exceptions for assemblies that can't be inspected
-                }
-            }
-            return false;
-        }
 
-        override public void OnInspectorGUI() {
-            // Check if the new input system has replaced the old one.
-            try {
-                Vector2 v = Input.mousePosition;
-            } catch {
-
-                onlyNewInputSystem = true;
-
-                /* Commented out since the new Input System has been given support
-                //catch(System.InvalidOperationException e)
-                Texture2D icon = EditorGUIUtility.Load("icons/console.erroricon.png") as Texture2D;
-
-                // Create a horizontal layout for the icon and text
-                GUILayout.BeginHorizontal(EditorStyles.helpBox);
-                {
-                    // Display the icon
-                    GUILayout.Label(icon, GUILayout.Width(40), GUILayout.Height(40));
-
-                    // Display the text
-                    GUIStyle ts = new GUIStyle(EditorStyles.label);
-                    ts.wordWrap = true;
-                    ts.richText = true;
-                    ts.alignment = TextAnchor.MiddleLeft;
-                    ts.fontSize = EditorStyles.helpBox.fontSize;
-                    GUILayout.Label("<b>This component does not work with the new Input System.</b> You will need to re-enable the old Input System by going to <b>Project Settings > Player > Other Settings > Active Input Handling</b> and selecting <b>Both</b>.", ts);
-                    Debug.LogWarning(e.Message, this);
-                }
-                GUILayout.EndHorizontal();*/
-            }
-
-            // Gives a status update on the input system, and what input handling is used
-            if (!IsNamespaceAvailable(inputSystemNamespace))
-            {
-                EditorGUILayout.HelpBox("New Input System Installed? - No. Using Old Input System",MessageType.Info);
-            }
-            else
-            {
-                #if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
-                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using Both New and Old Input System", MessageType.Info);
-                #elif ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
-                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using New Input System Only", MessageType.Info);
-                #else
-                EditorGUILayout.HelpBox("New Input System Installed? - Yes. Using Old Input System", MessageType.Info);
-                #endif
-            }
+        public override void OnInspectorGUI() {
 
             // Draw a help text box if this is not attached to a Canvas.
             if (!canvas && !EditorUtility.IsPersistent(target)) {
@@ -166,9 +95,6 @@ namespace Terresquall {
                     switch(property.name) {
                         case "m_Script":
                             continue;
-                        case "useNewInputSystem":
-                            if (onlyNewInputSystem) continue;
-                            break;
                         case "snapsToTouch":
                             snapsToTouch = property.boolValue;
                             break;
@@ -191,6 +117,12 @@ namespace Terresquall {
                     if(property.name == "angleOffset") {
                         float maxAngleOffset = 360f / directions / 2;
                         EditorGUILayout.Slider(property, -maxAngleOffset, maxAngleOffset, new GUIContent("Angle Offset"));
+                    } else if(property.name == "inputMode") {
+                        // Show this only when both input systems are used.
+#if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
+                        EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Select the one you want this Virtual Joystick to use.", MessageType.Info);
+#endif
+                        EditorGUILayout.PropertyField(property, true);
                     } else {
                         EditorGUILayout.PropertyField(property, true);
                     }
@@ -224,8 +156,7 @@ namespace Terresquall {
                     return;
                 }
                 
-                if (!joystick.controlStick.transform.IsChildOf(joystick.transform))
-                {
+                if (!joystick.controlStick.transform.IsChildOf(joystick.transform)) {
                     EditorGUILayout.HelpBox("The control stick of this joystick is not a child of this joystick.", MessageType.Warning);
                     return;
                 } 
