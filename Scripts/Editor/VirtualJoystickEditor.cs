@@ -117,12 +117,15 @@ namespace Terresquall {
                     if(property.name == "angleOffset") {
                         float maxAngleOffset = 360f / directions / 2;
                         EditorGUILayout.Slider(property, -maxAngleOffset, maxAngleOffset, new GUIContent("Angle Offset"));
-                    } else if(property.name == "inputMode") {
+                    } else if(property.name == "consolePrintAxis") {
+
+                        // Print the property itself, plus the static variable
+                        EditorGUILayout.PropertyField(property, true);
+
                         // Show this only when both input systems are used.
 #if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
-                        EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Select the one you want this Virtual Joystick to use.", MessageType.Info);
-#endif
-                        EditorGUILayout.PropertyField(property, true);
+                        EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Virtual Joysticks will default to using the old Input Manager to maintain compatibility with Unity Remote.", MessageType.Info);
+#endif                        
                     } else {
                         EditorGUILayout.PropertyField(property, true);
                     }

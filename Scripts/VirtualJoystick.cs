@@ -26,25 +26,22 @@ namespace Terresquall {
         public bool consolePrintAxis = false;
 
         public enum InputMode { oldInputManager, newInputSystem };
-        public InputMode inputMode;
+        public static InputMode inputMode;
 
         // Function to get an input mode. This is determined by which input system is
         // enabled, or if both input systems are on, on what the user sets.
-        public InputMode GetInputMode() {
+        public static InputMode GetInputMode() {
 #if ENABLE_INPUT_SYSTEM
-            EnhancedTouchSupport.Enable();
     #if ENABLE_LEGACY_INPUT_MANAGER
-            return inputMode;
+            return InputMode.oldInputManager;
     #else
+            EnhancedTouchSupport.Enable();
             return InputMode.newInputSystem;
     #endif
 #else
             return InputMode.oldInputManager;
 #endif
         }
-
-        // Static version of the function for convenience.
-        public static InputMode GetInputMode(int id = 0) { return GetInstance(id).GetInputMode(); }
 
         [Header("Settings")]
         [Tooltip("Disables the joystick if not on a mobile platform.")]
@@ -424,8 +421,8 @@ namespace Terresquall {
                 if (currentPointerId > -1) {
 
                     // We need to loop through all touches to find the one we want.
-                    for (int i = 0; i < GetTouchCount(ID); i++) {
-                        Touch t = GetTouch(i, ID);
+                    for (int i = 0; i < GetTouchCount(); i++) {
+                        Touch t = GetTouch(i);
                         if (t.fingerId == currentPointerId) {
                             SetPosition(t.position);
                             break;
@@ -434,18 +431,18 @@ namespace Terresquall {
 
                 } else {
                     // Otherwise, we are being manipulated by the mouse position.
-                    SetPosition(GetMousePosition(ID));
+                    SetPosition(GetMousePosition());
                 }
             }
         }
 
         void PositionUpdate() { //Used if using the old Input Manager
             // Handle the joystick interaction on Touch.
-            int touchCount = GetTouchCount(ID);
+            int touchCount = GetTouchCount();
             if(touchCount > 0) {
                 // Also detect touch events too.
                 for(int i = 0;i < touchCount;i++) {
-                    Touch t = GetTouch(i, ID);
+                    Touch t = GetTouch(i);
                     switch(t.phase) {
                         case Touch.Phase.Began:
 
@@ -470,7 +467,7 @@ namespace Terresquall {
 
             } else if(GetMouseButtonDown(0)) {
                 // Checks if our Joystick is being clicked on.
-                Vector2 mousePos = GetMousePosition(ID);
+                Vector2 mousePos = GetMousePosition();
                 CheckForInteraction(mousePos, -1);
 
                 // If currentPointerId < -1, it means this is the first frame we were
@@ -483,7 +480,7 @@ namespace Terresquall {
             }
 
             // Trigger OnPointerUp() when we release the button.
-            if(GetMouseButtonUp(0, ID) && currentPointerId == -1) {
+            if(GetMouseButtonUp(0) && currentPointerId == -1) {
                 OnPointerUp(new PointerEventData(null));
             }
         }
@@ -518,8 +515,8 @@ namespace Terresquall {
 
         // Get the mouse position. The function automatically adapts
         // depending on the input system used.
-        static Vector2 GetMousePosition(int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static Vector2 GetMousePosition() {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     return Mouse.current.position.ReadValue();
             }
@@ -528,8 +525,8 @@ namespace Terresquall {
             return Input.mousePosition;
         }
 
-        static bool GetMouseButton(int buttonId, int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static bool GetMouseButton(int buttonId) {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     switch(buttonId) {
                         case 0:
@@ -546,8 +543,8 @@ namespace Terresquall {
             return Input.GetMouseButton(buttonId);
         }
 
-        static bool GetMouseButtonDown(int buttonId, int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static bool GetMouseButtonDown(int buttonId) {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     switch(buttonId) {
                         case 0:
@@ -564,8 +561,8 @@ namespace Terresquall {
             return Input.GetMouseButtonDown(buttonId);
         }
 
-        static bool GetMouseButtonUp(int buttonId, int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static bool GetMouseButtonUp(int buttonId) {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     switch(buttonId) {
                         case 0:
@@ -590,8 +587,8 @@ namespace Terresquall {
             public Phase phase = Phase.None;
         }
 
-        static Touch GetTouch(int touchId, int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static Touch GetTouch(int touchId) {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     UnityEngine.InputSystem.EnhancedTouch.Touch nt = UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches[touchId];
                     return new Touch {
@@ -608,12 +605,12 @@ namespace Terresquall {
             };
         }
 
-        static int GetTouchCount(int joyId = 0) {
-            switch(GetInputMode(joyId)) {
+        static int GetTouchCount() {
+            switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     return UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count;
             }
-
+            
             // Default to the old input system.
             return Input.touchCount;
         }
