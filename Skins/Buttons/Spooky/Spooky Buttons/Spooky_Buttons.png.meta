@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 157de034407f72f4bac0231c552e6c05
+guid: 656d97ab88877a1408f33323760b0816
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -24,7 +24,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +89,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,13 +116,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Spooky_Button (Overlay)_0
+      name: Spooky_Buttons_0
       rect:
         serializedVersion: 2
-        x: 110
-        y: 733
-        width: 351
-        height: 202
+        x: 8
+        y: 288
+        width: 218
+        height: 217
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -131,41 +130,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e4e9a6bfe4ae306478a4fa8b71cb9fc8
-      internalID: 475493572
+      spriteID: bd171f834d64bb310800000000000000
+      internalID: 1421807984667881947
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spooky_Button (Overlay)_1
+      name: Spooky_Buttons_1
       rect:
         serializedVersion: 2
-        x: 598
-        y: 647
-        width: 305
-        height: 299
+        x: 314
+        y: 311
+        width: 186
+        height: 194
       alignment: 0
       pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      border: {x: 17, y: 31, z: 18, w: 17}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 970f638d7575c5b4abfddac61afb3047
-      internalID: 1081548689
+      spriteID: ecccc10734aab2070800000000000000
+      internalID: 8082741162866953422
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Spooky_Button (Overlay)_3
+      name: Spooky_Buttons_2
       rect:
         serializedVersion: 2
-        x: 121
-        y: 298
-        width: 764
-        height: 114
+        x: 13
+        y: 125
+        width: 229
+        height: 132
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -173,8 +172,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a00bb1af07185c745b1de60f6c41247d
-      internalID: 901657525
+      spriteID: f7be1eaf643ebb410800000000000000
+      internalID: 1494037595399777151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spooky_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 293
+        y: 102
+        width: 198
+        height: 194
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 72, y: 63, z: 90, w: 68}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0746c1cd4be05230800000000000000
+      internalID: 3625656419229255436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Spooky_Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 14
+        width: 496
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 72, y: 0, z: 72, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e4760ab3200200650800000000000000
+      internalID: 6196988281224193870
       vertices: []
       indices: 
       edges: []
@@ -189,12 +230,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Spooky_Button (Overlay)_0: 475493572
-      Spooky_Button (Overlay)_1: 1081548689
-      Spooky_Button (Overlay)_2: 647136350
-      Spooky_Button (Overlay)_3: 901657525
-      Spooky_Button (Overlay)_4: 256720502
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
