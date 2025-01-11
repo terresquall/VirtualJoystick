@@ -45,11 +45,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 80
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -81,11 +81,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -69.99997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -21.00003
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 281146753297635185, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -117,19 +117,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 281146754395228267, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 40
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 281146754395228267, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 40
+      value: 75
       objectReference: {fileID: 0}
     - target: {fileID: 1284009703291310903, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 80
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 1284009703291310903, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 80
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 7814516205262735175, guid: 2bc96965936fa364a8dc40fcf90586cc, type: 3}
       propertyPath: m_Color.b
