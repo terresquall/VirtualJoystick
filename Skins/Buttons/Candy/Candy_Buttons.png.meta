@@ -1,7 +1,25 @@
 fileFormatVersion: 2
-guid: 56e84a30de508cd4091a2aa45884811f
+guid: cbe1b56bb70810d48b7a9c0495140a42
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -4927252209688554532
+    second: Candy_Buttons_0
+  - first:
+      213: -6851904469662169407
+    second: Candy_Buttons_1
+  - first:
+      213: 4695825572430277639
+    second: Candy_Buttons_2
+  - first:
+      213: 3905957881375992959
+    second: Candy_Buttons_3
+  - first:
+      213: -6063191397142030734
+    second: Candy_Buttons_4
+  - first:
+      213: 1048889192934728222
+    second: Candy_Buttons_5
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -24,7 +42,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +107,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,64 +134,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Target_Button (Overlay)_0
+      name: Candy_Buttons_0
       rect:
         serializedVersion: 2
-        x: 142
-        y: 641
-        width: 287
-        height: 259
+        x: 12
+        y: 364
+        width: 155
+        height: 139
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1e3be10dfae0bb14ab56426ffef40d37
-      internalID: -1809964401
+      spriteID: cd351c29832ee9bb0800000000000000
+      internalID: -4927252209688554532
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Target_Button (Overlay)_1
+      name: Candy_Buttons_1
       rect:
         serializedVersion: 2
-        x: 630
-        y: 664
-        width: 245
-        height: 227
+        x: 195
+        y: 372
+        width: 133
+        height: 123
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 46, y: 42, z: 46, w: 41}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 64f06e003d591ca48bb03cdb7bf19f6a
-      internalID: -1010359622
+      spriteID: 1c600e2103529e0a0800000000000000
+      internalID: -6851904469662169407
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Target_Button (Overlay)_2
+      name: Candy_Buttons_2
       rect:
         serializedVersion: 2
-        x: 113
-        y: 195
-        width: 792
-        height: 188
+        x: 12
+        y: 187
+        width: 176
+        height: 168
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a8dd05cc91c8acd4284cbadc42c1ddcf
-      internalID: 1628473373
+      spriteID: 70ce6e38a7cea2140800000000000000
+      internalID: 4695825572430277639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candy_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 201
+        width: 154
+        height: 154
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 13, y: 23, z: 13, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f7cad0b9fffb43630800000000000000
+      internalID: 3905957881375992959
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candy_Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 8
+        y: 6
+        width: 175
+        height: 177
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 27615286c873bdba0800000000000000
+      internalID: -6063191397142030734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Candy_Buttons_5
+      rect:
+        serializedVersion: 2
+        x: 208
+        y: 16
+        width: 154
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 12, y: 27, z: 12, w: 14}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e12ee99e9276e8e00800000000000000
+      internalID: 1048889192934728222
       vertices: []
       indices: 
       edges: []
@@ -189,10 +269,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Target_Button (Overlay)_0: -1809964401
-      Target_Button (Overlay)_1: -1010359622
-      Target_Button (Overlay)_2: 1628473373
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
