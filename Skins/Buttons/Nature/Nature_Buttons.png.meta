@@ -1,7 +1,22 @@
 fileFormatVersion: 2
-guid: 915f7e47950d2dd4c91fb18d8bd9a3bd
+guid: 69e9699cc9dbffd46a514a2a7c42f1da
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: 2358319177338692910
+    second: Nature_Buttons_0
+  - first:
+      213: -23622063356351772
+    second: Nature_Buttons_1
+  - first:
+      213: 7603032452731585944
+    second: Nature_Buttons_2
+  - first:
+      213: 8862038737990180046
+    second: Nature_Buttons_3
+  - first:
+      213: 1465145317633784138
+    second: Nature_Buttons_4
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -24,7 +39,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +104,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,64 +131,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sun_Button_0
+      name: Nature_Buttons_0
       rect:
         serializedVersion: 2
-        x: 116
-        y: 593
-        width: 334
-        height: 335
+        x: 13
+        y: 321
+        width: 184
+        height: 185
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4704fc376a9b9d5499311e6bb62030c2
-      internalID: 1970581260
+      spriteID: e25a3400cce6ab020800000000000000
+      internalID: 2358319177338692910
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sun_Button_1
+      name: Nature_Buttons_1
       rect:
         serializedVersion: 2
-        x: 605
-        y: 639
-        width: 286
-        height: 300
+        x: 227
+        y: 340
+        width: 158
+        height: 166
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 44, y: 55, z: 44, w: 44}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b11dad04608614240b1dfa3804e4da55
-      internalID: -1547070607
+      spriteID: 4ea68c8cbd31caff0800000000000000
+      internalID: -23622063356351772
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sun_Button_2
+      name: Nature_Buttons_2
       rect:
         serializedVersion: 2
-        x: 80
-        y: 157
-        width: 848
-        height: 248
+        x: 17
+        y: 144
+        width: 180
+        height: 171
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd0c1d1417c26034786bf0c9bc63d981
-      internalID: -1943985240
+      spriteID: 89545d0bbb5638960800000000000000
+      internalID: 7603032452731585944
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nature_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 227
+        y: 160
+        width: 158
+        height: 157
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 14, y: 24, z: 15, w: 13}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eccd7a377494cfa70800000000000000
+      internalID: 8862038737990180046
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nature_Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 7
+        width: 466
+        height: 131
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 12, z: 16, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4973e957ed355410800000000000000
+      internalID: 1465145317633784138
       vertices: []
       indices: 
       edges: []
@@ -189,10 +245,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Sun_Button_0: 1970581260
-      Sun_Button_1: -1547070607
-      Sun_Button_2: -1943985240
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
