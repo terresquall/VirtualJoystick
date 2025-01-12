@@ -1,0 +1,637 @@
+fileFormatVersion: 2
+guid: f1387fa789b20674b854827aac79f888
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7057907647095800058
+    second: Neon_Buttons_0
+  - first:
+      213: 7333806323401439077
+    second: Neon_Buttons_1
+  - first:
+      213: 8145144633354343034
+    second: Neon_Buttons_2
+  - first:
+      213: 5869219681625018336
+    second: Neon_Buttons_3
+  - first:
+      213: -5868036365066611596
+    second: Neon_Buttons_4
+  - first:
+      213: -5922830181204976883
+    second: Neon_Buttons_5
+  - first:
+      213: 3201775771874950791
+    second: Neon_Buttons_6
+  - first:
+      213: -7138059056391548032
+    second: Neon_Buttons_7
+  - first:
+      213: -2402412329424379392
+    second: Neon_Buttons_8
+  - first:
+      213: 3966291962696459893
+    second: Neon_Buttons_9
+  - first:
+      213: 1985495627054675014
+    second: Neon_Buttons_10
+  - first:
+      213: 8690155307389013420
+    second: Neon_Buttons_11
+  - first:
+      213: -4854189571735839417
+    second: Neon_Buttons_12
+  - first:
+      213: -6592727522996238388
+    second: Neon_Buttons_13
+  - first:
+      213: -2818517267571773978
+    second: Neon_Buttons_14
+  - first:
+      213: 1810377418677652196
+    second: Neon_Buttons_15
+  - first:
+      213: 5063802008762453537
+    second: Neon_Buttons_16
+  - first:
+      213: 6324325036409134104
+    second: Neon_Buttons_17
+  - first:
+      213: -8781371084994710475
+    second: Neon_Buttons_18
+  - first:
+      213: -4434036339734883871
+    second: Neon_Buttons_19
+  - first:
+      213: -2616634929639323923
+    second: Neon_Buttons_20
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Neon_Buttons_0
+      rect:
+        serializedVersion: 2
+        x: 23
+        y: 838
+        width: 180
+        height: 170
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 60f775da3664d0e90800000000000000
+      internalID: -7057907647095800058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_1
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 850
+        width: 158
+        height: 158
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 13, y: 24, z: 14, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5673bd5bef9e6c560800000000000000
+      internalID: 7333806323401439077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_2
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 878
+        width: 466
+        height: 130
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 26, z: 16, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a72d343a3ed590170800000000000000
+      internalID: 8145144633354343034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 708
+        width: 128
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0ef8df73438a37150800000000000000
+      internalID: 5869219681625018336
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 168
+        y: 708
+        width: 128
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4745123240c809ea0800000000000000
+      internalID: -5868036365066611596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_5
+      rect:
+        serializedVersion: 2
+        x: 319
+        y: 708
+        width: 128
+        height: 118
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d0b9058a451edcda0800000000000000
+      internalID: -5922830181204976883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_6
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 768
+        width: 422
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78efe0dc91efe6c20800000000000000
+      internalID: 3201775771874950791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_7
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 578
+        width: 109
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 08395067b1580fc90800000000000000
+      internalID: -7138059056391548032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_8
+      rect:
+        serializedVersion: 2
+        x: 167
+        y: 578
+        width: 109
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 00224a407bae8aed0800000000000000
+      internalID: -2402412329424379392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_9
+      rect:
+        serializedVersion: 2
+        x: 318
+        y: 578
+        width: 109
+        height: 104
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 576620896891b0730800000000000000
+      internalID: 3966291962696459893
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_10
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 661
+        width: 422
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6447fa1d0c5ed8b10800000000000000
+      internalID: 1985495627054675014
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_11
+      rect:
+        serializedVersion: 2
+        x: 487
+        y: 554
+        width: 422
+        height: 84
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cadc5eba532a99870800000000000000
+      internalID: 8690155307389013420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_12
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 401
+        width: 157
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 74d97489d4472acb0800000000000000
+      internalID: -4854189571735839417
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_13
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 403
+        width: 139
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc74ed26f3de184a0800000000000000
+      internalID: -6592727522996238388
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_14
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 415
+        width: 445
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 15, z: 15, w: 15}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6ed64117a7d92e8d0800000000000000
+      internalID: -2818517267571773978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_15
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 219
+        width: 157
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4ea8ba5aba0cf1910800000000000000
+      internalID: 1810377418677652196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_16
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 225
+        width: 139
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 12e0239091d364640800000000000000
+      internalID: 5063802008762453537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_17
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 225
+        width: 445
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 15, z: 15, w: 15}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81c9647ec1484c750800000000000000
+      internalID: 6324325036409134104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_18
+      rect:
+        serializedVersion: 2
+        x: 35
+        y: 36
+        width: 157
+        height: 143
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 534f00e168d422680800000000000000
+      internalID: -8781371084994710475
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_19
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 45
+        width: 139
+        height: 128
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e1dde801732772c0800000000000000
+      internalID: -4434036339734883871
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Neon_Buttons_20
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 45
+        width: 445
+        height: 103
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 15, y: 15, z: 15, w: 15}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de608ff1568dfabd0800000000000000
+      internalID: -2616634929639323923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
