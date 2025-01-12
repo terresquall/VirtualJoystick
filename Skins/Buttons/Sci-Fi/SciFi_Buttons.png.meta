@@ -1,7 +1,19 @@
 fileFormatVersion: 2
-guid: 397a00173250c94478f6562c212de1f8
+guid: f4d7431a4b6f4e74dbf5f450736d6463
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -75450377721218859
+    second: SciFi_Buttons_0
+  - first:
+      213: 1202016327697666628
+    second: SciFi_Buttons_1
+  - first:
+      213: 495626331583973574
+    second: SciFi_Buttons_2
+  - first:
+      213: 6247170090765798535
+    second: SciFi_Buttons_3
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -24,7 +36,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +101,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,64 +128,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Radar_Button_0
+      name: SciFi_Buttons_0
       rect:
         serializedVersion: 2
-        x: 120
-        y: 606
-        width: 328
-        height: 311
+        x: 18
+        y: 310
+        width: 196
+        height: 187
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: eb3eebce078e2d7469b719d2fbeb4be5
-      internalID: -827161577
+      spriteID: 5d8f1cdf742f3fef0800000000000000
+      internalID: -75450377721218859
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Radar_Button_1
+      name: SciFi_Buttons_1
       rect:
         serializedVersion: 2
-        x: 610
-        y: 623
-        width: 286
-        height: 289
+        x: 236
+        y: 322
+        width: 184
+        height: 163
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efebca32ee9ac8443a5c29cf9d3f7f80
-      internalID: -762986986
+      spriteID: 44293a24b7b6ea010800000000000000
+      internalID: 1202016327697666628
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Radar_Button_2
+      name: SciFi_Buttons_2
       rect:
         serializedVersion: 2
-        x: 85
-        y: 162
-        width: 848
-        height: 237
+        x: 30
+        y: 109
+        width: 172
+        height: 173
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 18, z: 18, w: 18}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: df1f04181d9ce864fa0f41c5ae563596
-      internalID: -1341943311
+      spriteID: 6c8846bc581d0e600800000000000000
+      internalID: 495626331583973574
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SciFi_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 109
+        width: 172
+        height: 173
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 18, z: 18, w: 18}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 78c4a8f391862b650800000000000000
+      internalID: 6247170090765798535
       vertices: []
       indices: 
       edges: []
@@ -189,10 +221,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Radar_Button_0: -827161577
-      Radar_Button_1: -762986986
-      Radar_Button_2: -1341943311
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

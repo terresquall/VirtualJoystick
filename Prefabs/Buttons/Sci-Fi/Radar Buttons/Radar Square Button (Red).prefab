@@ -1,127 +1,111 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &3165924534847262221
+--- !u!1001 &2386575929403124105
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1649492093110275226, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196194465361, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_Color.b
-      value: 0.34070304
+      value: 0.29411766
       objectReference: {fileID: 0}
-    - target: {fileID: 1649492093110275226, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196194465361, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_Color.g
-      value: 0.3529412
+      value: 0.26666668
       objectReference: {fileID: 0}
-    - target: {fileID: 2094973474450690782, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_Name
-      value: Radar Square Button (Red)
+    - target: {fileID: 5378889196194465361, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7176471
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchorMin.x
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchorMin.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 61
+      value: 100
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 62
+      value: 100
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.3888887
-      objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.3888887
-      objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1.3888887
-      objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 304.1666
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -98.88887
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2809422354375983061, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+    - target: {fileID: 5378889196947883650, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9041057105930117789, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 56.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 9041057105930117789, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 54.4
+    - target: {fileID: 5378889196947883653, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
+      propertyPath: m_Name
+      value: Radar Square Button (Red)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 7da66c9428f7e904cb8d9a40f13361b0, type: 3}
+  m_SourcePrefab: {fileID: 100100000, guid: 496ad2defb4512d45ac13aafe4662a83, type: 3}
