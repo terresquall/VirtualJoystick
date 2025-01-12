@@ -1,7 +1,28 @@
 fileFormatVersion: 2
-guid: 2ff910843e3a04749957a80a7935894d
+guid: 2f47f43bf2350a54cb2e2b6944f55cb5
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -1875392348128841442
+    second: Workshop_Buttons_0
+  - first:
+      213: 137406089768916858
+    second: Workshop_Buttons_1
+  - first:
+      213: 5421467524817248294
+    second: Workshop_Buttons_2
+  - first:
+      213: -6407319923296883582
+    second: Workshop_Buttons_3
+  - first:
+      213: 4388599197387521962
+    second: Workshop_Buttons_4
+  - first:
+      213: -1739722144454718828
+    second: Workshop_Buttons_5
+  - first:
+      213: -1393753112913235348
+    second: Workshop_Buttons_6
   externalObjects: {}
   serializedVersion: 12
   mipmaps:
@@ -24,7 +45,6 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
-  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -90,7 +110,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Server
+    buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -117,64 +137,148 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Blueprint_Button (Overlay)_0
+      name: Workshop_Buttons_0
       rect:
         serializedVersion: 2
-        x: 130
-        y: 636
-        width: 308
-        height: 271
+        x: 19
+        y: 342
+        width: 164
+        height: 155
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9945c14311a4a8b41861431a078b7c65
-      internalID: -468998927
+      spriteID: e117b4b789449f5e0800000000000000
+      internalID: -1875392348128841442
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blueprint_Button (Overlay)_1
+      name: Workshop_Buttons_1
       rect:
         serializedVersion: 2
-        x: 620
-        y: 655
-        width: 266
-        height: 247
+        x: 191
+        y: 354
+        width: 143
+        height: 143
       alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 13, y: 26, z: 15, w: 15}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 23bb536ee173d1b49a423da4b8f1898a
-      internalID: 1936513602
+      spriteID: a77d6a25c1a28e100800000000000000
+      internalID: 137406089768916858
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Blueprint_Button (Overlay)_2
+      name: Workshop_Buttons_2
       rect:
         serializedVersion: 2
-        x: 95
-        y: 192
-        width: 828
-        height: 197
+        x: 362
+        y: 358
+        width: 133
+        height: 123
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 8, z: 8, w: 8}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6206c0a5dfbec3b40800000000000000
+      internalID: 5421467524817248294
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Workshop_Buttons_3
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 188
+        width: 154
+        height: 135
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 53320709ee90af942a86a1a590c01e4f
-      internalID: -60231628
+      spriteID: 28c2b992a70a417a0800000000000000
+      internalID: -6407319923296883582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Workshop_Buttons_4
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 176
+        width: 143
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 18, y: 22, z: 20, w: 20}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aaff8ddd7bf67ec30800000000000000
+      internalID: 4388599197387521962
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Workshop_Buttons_5
+      rect:
+        serializedVersion: 2
+        x: 326
+        y: 160
+        width: 181
+        height: 183
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 49a45e35de34bd7e0800000000000000
+      internalID: -1739722144454718828
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Workshop_Buttons_6
+      rect:
+        serializedVersion: 2
+        x: 56
+        y: 34
+        width: 414
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 8, y: 8, z: 8, w: 8}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c623630ade468ace0800000000000000
+      internalID: -1393753112913235348
       vertices: []
       indices: 
       edges: []
@@ -189,10 +293,6 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable:
-      Blueprint_Button (Overlay)_0: -468998927
-      Blueprint_Button (Overlay)_1: 1936513602
-      Blueprint_Button (Overlay)_2: -60231628
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
