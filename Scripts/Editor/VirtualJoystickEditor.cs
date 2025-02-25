@@ -20,9 +20,17 @@ namespace Terresquall {
             canvas = joystick.GetComponentInParent<Canvas>();
         }
 
+        static VirtualJoystick[] FindAll() {
+#if UNITY_2022_2_OR_NEWER
+            return FindObjectsByType<VirtualJoystick>(FindObjectsSortMode.None);
+#else
+            return FindObjectsOfType<VirtualJoystick>();
+#endif
+        }
+
         // Does the passed joystick have an ID that is unique to itself?
         bool HasUniqueID(VirtualJoystick vj) {
-            foreach(VirtualJoystick v in FindObjectsOfType<VirtualJoystick>()) {
+            foreach(VirtualJoystick v in FindAll()) {
                 if(v == vj) continue;
                 if(v.ID == vj.ID) return false;
             }
@@ -31,7 +39,7 @@ namespace Terresquall {
 
         // Is a given ID value already used by another joystick?
         bool IsAvailableID(int id) {
-            foreach(VirtualJoystick v in FindObjectsOfType<VirtualJoystick>()) {
+            foreach (VirtualJoystick v in FindAll()) {
                 if(v.ID == id) return false;
             }
             return true;
@@ -40,7 +48,7 @@ namespace Terresquall {
         // Do all the joysticks have unique IDs.
         bool HasRepeatIDs() {
             usedIDs.Clear();
-            foreach(VirtualJoystick vj in FindObjectsOfType<VirtualJoystick>()) {
+            foreach(VirtualJoystick vj in FindAll()) {
                 if(usedIDs.Contains(vj.ID)) return true;
                 usedIDs.Add(vj.ID);
             }
@@ -49,7 +57,7 @@ namespace Terresquall {
 
         // Reassign all IDs for all Joysticks.
         void ReassignAllIDs(VirtualJoystick exception = null) {
-            foreach(VirtualJoystick vj in FindObjectsOfType<VirtualJoystick>()) {
+            foreach (VirtualJoystick vj in FindAll()) {
                 // Ignore joysticks that are already unique.
                 if(exception == vj || HasUniqueID(vj)) continue;
                 ReassignThisID(vj);
@@ -63,7 +71,7 @@ namespace Terresquall {
             Undo.RecordObject(vj, "Generate Unique Joystick ID");
 
             // Get all joysticks so that we can check against it if the ID is valid.
-            VirtualJoystick[] joysticks = FindObjectsOfType<VirtualJoystick>();
+            VirtualJoystick[] joysticks = FindAll();
             for(int i = 0; i < joysticks.Length; i++) {
                 if(IsAvailableID(i)) {
                     vj.ID = i; // If we find an unused ID, use it.
