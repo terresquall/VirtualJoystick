@@ -329,6 +329,11 @@ namespace Terresquall {
                 enabled = false;
             }
 
+            // Warning for canvas.
+            if (canvas.renderMode != RenderMode.ScreenSpaceOverlay) {
+                Debug.LogWarning($"Your Virtual Joystick \"{name}\" is attached to a Canvas that does not have a Render Mode of Overlay. It will be buggy or fail to work entirely.");
+            }
+
             origin = desiredPosition = transform.position;
             StartCoroutine(Activate());
             originalColor = controlStick.color;

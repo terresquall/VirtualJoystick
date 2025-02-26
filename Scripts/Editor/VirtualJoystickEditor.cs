@@ -88,8 +88,11 @@ namespace Terresquall {
         public override void OnInspectorGUI() {
 
             // Draw a help text box if this is not attached to a Canvas.
-            if (!canvas && !EditorUtility.IsPersistent(target)) {
-                EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
+            if(!EditorUtility.IsPersistent(target)) {
+                if (!canvas)
+                    EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
+                else if(canvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                    EditorGUILayout.HelpBox("This GameObject is parented to a Canvas that is not set to Screen Space - Overlay. It may be buggy or fail to work entirely.", MessageType.Error);
             }
 
             // Draw all the inspector properties.
