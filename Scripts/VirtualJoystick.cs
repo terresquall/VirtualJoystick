@@ -77,8 +77,8 @@ namespace Terresquall {
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
-        public const string VERSION = "1.1.2";
-        public const string DATE = "26 February 2025";
+        public const string VERSION = "1.1.3";
+        public const string DATE = "27 February 2025";
 
         Vector2Int lastScreen;
         Canvas canvas;
@@ -525,13 +525,10 @@ namespace Terresquall {
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     return Mouse.current != null ? Mouse.current.position.ReadValue() : Vector2.zero;
-                case InputMode.oldInputManager: default:
-                    return Input.mousePosition;
             }
-#else
+#endif
             // Default to the old input system.
             return Input.mousePosition;
-#endif
         }
 
         static bool GetMouseButton(int buttonId) {
@@ -549,13 +546,10 @@ namespace Terresquall {
                         }
                     }
                     return false;
-                case InputMode.oldInputManager:
-                    return Input.GetMouseButton(buttonId);
             }
-#else
+#endif
             // Default to the old input system.
             return Input.GetMouseButton(buttonId);
-#endif
         }
 
         static bool GetMouseButtonDown(int buttonId) {
@@ -573,13 +567,11 @@ namespace Terresquall {
                         }
                     }
                     return false;
-                case InputMode.oldInputManager: default:
-                    return Input.GetMouseButtonDown(buttonId);
             }
-#else
+#endif
+            
             // Default to the old input system.
             return Input.GetMouseButtonDown(buttonId);
-#endif
         }
 
         static bool GetMouseButtonUp(int buttonId) {
@@ -597,13 +589,10 @@ namespace Terresquall {
                         }
                     }
                     return false;
-                case InputMode.oldInputManager: default:
-                    return Input.GetMouseButtonDown(buttonId);
             }
-#else
+#endif
             // Default to the old input system.
             return Input.GetMouseButtonUp(buttonId);
-#endif
         }
 
         // Nested touch class to manage both kinds of touch.
@@ -623,15 +612,8 @@ namespace Terresquall {
                         position = nt.screenPosition, fingerId = nt.finger.index,
                         phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), nt.phase.ToString())
                     };
-                case InputMode.oldInputManager: default:
-                    // Default to the old input system.
-                    UnityEngine.Touch t = Input.GetTouch(touchId);
-                    return new Touch {
-                        position = t.position, fingerId = t.fingerId,
-                        phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), t.phase.ToString())
-                    };
             }
-#else
+#endif
             // Default to the old input system.
             UnityEngine.Touch t = Input.GetTouch(touchId);
             return new Touch
@@ -640,7 +622,6 @@ namespace Terresquall {
                 fingerId = t.fingerId,
                 phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), t.phase.ToString())
             };
-#endif
         }
 
         static int GetTouchCount() {
@@ -648,13 +629,10 @@ namespace Terresquall {
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
                     return UnityEngine.InputSystem.EnhancedTouch.Touch.activeTouches.Count;
-                case InputMode.oldInputManager: default:
-                    return Input.touchCount;
             }
-#else
+#endif
             // Default to the old input system.
             return Input.touchCount;
-#endif
         }
     }
 }
