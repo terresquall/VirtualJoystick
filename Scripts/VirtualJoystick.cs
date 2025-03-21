@@ -16,14 +16,14 @@ namespace Terresquall
 {
 
     [System.Serializable]
-    [RequireComponent(typeof(Image), typeof(RectTransform))]
+    [RequireComponent(typeof(UnityEngine.UI.Image), typeof(RectTransform))]
     public class VirtualJoystick : MonoBehaviour
     {
 
         [Tooltip("The unique ID for this joystick. Needs to be unique.")]
         public int ID;
         [Tooltip("The component that the user will drag around for joystick input.")]
-        public Image controlStick;
+        public UnityEngine.UI.Image controlStick;
 
         [Header("Debug")]
         [Tooltip("Prints to the console the control stick's direction within the joystick.")]
@@ -101,17 +101,17 @@ namespace Terresquall
                     if (instances.Count > 0)
                     {
                         id = instances.Keys.First();
-                        Debug.LogWarning($"You are reading Joystick input without specifying an ID, so joystick ID {id} is being used instead.");
+                        UnityEngine.Debug.LogWarning($"You are reading Joystick input without specifying an ID, so joystick ID {id} is being used instead.");
                     }
                     else
                     {
-                        Debug.LogError("There are no Virtual Joysticks in the Scene!");
+                        UnityEngine.Debug.LogError("There are no Virtual Joysticks in the Scene!");
                         return null;
                     }
                 }
                 else
                 {
-                    Debug.LogError($"Virtual Joystick ID '{id}' does not exist!");
+                    UnityEngine.Debug.LogError($"Virtual Joystick ID '{id}' does not exist!");
                     return null;
                 }
             }
@@ -138,7 +138,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -168,7 +168,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return 0;
             }
 
@@ -180,7 +180,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
+                UnityEngine.Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -208,7 +208,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
+                UnityEngine.Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return 0;
             }
 
@@ -220,7 +220,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                Debug.LogWarning("No instances of joysticks found on the Scene.");
+                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -374,7 +374,7 @@ namespace Terresquall
             for (int i = 0; i < transform.childCount; i++)
             {
                 // Once we find an appropriate Image component, abort.
-                Image img = transform.GetChild(i).GetComponent<Image>();
+                UnityEngine.UI.Image img = transform.GetChild(i).GetComponent<UnityEngine.UI.Image>();
                 if (img)
                 {
                     controlStick = img;
@@ -393,10 +393,10 @@ namespace Terresquall
         void OnEnable()
         {
             // If we are not on mobile, and this is mobile only, disable.
-            if (!Application.isMobilePlatform && onlyOnMobile)
+            if (!UnityEngine.Application.isMobilePlatform && onlyOnMobile)
             {
                 gameObject.SetActive(false);
-                Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
+                UnityEngine.Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
                 return;
             }
 
@@ -404,7 +404,7 @@ namespace Terresquall
             canvas = GetComponentInParent<Canvas>();
             if (!canvas)
             {
-                Debug.LogError(
+                UnityEngine.Debug.LogError(
                     $"Your Virtual Joystick \"{name})\" is not attached to a Canvas, so it won't work. It has been disabled.",
                     gameObject
                 );
@@ -414,7 +414,7 @@ namespace Terresquall
             // Warning for canvas.
             if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
             {
-                Debug.LogWarning($"Your Virtual Joystick \"{name}\" is attached to a Canvas that does not have a Render Mode of Overlay. It will be buggy or fail to work entirely.");
+                UnityEngine.Debug.LogWarning($"Your Virtual Joystick \"{name}\" is attached to a Canvas that does not have a Render Mode of Overlay. It will be buggy or fail to work entirely.");
             }
 
             origin = desiredPosition = transform.position;
@@ -429,7 +429,7 @@ namespace Terresquall
             if (!instances.ContainsKey(ID))
                 instances.Add(ID, this);
             else
-                Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
+                UnityEngine.Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
         }
 
         // Added in Version 1.0.2.
@@ -447,7 +447,7 @@ namespace Terresquall
             if (instances.ContainsKey(ID))
                 instances.Remove(ID);
             else
-                Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
+                UnityEngine.Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
         }
 
         void Update()
@@ -472,7 +472,7 @@ namespace Terresquall
             {
                 string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
                 if (consolePrintAxis)
-                    Debug.Log(output);
+                    UnityEngine.Debug.Log(output);
             }
         }
 
