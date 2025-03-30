@@ -138,7 +138,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
+                    UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -233,28 +233,24 @@ namespace Terresquall
 
             if (t)
             {
-                if (canvas.renderMode == RenderMode.WorldSpace || canvas.renderMode == RenderMode.ScreenSpaceCamera)
+                if (canvas != null)
                 {
-                    // Convert the radius to world space using the canvas scale factor.
-                    // Use world to screen point to convert and then calculate the appropriate radius.
-                    Vector3 worldPosition = t.position;
-                    Vector3 screenPoint = Camera.main.WorldToScreenPoint(worldPosition);
+                    if (canvas.renderMode == RenderMode.WorldSpace || canvas.renderMode == RenderMode.ScreenSpaceCamera)
+                    {
+                        float canvasScaleFactor = canvas.scaleFactor;
+                        float adjustedRadius = radius * canvasScaleFactor;
 
-                    // Adjust the radius based on screen width and the canvas scale factor
-                    float canvasScaleFactor = canvas.scaleFactor;
-                    float adjustedRadius = radius * canvasScaleFactor;
+                        return adjustedRadius;
+                    }
+                    else
+                    {
+                        return radius * t.rect.width * 0.5f;
+                    }
+                }
 
-                    // Use the screen space width to fine-tune the scaling
-                    return adjustedRadius * (t.rect.width / Screen.width * 4f);
-                }
-                else
-                {
-                    // In Overlay mode, return the normal radius multiplied by the rect width
-                    return radius * t.rect.width * 0.5f;
-                }
             }
 
-            // Default radius if RectTransform is not found
+            // Default radius if RectTransform or Canvas is not found
             return radius;
         }
 
@@ -599,21 +595,48 @@ namespace Terresquall
             }
         }
 
-        // Roots the joystick to a new position.
         public void Uproot(Vector2 newPos, int newPointerId = -1)
         {
-            // Don't move the joystick if we are not tapping too far from it.
-            if (Vector2.Distance(transform.position, newPos) < radius)
+            // Skip if we don't move far enough from the joystick's current position
+            if (Vector2.Distance(transform.position, newPos) < GetRadius())
                 return;
 
-            // Otherwise move the virtual joystick to where we clicked.
-            transform.position = newPos;
-            desiredPosition = transform.position;
+            Vector2 position;
 
-            // Artificially trigger the drag event.
-            PointerEventData data = new PointerEventData(EventSystem.current);
-            data.position = newPos;
-            data.pointerId = newPointerId;
+            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+            {
+                // Overlay: newPos is already in screen space, just assign it directly
+                position = newPos;
+            }
+            else // For ScreenSpaceCamera or WorldSpace
+            {
+                Vector3 worldPoint;
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                    canvas.transform as RectTransform,
+                    newPos,
+                    canvas.worldCamera,
+                    out worldPoint))
+                {
+                    position = worldPoint;
+                }
+                else
+                {
+                    // Fallback to screen position if conversion fails
+                    position = newPos;
+                }
+            }
+
+            // Move the joystick
+            transform.position = position;
+            desiredPosition = position;
+
+            // Simulate pointer down
+            PointerEventData data = new PointerEventData(EventSystem.current)
+            {
+                position = newPos,
+                pointerId = newPointerId
+            };
+
             OnPointerDown(data);
         }
 
