@@ -6,7 +6,7 @@ public class DirectionMemory : MonoBehaviour
 {
     private VirtualJoystick joystick;
 
-    private List<JoystickData> inputMemory = new();
+    private List<JoystickData> inputMemory = new List<JoystickData>();
     private Vector2 lastDirection = Vector2.zero;
 
     public InputData[] inputData;   

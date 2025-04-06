@@ -17,7 +17,7 @@ namespace Terresquall
 
     [System.Serializable]
     [RequireComponent(typeof(UnityEngine.UI.Image), typeof(RectTransform))]
-    public class VirtualJoystick : MonoBehaviour
+    public partial class VirtualJoystick : MonoBehaviour
     {
 
         [Tooltip("The unique ID for this joystick. Needs to be unique.")]
