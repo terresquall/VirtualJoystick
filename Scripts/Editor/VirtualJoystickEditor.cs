@@ -260,8 +260,8 @@ namespace Terresquall {
             //}
         }
 
-        void OnSceneGUI() {
-
+        void OnSceneGUI()
+        {
             VirtualJoystick vj = (VirtualJoystick)target;
 
             float radius = vj.GetRadius();
@@ -271,7 +271,7 @@ namespace Terresquall {
             Handles.DrawSolidArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius);
             Handles.color = new Color(0, 1, 0, 0.5f);
             Handles.DrawWireArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius, 3f);
-            
+
             // Draw the deadzone.
             Handles.color = new Color(1, 0, 0, 0.2f);
             Handles.DrawSolidArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius * vj.deadzone);
@@ -279,30 +279,77 @@ namespace Terresquall {
             Handles.DrawWireArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius * vj.deadzone, 3f);
 
             // Draw the boundaries of the joystick.
-            if(vj.GetBounds().size.sqrMagnitude > 0) {
+            if (vj.GetBounds().size.sqrMagnitude > 0)
+            {
                 // Draw the lines of the bounds.
                 Handles.color = Color.yellow;
 
-                // Get the 4 points in the bounds.
-                Vector3 a = new Vector3(vj.boundaries.x, vj.boundaries.y),
-                        b = new Vector3(vj.boundaries.x, vj.boundaries.y + Screen.height * vj.boundaries.height),
-                        c = new Vector2(vj.boundaries.x + Screen.width * vj.boundaries.width, vj.boundaries.y + Screen.height * vj.boundaries.height),
-                        d = new Vector3(vj.boundaries.x + Screen.width * vj.boundaries.width, vj.boundaries.y);
-                Handles.DrawLine(a,b);
-                Handles.DrawLine(b,c);
-                Handles.DrawLine(c,d);
-                Handles.DrawLine(d,a);
+                // Get the 4 points in the bounds (in pixels).
+                Vector3 bottomLeft = new Vector3(vj.boundaries.x, vj.boundaries.y);
+                Vector3 topLeft = new Vector3(vj.boundaries.x, vj.boundaries.y + vj.boundaries.height);
+                Vector3 topRight = new Vector3(vj.boundaries.x + vj.boundaries.width, vj.boundaries.y + vj.boundaries.height);
+                Vector3 bottomRight = new Vector3(vj.boundaries.x + vj.boundaries.width, vj.boundaries.y);
+
+                // Draw the boundary lines
+                Handles.DrawLine(bottomLeft, topLeft);
+                Handles.DrawLine(topLeft, topRight);
+                Handles.DrawLine(topRight, bottomRight);
+                Handles.DrawLine(bottomRight, bottomLeft);
+
+                // Calculate the center point of the boundaries
+                Vector3 center = new Vector3(vj.boundaries.x + vj.boundaries.width / 2, vj.boundaries.y + vj.boundaries.height / 2);
+
+                // Add a draggable handle in the center to move the boundaries
+                EditorGUI.BeginChangeCheck();
+                var CenterHandle = Quaternion.identity; Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.CircleHandleCap);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(vj, "Move Joystick Boundaries");
+
+                    // Move the boundaries based on the handle's new position
+                    float offsetX = newCenter.x - center.x;
+                    float offsetY = newCenter.y - center.y;
+
+                    vj.boundaries.x += offsetX;
+                    vj.boundaries.y += offsetY;
+
+                    EditorUtility.SetDirty(vj);
+                }
+
+                // Add draggable handles for the corners
+                EditorGUI.BeginChangeCheck();
+                var BottomLeftHandle = Quaternion.identity; Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
+                var TopRightHandle = Quaternion.identity; Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    Undo.RecordObject(vj, "Resize Joystick Boundaries");
+
+                    // Update boundaries based on handle movement (in pixels)
+                    vj.boundaries.x = newBottomLeft.x;
+                    vj.boundaries.y = newBottomLeft.y;
+                    vj.boundaries.width = Mathf.Max(0, newTopRight.x - newBottomLeft.x);
+                    vj.boundaries.height = Mathf.Max(0, newTopRight.y - newBottomLeft.y);
+
+                    EditorUtility.SetDirty(vj);
+                }
             }
 
             // Draw the direction anchors of the joystick.
-            if(vj.directions > 0) {
+            if (vj.directions > 0)
+            {
                 Handles.color = Color.blue;
                 float partition = 360f / vj.directions;
-                for(int i = 0; i < vj.directions;i++) {
-                    Handles.DrawLine(vj.transform.position, vj.transform.position + Quaternion.Euler(0,0,i*partition + vj.angleOffset) * Vector2.right * radius, 2f);
+                for (int i = 0; i < vj.directions; i++)
+                {
+                    Handles.DrawLine(vj.transform.position, vj.transform.position + Quaternion.Euler(0, 0, i * partition + vj.angleOffset) * Vector2.right * radius, 2f);
                 }
             }
         }
+
+
+
 
         // Function to return gcd of a and b
         int GCD(int a, int b) {

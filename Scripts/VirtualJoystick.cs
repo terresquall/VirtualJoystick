@@ -17,7 +17,7 @@ namespace Terresquall
 
     [System.Serializable]
     [RequireComponent(typeof(UnityEngine.UI.Image), typeof(RectTransform))]
-    public partial class VirtualJoystick : MonoBehaviour
+    public class VirtualJoystick : MonoBehaviour
     {
 
         [Tooltip("The unique ID for this joystick. Needs to be unique.")]
@@ -75,6 +75,10 @@ namespace Terresquall
         public bool snapsToTouch = false;
         public Rect boundaries;
 
+        [Tooltip("joystick will dissapear after not being interacted with for some time")]
+        public bool dissapearAfterTime;
+        public float timeToDissapear;
+
         // Private variables.
         internal Vector2 desiredPosition, axis, origin, lastAxis;
         internal Color originalColor; // Stores the original color of the Joystick.
@@ -82,8 +86,8 @@ namespace Terresquall
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
-        public const string VERSION = "1.1.3";
-        public const string DATE = "27 February 2025";
+        public const string VERSION = "1.1.5";
+        public const string DATE = "7 APRIL 2025";
 
         Vector2Int lastScreen;
         Canvas canvas;
@@ -383,7 +387,7 @@ namespace Terresquall
         public Rect GetBounds()
         {
             if (!snapsToTouch) return new Rect(0, 0, 0, 0);
-            return new Rect(boundaries.x, boundaries.y, Screen.width * boundaries.width, Screen.height * boundaries.height);
+            return new Rect(boundaries.x, boundaries.y, boundaries.width,  boundaries.height);
         }
 
         void OnEnable()
@@ -548,8 +552,15 @@ namespace Terresquall
                     switch (t.phase)
                     {
                         case Touch.Phase.Began:
-
+                           
                             CheckForInteraction(t.position, t.fingerId);
+
+                            UnityEngine.Debug.Log("tapped");
+                            if (!controlStick.enabled)
+                            {
+                                controlStick.enabled = true;
+                                gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
+                            }
 
                             // If currentPointerId < -1, it means this is the first frame we were
                             // clicked on. Check if we need to Uproot().
@@ -566,6 +577,11 @@ namespace Terresquall
                         case Touch.Phase.Canceled:
                             if (currentPointerId == t.fingerId)
                                 OnPointerUp(new PointerEventData(null));
+
+                            if (dissapearAfterTime) //allow the joystick to dissapear after player stops interaction
+                            {
+                                StartCoroutine(StartDissapearance());
+                            }
                             break;
                     }
                 }
@@ -573,9 +589,15 @@ namespace Terresquall
             }
             else if (GetMouseButtonDown(0))
             {
+                if (!controlStick.enabled)
+                {
+                    controlStick.enabled = true;
+                    gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
+                }
                 // Checks if our Joystick is being clicked on.
                 Vector2 mousePos = GetMousePosition();
                 CheckForInteraction(mousePos, -1);
+               
 
                 // If currentPointerId < -1, it means this is the first frame we were
                 // clicked on. Check if we need to Uproot().
@@ -592,7 +614,32 @@ namespace Terresquall
             if (GetMouseButtonUp(0) && currentPointerId == -1)
             {
                 OnPointerUp(new PointerEventData(null));
+
+                if(dissapearAfterTime) //allow the joystick to dissapear after player stops interaction
+                {
+                    StartCoroutine(StartDissapearance()); 
+                }
+                
             }
+        }
+
+
+        //makes the joystick dissapear after set time
+        IEnumerator StartDissapearance()
+        {
+            float time = 0f;
+            while (time < timeToDissapear)
+            {
+                time += Time.deltaTime;
+                yield return null;
+            }
+
+            if (controlStick.enabled) // avoid redundant disables
+            {
+                controlStick.enabled = false;
+                gameObject.GetComponent<UnityEngine.UI.Image>().enabled = false;
+            }
+
         }
 
         public void Uproot(Vector2 newPos, int newPointerId = -1)
