@@ -17,7 +17,7 @@ namespace Terresquall
 
     [System.Serializable]
     [RequireComponent(typeof(UnityEngine.UI.Image), typeof(RectTransform))]
-    public class VirtualJoystick : MonoBehaviour
+    public partial class VirtualJoystick : MonoBehaviour
     {
 
         [Tooltip("The unique ID for this joystick. Needs to be unique.")]
@@ -76,8 +76,8 @@ namespace Terresquall
         public Rect boundaries;
 
         [Tooltip("joystick will dissapear after not being interacted with for some time")]
-        public bool dissapearAfterTime;
-        public float timeToDissapear;
+        public bool disapearAfterTime;
+        public float timeToDisapear;
 
         // Private variables.
         internal Vector2 desiredPosition, axis, origin, lastAxis;
@@ -392,6 +392,10 @@ namespace Terresquall
 
         void OnEnable()
         {
+            if(disapearAfterTime)
+            {
+                StartCoroutine(StartDissapearance());
+            }
             // If we are not on mobile, and this is mobile only, disable.
             if (!UnityEngine.Application.isMobilePlatform && onlyOnMobile)
             {
@@ -578,7 +582,7 @@ namespace Terresquall
                             if (currentPointerId == t.fingerId)
                                 OnPointerUp(new PointerEventData(null));
 
-                            if (dissapearAfterTime) //allow the joystick to dissapear after player stops interaction
+                            if (disapearAfterTime) //allow the joystick to dissapear after player stops interaction
                             {
                                 StartCoroutine(StartDissapearance());
                             }
@@ -615,7 +619,7 @@ namespace Terresquall
             {
                 OnPointerUp(new PointerEventData(null));
 
-                if(dissapearAfterTime) //allow the joystick to dissapear after player stops interaction
+                if(disapearAfterTime) //allow the joystick to dissapear after player stops interaction
                 {
                     StartCoroutine(StartDissapearance()); 
                 }
@@ -628,7 +632,7 @@ namespace Terresquall
         IEnumerator StartDissapearance()
         {
             float time = 0f;
-            while (time < timeToDissapear)
+            while (time < timeToDisapear)
             {
                 time += Time.deltaTime;
                 yield return null;
