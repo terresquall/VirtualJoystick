@@ -64,47 +64,102 @@ namespace Terresquall
             if (memory.Count < totalMemoryFrames)
                 return false;
 
-            for (int i = 0; i < memory.Count - 30; i++) // Ensure enough frames ahead
+            for (int i = 0; i < memory.Count - 30; i++) // look ahead to avoid out of range
             {
-                // Check for first tap
-                var firstTap = memory[i];
-                if (firstTap.magnitude < 0.7f || firstTap.magnitude > 1f)
+                if (!IsStrongTap(memory[i]))
                     continue;
 
-                // Check for neutral zone after first tap
-                bool neutralFound = false;
-                for (int j = i + 1; j < i + 10; j++)
-                {
-                    if (memory[j].magnitude <= deadzone)
-                    {
-                        neutralFound = true;
-                        break;
-                    }
-                }
-
-                if (!neutralFound)
+                if (!HasNeutralBetween(i + 1, i + 10))
                     continue;
 
-                // Check for second tap after neutral
-                for (int k = i + 10; k < i + 20; k++)
+                int secondTapIndex = FindMatchingSecondTap(i + 10, i + 20, memory[i]);
+                if (secondTapIndex != -1)
                 {
-                    Vector2 secondTap = memory[k];
-                    if (secondTap.magnitude >= 0.7f && secondTap.magnitude <= 1f)
-                    {
-                        float angleBetween = Vector2.Angle(firstTap, secondTap);
-                        if (angleBetween <= 30f)
-                        {
-                            direction = firstTap.normalized;
-                            memory.Clear(); // Clear after detection
-                            return true;
-                        }
-                    }
+                    direction = memory[i].normalized;
+                    memory.Clear(); // prevent repeated triggers
+                    return true;
                 }
             }
 
             return false;
         }
 
+        //check if direction is the same for number of frames
+        public bool GetHoldDirection(out Vector2 direction, int holdFrames = 20)
+        {
+            direction = Vector2.zero;
+
+            if (memory.Count < holdFrames)
+                return false;
+
+            Vector2 total = Vector2.zero;
+            for (int i = 0; i < holdFrames; i++)
+            {
+                if (!IsStrongTap(memory[i]))
+                    return false;
+
+                total += memory[i];
+            }
+
+            direction = total.normalized;
+            return true;
+        }
+
+        public bool GetFlickedTap(out Vector2 direction)
+        {
+            direction = Vector2.zero;
+
+            if (memory.Count < totalMemoryFrames)
+                return false;
+
+            for (int i = 0; i < memory.Count - 30; i++) // look ahead to avoid out of range
+            {
+                if (!IsStrongTap(memory[i]))
+                    continue;
+
+                if (!HasNeutralBetween(i + 1, i + 5))
+                { 
+                    direction = memory[i].normalized;
+                    memory.Clear(); // prevent repeated triggers
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool IsStrongTap(Vector2 input)
+        {
+            float mag = input.magnitude;
+            return mag >= 0.7f && mag <= 1f;
+        }
+
+        private bool HasNeutralBetween(int start, int end)
+        {
+            end = Mathf.Min(end, memory.Count);
+            for (int i = start; i < end; i++)
+            {
+                if (memory[i].magnitude <= deadzone)
+                    return true;
+            }
+            return false;
+        }
+
+        private int FindMatchingSecondTap(int start, int end, Vector2 firstTap)
+        {
+            end = Mathf.Min(end, memory.Count);
+            for (int i = start; i < end; i++)
+            {
+                Vector2 secondTap = memory[i];
+                if (IsStrongTap(secondTap))
+                {
+                    float angle = Vector2.Angle(firstTap, secondTap);
+                    if (angle <= 30f)
+                        return i;
+                }
+            }
+            return -1;
+        }
 
         public List<Vector2> GetInputsInRange(float minIntensity, float maxIntensity)
         {
