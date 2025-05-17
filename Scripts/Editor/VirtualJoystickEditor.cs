@@ -301,8 +301,11 @@ namespace Terresquall {
 
                 // Add a draggable handle in the center to move the boundaries
                 EditorGUI.BeginChangeCheck();
-                var CenterHandle = Quaternion.identity; Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.CircleHandleCap);
-
+#if UNITY_2022_1_OR_NEWER
+                Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.CircleHandleCap);
+#else
+                Vector3 newCenter = Handles.FreeMoveHandle(center, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+#endif
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(vj, "Move Joystick Boundaries");
@@ -319,8 +322,14 @@ namespace Terresquall {
 
                 // Add draggable handles for the corners
                 EditorGUI.BeginChangeCheck();
-                var BottomLeftHandle = Quaternion.identity; Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
-                var TopRightHandle = Quaternion.identity; Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+#if UNITY_2022_1_OR_NEWER
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+#else
+                // For older Unity versions (before 2022.1)
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+#endif
 
                 if (EditorGUI.EndChangeCheck())
                 {
