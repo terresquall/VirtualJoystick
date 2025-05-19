@@ -5,16 +5,15 @@ using Terresquall;
 
 public class VirtualJoystickFade : MonoBehaviour
 {
-    VirtualJoystick joystick;
-    public float activeTime = 2f;
-    public float fadeTime = 1f; // Instead of fadeTime, this sets speed of fading
+    public VirtualJoystick joystick;
+    [Range(0.1f, 100)] public float activeTime = 2f;
+    public float fadeTime = 0.5f;
     public float fadeAlpha = 0.2f;
-    public AnimationCurve fadeCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private Image joystickImage;
     private Image controlStickImage;
-
     private Coroutine fadeCoroutine;
+    private bool joystickActive = false;
 
     void Start()
     {
@@ -25,16 +24,32 @@ public class VirtualJoystickFade : MonoBehaviour
 
     void Update()
     {
+        // Joystick pressed (pointer down)
         if (Input.GetMouseButtonDown(0) && joystick.currentPointerId == -2)
         {
+            joystickActive = true;
+
+            if (fadeCoroutine != null)
+            {
+                StopCoroutine(fadeCoroutine);
+                fadeCoroutine = null;
+            }
+
             SetAlpha(1f);
-            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
         }
 
-        if (Input.GetMouseButtonUp(0) && joystick.currentPointerId == -1)
+        // Joystick released (pointer up or touch ended)
+        if (Input.GetMouseButtonUp(0))
         {
-            if (fadeCoroutine != null) StopCoroutine(fadeCoroutine);
-            fadeCoroutine = StartCoroutine(StartDissapearance());
+            if (joystickActive)
+            {
+                joystickActive = false;
+
+                if (fadeCoroutine != null)
+                    StopCoroutine(fadeCoroutine);
+
+                fadeCoroutine = StartCoroutine(StartDissapearance());
+            }
         }
     }
 
@@ -48,26 +63,23 @@ public class VirtualJoystickFade : MonoBehaviour
             yield return null;
         }
 
-        // Get current alpha from joystick image
+        // Get current alpha from joystick image (or fallback to 1f)
         float startAlpha = joystickImage ? joystickImage.color.a : 1f;
 
-        // Fade out using fade speed and easing
+        // Fade out
         time = 0f;
-        float duration = Mathf.Abs(startAlpha - fadeAlpha) / fadeTime;
-
-        while (time < duration)
+        while (time < fadeTime)
         {
-            float t = time / duration;
-            float easedT = fadeCurve.Evaluate(t);
-            float alpha = Mathf.Lerp(startAlpha, fadeAlpha, easedT);
+            float t = time / fadeTime;
+            float alpha = Mathf.Lerp(startAlpha, fadeAlpha, t);
             SetAlpha(alpha);
 
             time += Time.deltaTime;
             yield return null;
         }
 
-        // Final fade and disable
         SetAlpha(fadeAlpha);
+        fadeCoroutine = null;
     }
 
     void SetAlpha(float alpha)
