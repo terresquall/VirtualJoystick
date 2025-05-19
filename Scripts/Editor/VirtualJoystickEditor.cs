@@ -14,6 +14,8 @@ namespace Terresquall {
         private int scaleFactor;
         private static readonly List<int> usedIDs = new List<int>();
 
+        private bool hasLoggedSnapsToTouch;
+
         void OnEnable() {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
@@ -86,20 +88,22 @@ namespace Terresquall {
         }
 
         public override void OnInspectorGUI() {
+           
 
             // Draw a help text box if this is not attached to a Canvas.
-            if(!EditorUtility.IsPersistent(target)) {
+            if (!EditorUtility.IsPersistent(target)) {
                 if (!canvas)
                     EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
                 else if(canvas.renderMode != RenderMode.ScreenSpaceOverlay)
                     EditorGUILayout.HelpBox("This GameObject is parented to a Canvas that is not set to Screen Space - Overlay. It may be buggy or fail to work entirely.", MessageType.Error);
             }
-
+            
             // Draw all the inspector properties.
             serializedObject.Update();
             SerializedProperty property = serializedObject.GetIterator();
             bool snapsToTouch = true;
             int directions = 0;
+
             if (property.NextVisible(true)) {
                 do {
                     // If the property name is snapsToTouch, record its value.
@@ -123,6 +127,7 @@ namespace Terresquall {
 
                     
                     EditorGUI.BeginChangeCheck();
+
 
                     // Print different properties based on what the property is.
                     if(property.name == "angleOffset") {
@@ -161,6 +166,8 @@ namespace Terresquall {
             }
 
             serializedObject.ApplyModifiedProperties();
+
+           
 
             //Increase Decrease buttons
             if(joystick) {
@@ -260,11 +267,38 @@ namespace Terresquall {
             //}
         }
 
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            VirtualJoystick vj = (VirtualJoystick)target;
+            if (vj.snapsToTouch)
+            {
+                float screenWidth = Screen.width;
+                float screenHeight = Screen.height;
+
+                // Calculate 80% of the screen for boundaries
+                float boundaryWidth = screenWidth * 0.8f;
+                float boundaryHeight = screenHeight * 0.8f;
+
+                // Set default boundaries centered around the object
+                vj.boundaries.x = vj.transform.position.x - (boundaryWidth / 2f);
+                vj.boundaries.y = vj.transform.position.y - (boundaryHeight / 2f);
+                vj.boundaries.width = boundaryWidth;
+                vj.boundaries.height = boundaryHeight;
+
+                UnityEditor.EditorUtility.SetDirty(this); // Marks the object as changed
+            }
+        }
+#endif
+
         void OnSceneGUI()
         {
             VirtualJoystick vj = (VirtualJoystick)target;
 
+            GUILayout.Space(10);
             float radius = vj.GetRadius();
+
 
             // Draw the radius of the joystick.
             Handles.color = new Color(0, 1, 0, 0.1f);
@@ -300,8 +334,13 @@ namespace Terresquall {
                 Vector3 center = new Vector3(vj.boundaries.x + vj.boundaries.width / 2, vj.boundaries.y + vj.boundaries.height / 2);
 
                 // Add a draggable handle in the center to move the boundaries
+                Handles.color = Color.white; //Changes the color of the draggable handles
                 EditorGUI.BeginChangeCheck();
 #if UNITY_2022_1_OR_NEWER
+                //Square handles
+                //Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.RectangleHandleCap);
+
+                //Circle Handles
                 Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.CircleHandleCap);
 #else
                 Vector3 newCenter = Handles.FreeMoveHandle(center, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
@@ -323,23 +362,75 @@ namespace Terresquall {
                 // Add draggable handles for the corners
                 EditorGUI.BeginChangeCheck();
 #if UNITY_2022_1_OR_NEWER
-                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
-#else
-                // For older Unity versions (before 2022.1)
-                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
-#endif
+                //Square handles
+                //Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, 5f, Vector3.zero, Handles.RectangleHandleCap);
 
+                //Circle handles
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+#else
+                //Square handles
+                //Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
+                //Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
+
+                //Circle handles
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+#endif
                 if (EditorGUI.EndChangeCheck())
                 {
                     Undo.RecordObject(vj, "Resize Joystick Boundaries");
 
-                    // Update boundaries based on handle movement (in pixels)
-                    vj.boundaries.x = newBottomLeft.x;
-                    vj.boundaries.y = newBottomLeft.y;
-                    vj.boundaries.width = Mathf.Max(0, newTopRight.x - newBottomLeft.x);
-                    vj.boundaries.height = Mathf.Max(0, newTopRight.y - newBottomLeft.y);
+                    // Determine which handle moved and apply appropriate changes
+                    if (newBottomLeft != bottomLeft)
+                    {
+                        // Bottom left affects x, y, width, height
+                        float deltaX = newBottomLeft.x - bottomLeft.x;
+                        float deltaY = newBottomLeft.y - bottomLeft.y;
+                        vj.boundaries.x += deltaX;
+                        vj.boundaries.y += deltaY;
+                        vj.boundaries.width -= deltaX;
+                        vj.boundaries.height -= deltaY;
+                    }
+                    else if (newTopLeft != topLeft)
+                    {
+                        // Top left affects x and width (moving left edge) and height (moving top edge)
+                        float deltaX = newTopLeft.x - topLeft.x;
+                        float deltaY = newTopLeft.y - topLeft.y;
+                        vj.boundaries.x += deltaX;
+                        vj.boundaries.width -= deltaX;
+                        vj.boundaries.height += deltaY;
+                    }
+                    else if (newTopRight != topRight)
+                    {
+                        // Top right affects width and height
+                        float deltaX = newTopRight.x - topRight.x;
+                        float deltaY = newTopRight.y - topRight.y;
+                        vj.boundaries.width += deltaX;
+                        vj.boundaries.height += deltaY;
+                    }
+                    else if (newBottomRight != bottomRight)
+                    {
+                        // Bottom right affects width (moving right edge) and y, height (moving bottom edge)
+                        float deltaX = newBottomRight.x - bottomRight.x;
+                        float deltaY = newBottomRight.y - bottomRight.y;
+                        vj.boundaries.width += deltaX;
+                        vj.boundaries.y += deltaY;
+                        vj.boundaries.height -= deltaY;
+                    }
+
+                    // Ensure minimum size
+                    vj.boundaries.width = Mathf.Max(1, vj.boundaries.width);
+                    vj.boundaries.height = Mathf.Max(1, vj.boundaries.height);
 
                     EditorUtility.SetDirty(vj);
                 }

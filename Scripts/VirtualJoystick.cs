@@ -75,14 +75,10 @@ namespace Terresquall
         public bool snapsToTouch = false;
         public Rect boundaries;
 
-        [Tooltip("joystick will dissapear after not being interacted with for some time")]
-        public bool disapearAfterTime;
-        public float timeToDisapear;
-
         // Private variables.
         internal Vector2 desiredPosition, axis, origin, lastAxis;
         internal Color originalColor; // Stores the original color of the Joystick.
-        int currentPointerId = -2;
+        public int currentPointerId = -2;
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
@@ -142,7 +138,7 @@ namespace Terresquall
             // Show an error if no joysticks are found.
             if (instances.Count <= 0)
             {
-                    UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
+                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -387,15 +383,11 @@ namespace Terresquall
         public Rect GetBounds()
         {
             if (!snapsToTouch) return new Rect(0, 0, 0, 0);
-            return new Rect(boundaries.x, boundaries.y, boundaries.width,  boundaries.height);
+            return new Rect(boundaries.x, boundaries.y, boundaries.width, boundaries.height);
         }
 
         void OnEnable()
         {
-            if(disapearAfterTime)
-            {
-                StartCoroutine(StartDissapearance());
-            }
             // If we are not on mobile, and this is mobile only, disable.
             if (!UnityEngine.Application.isMobilePlatform && onlyOnMobile)
             {
@@ -556,7 +548,7 @@ namespace Terresquall
                     switch (t.phase)
                     {
                         case Touch.Phase.Began:
-                           
+
                             CheckForInteraction(t.position, t.fingerId);
 
                             UnityEngine.Debug.Log("tapped");
@@ -581,11 +573,6 @@ namespace Terresquall
                         case Touch.Phase.Canceled:
                             if (currentPointerId == t.fingerId)
                                 OnPointerUp(new PointerEventData(null));
-
-                            if (disapearAfterTime) //allow the joystick to dissapear after player stops interaction
-                            {
-                                StartCoroutine(StartDissapearance());
-                            }
                             break;
                     }
                 }
@@ -601,7 +588,7 @@ namespace Terresquall
                 // Checks if our Joystick is being clicked on.
                 Vector2 mousePos = GetMousePosition();
                 CheckForInteraction(mousePos, -1);
-               
+
 
                 // If currentPointerId < -1, it means this is the first frame we were
                 // clicked on. Check if we need to Uproot().
@@ -618,33 +605,11 @@ namespace Terresquall
             if (GetMouseButtonUp(0) && currentPointerId == -1)
             {
                 OnPointerUp(new PointerEventData(null));
-
-                if(disapearAfterTime) //allow the joystick to dissapear after player stops interaction
-                {
-                    StartCoroutine(StartDissapearance()); 
-                }
-                
             }
         }
 
 
-        //makes the joystick dissapear after set time
-        IEnumerator StartDissapearance()
-        {
-            float time = 0f;
-            while (time < timeToDisapear)
-            {
-                time += Time.deltaTime;
-                yield return null;
-            }
 
-            if (controlStick.enabled) // avoid redundant disables
-            {
-                controlStick.enabled = false;
-                gameObject.GetComponent<UnityEngine.UI.Image>().enabled = false;
-            }
-
-        }
 
         public void Uproot(Vector2 newPos, int newPointerId = -1)
         {
