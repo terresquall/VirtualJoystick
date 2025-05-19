@@ -16,6 +16,7 @@ namespace Terresquall {
 
         private bool hasLoggedSnapsToTouch;
 
+
         void OnEnable() {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
@@ -267,30 +268,6 @@ namespace Terresquall {
             //}
         }
 
-
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            VirtualJoystick vj = (VirtualJoystick)target;
-            if (vj.snapsToTouch)
-            {
-                float screenWidth = Screen.width;
-                float screenHeight = Screen.height;
-
-                // Calculate 80% of the screen for boundaries
-                float boundaryWidth = screenWidth * 0.8f;
-                float boundaryHeight = screenHeight * 0.8f;
-
-                // Set default boundaries centered around the object
-                vj.boundaries.x = vj.transform.position.x - (boundaryWidth / 2f);
-                vj.boundaries.y = vj.transform.position.y - (boundaryHeight / 2f);
-                vj.boundaries.width = boundaryWidth;
-                vj.boundaries.height = boundaryHeight;
-
-                UnityEditor.EditorUtility.SetDirty(this); // Marks the object as changed
-            }
-        }
-#endif
 
         void OnSceneGUI()
         {

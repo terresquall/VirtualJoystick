@@ -78,7 +78,7 @@ namespace Terresquall
         // Private variables.
         internal Vector2 desiredPosition, axis, origin, lastAxis;
         internal Color originalColor; // Stores the original color of the Joystick.
-        public int currentPointerId = -2;
+        [HideInInspector] public int currentPointerId = -2;
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
@@ -87,6 +87,24 @@ namespace Terresquall
 
         Vector2Int lastScreen;
         Canvas canvas;
+
+        private void OnValidate()
+        {
+            RectTransform rectTransform = GetComponent<RectTransform>();
+            if (rectTransform == null) return;
+
+            // Only assign a default if boundaries haven't been customized yet
+            if (snapsToTouch && (boundaries.width == 0 && boundaries.height == 0))
+            {
+                // Get the width and height from the RectTransform
+                boundaries.width = rectTransform.rect.width + 250;
+                boundaries.height = rectTransform.rect.height + 250;
+
+                // Center the boundaries around the joystick position
+                boundaries.x = transform.position.x - (boundaries.width / 2f);
+                boundaries.y = transform.position.y - (boundaries.height / 2f);
+            }
+        }
 
         // Get an existing instance of a joystick.
         public static VirtualJoystick GetInstance(int id = 0)
