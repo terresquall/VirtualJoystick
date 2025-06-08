@@ -5,25 +5,21 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-using static System.Net.Mime.MediaTypeNames;
-using System.Diagnostics;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 #endif
 
-namespace Terresquall
-{
+namespace Terresquall {
 
-    [System.Serializable]
-    [RequireComponent(typeof(UnityEngine.UI.Image), typeof(RectTransform))]
-    public partial class VirtualJoystick : MonoBehaviour
-    {
+    [Serializable]
+    [RequireComponent(typeof(Image), typeof(RectTransform))]
+    public partial class VirtualJoystick : MonoBehaviour {
 
         [Tooltip("The unique ID for this joystick. Needs to be unique.")]
         public int ID;
         [Tooltip("The component that the user will drag around for joystick input.")]
-        public UnityEngine.UI.Image controlStick;
+        public Image controlStick;
 
         [Header("Debug")]
         [Tooltip("Prints to the console the control stick's direction within the joystick.")]
@@ -34,8 +30,7 @@ namespace Terresquall
 
         // Function to get an input mode. This is determined by which input system is
         // enabled, or if both input systems are on, on what the user sets.
-        public static InputMode GetInputMode()
-        {
+        public static InputMode GetInputMode() {
 #if ENABLE_INPUT_SYSTEM
 #if ENABLE_LEGACY_INPUT_MANAGER
             return InputMode.oldInputManager;
@@ -54,6 +49,7 @@ namespace Terresquall
         [Tooltip("Colour of the control stick while it is being dragged.")]
         public Color dragColor = new Color(0.9f, 0.9f, 0.9f, 1f);
         //[Tooltip("Sets the joystick back to its original position once it is let go of")] public bool snapToOrigin = false;
+        
         [Tooltip("How responsive the control stick is to dragging.")]
         public float sensitivity = 2f;
         [Tooltip("How far you can drag the control stick away from the joystick's centre.")]
@@ -83,19 +79,22 @@ namespace Terresquall
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
         public const string VERSION = "1.1.5";
-        public const string DATE = "7 APRIL 2025";
+        public const string DATE = "8 June 2025";
 
         Vector2Int lastScreen;
-        Canvas canvas;
+        protected Canvas rootCanvas;
+        public Canvas GetRootCanvas() {
+            Canvas[] all = GetComponentsInParent<Canvas>();
+            if(all.Length > 0) return all[all.Length - 1];
+            return null;
+        }
 
-        private void OnValidate()
-        {
+        void OnValidate() {
             RectTransform rectTransform = GetComponent<RectTransform>();
             if (rectTransform == null) return;
 
             // Only assign a default if boundaries haven't been customized yet
-            if (snapsToTouch && (boundaries.width == 0 && boundaries.height == 0))
-            {
+            if (snapsToTouch && boundaries.width == 0 && boundaries.height == 0) {
                 // Get the width and height from the RectTransform
                 boundaries.width = rectTransform.rect.width + 250;
                 boundaries.height = rectTransform.rect.height + 250;
@@ -107,29 +106,21 @@ namespace Terresquall
         }
 
         // Get an existing instance of a joystick.
-        public static VirtualJoystick GetInstance(int id = 0)
-        {
+        public static VirtualJoystick GetInstance(int id = 0) {
             // Display an error if an invalid ID is used.
-            if (!instances.ContainsKey(id))
-            {
+            if (!instances.ContainsKey(id)) {
                 // If used without any arguments, but no item has an ID of 0,
                 // we get the first item in the dictionary.
-                if (id == 0)
-                {
-                    if (instances.Count > 0)
-                    {
+                if (id == 0) {
+                    if (instances.Count > 0) {
                         id = instances.Keys.First();
-                        UnityEngine.Debug.LogWarning($"You are reading Joystick input without specifying an ID, so joystick ID {id} is being used instead.");
-                    }
-                    else
-                    {
-                        UnityEngine.Debug.LogError("There are no Virtual Joysticks in the Scene!");
+                        Debug.LogWarning($"You are reading Joystick input without specifying an ID, so joystick ID {id} is being used instead.");
+                    } else {
+                        Debug.LogError("There are no Virtual Joysticks in the Scene!");
                         return null;
                     }
-                }
-                else
-                {
-                    UnityEngine.Debug.LogError($"Virtual Joystick ID '{id}' does not exist!");
+                } else {
+                    Debug.LogError($"Virtual Joystick ID '{id}' does not exist!");
                     return null;
                 }
             }
@@ -139,11 +130,9 @@ namespace Terresquall
         }
 
         // Gets us the number of active joysticks on the screen.
-        public static int CountActiveInstances()
-        {
+        public static int CountActiveInstances() {
             int count = 0;
-            foreach (KeyValuePair<int, VirtualJoystick> j in instances)
-            {
+            foreach (KeyValuePair<int, VirtualJoystick> j in instances) {
                 if (j.Value.isActiveAndEnabled)
                     count++;
             }
@@ -151,12 +140,10 @@ namespace Terresquall
         }
 
         public Vector2 GetAxisDelta() { return GetAxis() - lastAxis; }
-        public static Vector2 GetAxisDelta(int id = 0)
-        {
+        public static Vector2 GetAxisDelta(int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
@@ -165,107 +152,84 @@ namespace Terresquall
 
         public Vector2 GetAxis() { return axis; }
 
-        public float GetAxis(string axe)
-        {
-            switch (axe.ToLower())
-            {
-                case "horizontal":
-                case "h":
-                case "x":
+        public float GetAxis(string axe) {
+            switch (axe.ToLower()) {
+                case "horizontal": case "h": case "x":
                     return axis.x;
-                case "vertical":
-                case "v":
-                case "y":
+                case "vertical": case "v": case "y":
                     return axis.y;
             }
             return 0;
         }
 
-        public static float GetAxis(string axe, int id = 0)
-        {
+        public static float GetAxis(string axe, int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return 0;
             }
 
             return GetInstance(id).GetAxis(axe);
         }
 
-        public static Vector2 GetAxis(int id = 0)
-        {
+        public static Vector2 GetAxis(int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                UnityEngine.Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return Vector2.zero;
             }
 
             return GetInstance(id).axis;
         }
 
-        public Vector2 GetAxisRaw()
-        {
+        public Vector2 GetAxisRaw() {
             return new Vector2(
                 Mathf.Abs(axis.x) < deadzone || Mathf.Approximately(axis.x, 0) ? 0 : Mathf.Sign(axis.x),
                 Mathf.Abs(axis.y) < deadzone || Mathf.Approximately(axis.y, 0) ? 0 : Mathf.Sign(axis.y)
             );
         }
 
-        public float GetAxisRaw(string axe)
-        {
+        public float GetAxisRaw(string axe) {
             float f = GetAxis(axe);
             if (Mathf.Abs(f) < deadzone || Mathf.Approximately(f, 0))
                 return 0;
             return Mathf.Sign(f);
         }
 
-        public static float GetAxisRaw(string axe, int id = 0)
-        {
+        public static float GetAxisRaw(string axe, int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                UnityEngine.Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No active instance of Virtual Joystick found on the Scene.");
                 return 0;
             }
 
             return GetInstance(id).GetAxisRaw(axe);
         }
 
-        public static Vector2 GetAxisRaw(int id = 0)
-        {
+        public static Vector2 GetAxisRaw(int id = 0) {
             // Show an error if no joysticks are found.
-            if (instances.Count <= 0)
-            {
-                UnityEngine.Debug.LogWarning("No instances of joysticks found on the Scene.");
+            if (instances.Count <= 0) {
+                Debug.LogWarning("No instances of joysticks found on the Scene.");
                 return Vector2.zero;
             }
 
             return GetInstance(id).GetAxisRaw();
         }
 
-        public float GetRadius()
-        {
+        public float GetRadius() {
             RectTransform t = transform as RectTransform;
 
-            if (t)
-            {
-                if (canvas != null)
-                {
-                    if (canvas.renderMode == RenderMode.WorldSpace || canvas.renderMode == RenderMode.ScreenSpaceCamera)
-                    {
-                        float canvasScaleFactor = canvas.scaleFactor;
+            if (t) {
+                if (rootCanvas != null) {
+                    if (rootCanvas.renderMode == RenderMode.WorldSpace || rootCanvas.renderMode == RenderMode.ScreenSpaceCamera) {
+                        float canvasScaleFactor = rootCanvas.scaleFactor;
                         float adjustedRadius = radius * canvasScaleFactor;
 
                         return adjustedRadius;
-                    }
-                    else
-                    {
+                    } else {
                         return radius * t.rect.width * 0.5f;
                     }
                 }
-
             }
 
             // Default radius if RectTransform or Canvas is not found
@@ -273,50 +237,42 @@ namespace Terresquall
         }
 
         // What happens when we press down on the element.
-        public void OnPointerDown(PointerEventData data)
-        {
+        public void OnPointerDown(PointerEventData data) {
             currentPointerId = data.pointerId;
             SetPosition(data.position);
             controlStick.color = dragColor;
         }
 
         // What happens when we stop pressing down on the element.
-        public void OnPointerUp(PointerEventData data)
-        {
+        public void OnPointerUp(PointerEventData data) {
             desiredPosition = transform.position;
             controlStick.color = originalColor;
             currentPointerId = -2;
 
             //Snaps the joystick back to its original position
-            /*if (snapToOrigin && (Vector2)transform.position != origin) {
-                transform.position = origin;
-                SetPosition(origin);
-            }*/
+            //if (snapToOrigin && (Vector2)transform.position != origin) {
+            //    transform.position = origin;
+            //    SetPosition(origin);
+            //}
         }
 
-        protected void SetPosition(Vector2 screenPosition)
-        {
+        protected void SetPosition(Vector2 screenPosition) {
             Vector2 position;
-            //if canvas render mode is in screenspace
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
-            {
+
+            // If canvas render mode is in screen space.
+            if (rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay) {
                 position = screenPosition;  // Directly use screen position
-            }
-            else //if canvas render mode is in camera/world space
-            {
+            } else {
+                // If canvas render mode is in camera / world space.
                 Vector3 worldPoint;
                 if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                    canvas.transform as RectTransform,
+                    rootCanvas.transform as RectTransform,
                     screenPosition,
-                    canvas.worldCamera,
+                    rootCanvas.worldCamera,
                     out worldPoint
-                ))
-                {
+                )) {
                     position = worldPoint; // Convert world position to 2D
-
-                }
-                else
-                {
+                } else {
                     position = screenPosition; // Fallback to screen position
                 }
             }
@@ -326,18 +282,15 @@ namespace Terresquall
             float radius = GetRadius();
             bool snapToEdge = edgeSnap && (diff.magnitude / radius) > deadzone;
 
-            if (directions <= 0) // Check if there are no directional constraints
-            {
+            // Check if there are no directional constraints.
+            if (directions <= 0) {
                 // If snapToEdge is enabled, move the joystick to the edge of the radius;
                 // otherwise, clamp the movement to the radius based on the input distance (diff).
                 desiredPosition = snapToEdge
                     ? (Vector2)transform.position + diff.normalized * radius // Snap to the edge of the joystick's radius
                     : (Vector2)transform.position + Vector2.ClampMagnitude(diff, radius); // Clamp movement within the radius
-            }
-            else
-            {
-                // If there are directional constraints
-                // calculate the nearest snap direction
+            } else {
+                // If there are directional constraints, calculate the nearest snap direction.
                 Vector2 snapDirection = SnapDirection(diff.normalized, directions, ((360f / directions) + angleOffset) * Mathf.Deg2Rad);
 
                 // If snapToEdge is enabled move the joystick to the edge in the snap direction
@@ -349,8 +302,7 @@ namespace Terresquall
         }
 
         // Calculates nearest directional snap vector to the actual directional vector of the joystick
-        private Vector2 SnapDirection(Vector2 vector, int directions, float symmetryAngle)
-        {
+        private Vector2 SnapDirection(Vector2 vector, int directions, float symmetryAngle) {
             //Gets the line of symmetry between 2 snap directions
             Vector2 symmetryLine = new Vector2(Mathf.Cos(symmetryAngle), Mathf.Sin(symmetryAngle));
 
@@ -365,8 +317,7 @@ namespace Terresquall
             angle = (angle >= 0f) ? Mathf.Floor(angle) : Mathf.Ceil(angle);
 
             // Checks if angle is odd
-            if ((int)Mathf.Abs(angle) % 2 == 1)
-            {
+            if ((int)Mathf.Abs(angle) % 2 == 1) {
                 // Adds or subtracts 1 to ensure that angle is always even.
                 angle += (angle >= 0f) ? 1 : -1;
             }
@@ -383,14 +334,11 @@ namespace Terresquall
         }
 
         // Loops through children to find an appropriate component to put in.
-        void Reset()
-        {
-            for (int i = 0; i < transform.childCount; i++)
-            {
+        void Reset() {
+            for (int i = 0; i < transform.childCount; i++) {
                 // Once we find an appropriate Image component, abort.
-                UnityEngine.UI.Image img = transform.GetChild(i).GetComponent<UnityEngine.UI.Image>();
-                if (img)
-                {
+                Image img = transform.GetChild(i).GetComponent<Image>();
+                if (img) {
                     controlStick = img;
                     break;
                 }
@@ -404,31 +352,22 @@ namespace Terresquall
             return new Rect(boundaries.x, boundaries.y, boundaries.width, boundaries.height);
         }
 
-        void OnEnable()
-        {
+        void OnEnable() {
             // If we are not on mobile, and this is mobile only, disable.
-            if (!UnityEngine.Application.isMobilePlatform && onlyOnMobile)
-            {
+            if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
-                UnityEngine.Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
+                Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
                 return;
             }
 
             // Gets the Canvas that this joystick is on.
-            canvas = GetComponentInParent<Canvas>();
-            if (!canvas)
-            {
-                UnityEngine.Debug.LogError(
+            rootCanvas = GetRootCanvas();
+            if (!rootCanvas) {
+                Debug.LogError(
                     $"Your Virtual Joystick \"{name})\" is not attached to a Canvas, so it won't work. It has been disabled.",
                     gameObject
                 );
                 enabled = false;
-            }
-
-            // Warning for canvas.
-            if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-            {
-                UnityEngine.Debug.LogWarning($"Your Virtual Joystick \"{name}\" is attached to a Canvas that does not have a Render Mode of Overlay. It will be buggy or fail to work entirely.");
             }
 
             origin = desiredPosition = transform.position;
@@ -443,29 +382,26 @@ namespace Terresquall
             if (!instances.ContainsKey(ID))
                 instances.Add(ID, this);
             else
-                UnityEngine.Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
+                Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
         }
 
         // Added in Version 1.0.2.
         // Resets the position of the joystick again 1 frame after the game starts.
         // This is because the Canvas gets rescaled after the game starts, and this affects
         // how the position is calculated.        
-        IEnumerator Activate()
-        {
+        IEnumerator Activate() {
             yield return new WaitForEndOfFrame();
             origin = desiredPosition = transform.position;
         }
 
-        void OnDisable()
-        {
+        void OnDisable() {
             if (instances.ContainsKey(ID))
                 instances.Remove(ID);
             else
-                UnityEngine.Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
+                Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
         }
 
-        void Update()
-        {
+        void Update() {
             PositionUpdate();
             CheckForDrag();
 
@@ -482,18 +418,16 @@ namespace Terresquall
                 axis = Vector2.zero;
 
             // If a joystick is toggled and we are debugging, output to console.
-            if (axis.sqrMagnitude > 0)
-            {
+            if (axis.sqrMagnitude > 0) {
                 string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
                 if (consolePrintAxis)
-                    UnityEngine.Debug.Log(output);
+                    Debug.Log(output);
             }
         }
 
         // Takes the mouse's or finger's position and registers OnPointerDown()
         // if the position hits any part of our Joystick.
-        void CheckForInteraction(Vector2 position, int pointerId = -1)
-        {
+        void CheckForInteraction(Vector2 position, int pointerId = -1)  {
             // Create PointerEventData
             PointerEventData data = new PointerEventData(null);
             data.position = position;
@@ -501,15 +435,13 @@ namespace Terresquall
 
             // Perform raycast using GraphicRaycaster attached to the Canvas
             List<RaycastResult> results = new List<RaycastResult>();
-            GraphicRaycaster raycaster = canvas.GetComponent<GraphicRaycaster>();
+            GraphicRaycaster raycaster = rootCanvas.GetComponent<GraphicRaycaster>();
             raycaster.Raycast(data, results);
 
             // Go through the results, and compare it to 
-            foreach (RaycastResult result in results)
-            {
+            foreach (RaycastResult result in results) {
                 // Check if the hit GameObject is the control stick or one of its children
-                if (IsGameObjectOrChild(result.gameObject, gameObject))
-                {
+                if (IsGameObjectOrChild(result.gameObject, gameObject)) {
                     // Start dragging the joystick
                     OnPointerDown(data);
                     break;
@@ -517,71 +449,56 @@ namespace Terresquall
             }
         }
 
-        void CheckForDrag()
-        { // Used if using the old Input Manager
+        void CheckForDrag() { 
+            // Used if using the old Input Manager
             // If the screen has changed, reset the joystick.
-            if (lastScreen.x != Screen.width || lastScreen.y != Screen.height)
-            {
+            if (lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
                 lastScreen = new Vector2Int(Screen.width, Screen.height);
                 OnEnable();
             }
 
             // If the currentPointerId > -2, we are being dragged.
-            if (currentPointerId > -2)
-            {
+            if (currentPointerId > -2) {
                 // If this is more than -1, the Joystick is manipulated by touch.
-                if (currentPointerId > -1)
-                {
+                if (currentPointerId > -1) {
 
                     // We need to loop through all touches to find the one we want.
-                    for (int i = 0; i < GetTouchCount(); i++)
-                    {
+                    for (int i = 0; i < GetTouchCount(); i++) {
                         Touch t = GetTouch(i);
-                        if (t.fingerId == currentPointerId)
-                        {
+                        if (t.fingerId == currentPointerId) {
                             SetPosition(t.position);
                             break;
                         }
                     }
 
-                }
-                else
-                {
+                } else {
                     // Otherwise, we are being manipulated by the mouse position.
                     SetPosition(GetMousePosition());
                 }
             }
         }
 
-        void PositionUpdate()
-        {
+        void PositionUpdate() {
             // Handle the joystick interaction on Touch.
             int touchCount = GetTouchCount();
-            if (touchCount > 0)
-            {
+            if (touchCount > 0) {
                 // Also detect touch events too.
-                for (int i = 0; i < touchCount; i++)
-                {
+                for (int i = 0; i < touchCount; i++) {
+
                     Touch t = GetTouch(i);
-                    switch (t.phase)
-                    {
+                    switch (t.phase) {
                         case Touch.Phase.Began:
 
                             CheckForInteraction(t.position, t.fingerId);
-
-                            UnityEngine.Debug.Log("tapped");
-                            if (!controlStick.enabled)
-                            {
+                            if (!controlStick.enabled) {
                                 controlStick.enabled = true;
-                                gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
+                                gameObject.GetComponent<Image>().enabled = true;
                             }
 
                             // If currentPointerId < -1, it means this is the first frame we were
                             // clicked on. Check if we need to Uproot().
-                            if (currentPointerId < -1)
-                            {
-                                if (GetBounds().Contains(t.position))
-                                {
+                            if (currentPointerId < -1) {
+                                if (GetBounds().Contains(t.position)) {
                                     Uproot(t.position, t.fingerId);
                                     return;
                                 }
@@ -595,66 +512,52 @@ namespace Terresquall
                     }
                 }
 
-            }
-            else if (GetMouseButtonDown(0))
-            {
-                if (!controlStick.enabled)
-                {
+            } else if (GetMouseButtonDown(0)) {
+
+                if (!controlStick.enabled) {
                     controlStick.enabled = true;
-                    gameObject.GetComponent<UnityEngine.UI.Image>().enabled = true;
+                    gameObject.GetComponent<Image>().enabled = true;
                 }
+
                 // Checks if our Joystick is being clicked on.
                 Vector2 mousePos = GetMousePosition();
                 CheckForInteraction(mousePos, -1);
 
-
                 // If currentPointerId < -1, it means this is the first frame we were
                 // clicked on. Check if we need to Uproot().
-                if (currentPointerId < -1)
-                {
-                    if (GetBounds().Contains(mousePos))
-                    {
+                if (currentPointerId < -1) {
+                    if (GetBounds().Contains(mousePos)) {
                         Uproot(mousePos);
                     }
                 }
             }
 
             // Trigger OnPointerUp() when we release the button.
-            if (GetMouseButtonUp(0) && currentPointerId == -1)
-            {
+            if (GetMouseButtonUp(0) && currentPointerId == -1) {
                 OnPointerUp(new PointerEventData(null));
             }
         }
 
+        public void Uproot(Vector2 newPos, int newPointerId = -1)  {
 
-
-
-        public void Uproot(Vector2 newPos, int newPointerId = -1)
-        {
             // Skip if we don't move far enough from the joystick's current position
-            if (Vector2.Distance(transform.position, newPos) < GetRadius())
-                return;
+            if (Vector2.Distance(transform.position, newPos) < GetRadius()) return;
 
             Vector2 position;
-
-            if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
-            {
+            if (rootCanvas.renderMode == RenderMode.ScreenSpaceOverlay) {
                 // Overlay: newPos is already in screen space, just assign it directly
                 position = newPos;
-            }
-            else // For ScreenSpaceCamera or WorldSpace
-            {
+            } else {
+                // For ScreenSpaceCamera or WorldSpace
                 Vector3 worldPoint;
                 if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                    canvas.transform as RectTransform,
+                    rootCanvas.transform as RectTransform,
                     newPos,
-                    canvas.worldCamera,
-                    out worldPoint))
-                {
+                    rootCanvas.worldCamera,
+                    out worldPoint
+                )) {
                     position = worldPoint;
-                }
-                else
-                {
+                } else {
                     // Fallback to screen position if conversion fails
                     position = newPos;
                 }
@@ -665,8 +568,7 @@ namespace Terresquall
             desiredPosition = position;
 
             // Simulate pointer down
-            PointerEventData data = new PointerEventData(EventSystem.current)
-            {
+            PointerEventData data = new PointerEventData(EventSystem.current) {
                 position = newPos,
                 pointerId = newPointerId
             };
@@ -676,8 +578,7 @@ namespace Terresquall
 
         // Utility method to check if <hitObject> is <target> or its children.
         // Used by CheckForInteraction().
-        bool IsGameObjectOrChild(GameObject hitObject, GameObject target)
-        {
+        bool IsGameObjectOrChild(GameObject hitObject, GameObject target) {
             if (hitObject == target) return true;
 
             foreach (Transform child in target.transform)
@@ -688,8 +589,7 @@ namespace Terresquall
 
         // Get the mouse position. The function automatically adapts
         // depending on the input system used.
-        static Vector2 GetMousePosition()
-        {
+        static Vector2 GetMousePosition() {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
@@ -700,8 +600,7 @@ namespace Terresquall
             return Input.mousePosition;
         }
 
-        static bool GetMouseButton(int buttonId)
-        {
+        static bool GetMouseButton(int buttonId) {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
@@ -722,8 +621,7 @@ namespace Terresquall
             return Input.GetMouseButton(buttonId);
         }
 
-        static bool GetMouseButtonDown(int buttonId)
-        {
+        static bool GetMouseButtonDown(int buttonId) {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
@@ -745,8 +643,7 @@ namespace Terresquall
             return Input.GetMouseButtonDown(buttonId);
         }
 
-        static bool GetMouseButtonUp(int buttonId)
-        {
+        static bool GetMouseButtonUp(int buttonId) {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
@@ -768,16 +665,14 @@ namespace Terresquall
         }
 
         // Nested touch class to manage both kinds of touch.
-        public class Touch
-        {
+        public class Touch {
             public Vector2 position;
             public int fingerId = -1;
             public enum Phase { None, Began, Moved, Stationary, Ended, Canceled }
             public Phase phase = Phase.None;
         }
 
-        static Touch GetTouch(int touchId)
-        {
+        static Touch GetTouch(int touchId) {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:
@@ -790,16 +685,14 @@ namespace Terresquall
 #endif
             // Default to the old input system.
             UnityEngine.Touch t = Input.GetTouch(touchId);
-            return new Touch
-            {
+            return new Touch {
                 position = t.position,
                 fingerId = t.fingerId,
                 phase = (Touch.Phase)Enum.Parse(typeof(Touch.Phase), t.phase.ToString())
             };
         }
 
-        static int GetTouchCount()
-        {
+        static int GetTouchCount() {
 #if ENABLE_INPUT_SYSTEM
             switch(GetInputMode()) {
                 case InputMode.newInputSystem:

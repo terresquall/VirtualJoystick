@@ -1,5 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
+using System;
+using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 namespace Terresquall {
 
@@ -9,18 +12,22 @@ namespace Terresquall {
 
         VirtualJoystick joystick;
         RectTransform rectTransform;
-        Canvas canvas;
+        Canvas rootCanvas;
 
-        private int scaleFactor;
+        const float HANDLE_SIZE = 5f;
+
         private static readonly List<int> usedIDs = new List<int>();
 
-        private bool hasLoggedSnapsToTouch;
-
+        public float GetHandleSize() {
+            if(rootCanvas != null && rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                return HANDLE_SIZE / 90;
+            return HANDLE_SIZE;
+        }
 
         void OnEnable() {
             joystick = target as VirtualJoystick;
             rectTransform = joystick.GetComponent<RectTransform>();
-            canvas = joystick.GetComponentInParent<Canvas>();
+            rootCanvas = joystick.GetRootCanvas();
         }
 
         static VirtualJoystick[] FindAll() {
@@ -89,16 +96,22 @@ namespace Terresquall {
         }
 
         public override void OnInspectorGUI() {
-           
 
             // Draw a help text box if this is not attached to a Canvas.
             if (!EditorUtility.IsPersistent(target)) {
-                if (!canvas)
-                    EditorGUILayout.HelpBox("This GameObject needs to be parented to a Canvas, or it won't work!", MessageType.Warning);
-                else if(canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-                    EditorGUILayout.HelpBox("This GameObject is parented to a Canvas that is not set to Screen Space - Overlay. It may be buggy or fail to work entirely.", MessageType.Error);
+                if (!rootCanvas)
+                    EditorGUILayout.HelpBox("This joystick needs to be parented to a Canvas, or it won't work!", MessageType.Error);
+                else if(rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+                    EditorGUILayout.HelpBox("This joystick is parented to a Canvas that is not set to Screen Space - Overlay. It may be buggy or fail to work entirely.", MessageType.Error);
             }
             
+            // Show this only when both input systems are used.
+#if ENABLE_INPUT_SYSTEM
+    #if ENABLE_LEGACY_INPUT_MANAGER
+            EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Virtual Joystick will default to using the old Input Manager to maintain compatibility with Unity Remote.", MessageType.Info);
+    #endif
+#endif
+
             // Draw all the inspector properties.
             serializedObject.Update();
             SerializedProperty property = serializedObject.GetIterator();
@@ -126,23 +139,12 @@ namespace Terresquall {
                             break;
                     }
 
-                    
                     EditorGUI.BeginChangeCheck();
-
 
                     // Print different properties based on what the property is.
                     if(property.name == "angleOffset") {
                         float maxAngleOffset = 360f / directions / 2;
                         EditorGUILayout.Slider(property, -maxAngleOffset, maxAngleOffset, new GUIContent("Angle Offset"));
-                    } else if(property.name == "consolePrintAxis") {
-
-                        // Print the property itself, plus the static variable
-                        EditorGUILayout.PropertyField(property, true);
-
-                        // Show this only when both input systems are used.
-#if ENABLE_INPUT_SYSTEM && ENABLE_LEGACY_INPUT_MANAGER
-                        EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Virtual Joysticks will default to using the old Input Manager to maintain compatibility with Unity Remote.", MessageType.Info);
-#endif                        
                     } else {
                         EditorGUILayout.PropertyField(property, true);
                     }
@@ -167,8 +169,6 @@ namespace Terresquall {
             }
 
             serializedObject.ApplyModifiedProperties();
-
-           
 
             //Increase Decrease buttons
             if(joystick) {
@@ -214,68 +214,14 @@ namespace Terresquall {
                 GUILayout.EndHorizontal();
                 EditorGUI.EndChangeCheck();
             }
-
-            ////Boundaries Stuff
-            //GUILayout.Space(15);
-            //EditorGUILayout.LabelField("Boundaries:", EditorStyles.boldLabel);
-            //joystick.snapsToTouch = EditorGUILayout.Toggle("Snap to Touch", joystick.snapsToTouch);
-
-            //EditorGUILayout.LabelField("Boundaries");
-            //EditorGUIUtility.labelWidth = 15;
-            //GUILayout.BeginHorizontal();
-            //joystick.boundaries.x = EditorGUILayout.Slider("X", joystick.boundaries.x, 0, 1);
-            //joystick.boundaries.y = EditorGUILayout.Slider("Y", joystick.boundaries.y, 0, 1);
-            //GUILayout.EndHorizontal();
-
-            //GUILayout.BeginHorizontal();
-            //joystick.boundaries.width = EditorGUILayout.Slider("W", joystick.boundaries.width, 0, 1);
-            //joystick.boundaries.height = EditorGUILayout.Slider("H", joystick.boundaries.height, 0, 1);
-            //GUILayout.EndHorizontal();
-
-            ////Bounds Anchor buttons
-            //GUILayout.Space(3);
-            //EditorGUILayout.LabelField("Bounds Anchor:", EditorStyles.boldLabel);
-            //GUILayout.BeginHorizontal();
-            //if (GUILayout.Button("Top Left", EditorStyles.miniButtonLeft))
-            //{
-
-            //}
-            //if (GUILayout.Button("Top Right", EditorStyles.miniButtonRight))
-            //{
-
-            //}
-            //GUILayout.EndHorizontal();
-
-            //if (GUILayout.Button("Middle"))
-            //{
-
-            //}
-
-            //GUILayout.BeginHorizontal();
-            //if (GUILayout.Button("Bottom Left", EditorStyles.miniButtonLeft))
-            //{
-
-            //}
-            //if (GUILayout.Button("Bottom Right", EditorStyles.miniButtonRight))
-            //{
-
-            //}
-            //GUILayout.EndHorizontal();
-
-            //if (EditorGUI.EndChangeCheck())
-            //{
-
-            //}
         }
 
 
-        void OnSceneGUI()
-        {
+        void OnSceneGUI() {
             VirtualJoystick vj = (VirtualJoystick)target;
 
             GUILayout.Space(10);
             float radius = vj.GetRadius();
-
 
             // Draw the radius of the joystick.
             Handles.color = new Color(0, 1, 0, 0.1f);
@@ -290,8 +236,8 @@ namespace Terresquall {
             Handles.DrawWireArc(vj.transform.position, Vector3.forward, Vector3.right, 360, radius * vj.deadzone, 3f);
 
             // Draw the boundaries of the joystick.
-            if (vj.GetBounds().size.sqrMagnitude > 0)
-            {
+            if (vj.GetBounds().size.sqrMagnitude > 0) {
+
                 // Draw the lines of the bounds.
                 Handles.color = Color.yellow;
 
@@ -300,6 +246,17 @@ namespace Terresquall {
                 Vector3 topLeft = new Vector3(vj.boundaries.x, vj.boundaries.y + vj.boundaries.height);
                 Vector3 topRight = new Vector3(vj.boundaries.x + vj.boundaries.width, vj.boundaries.y + vj.boundaries.height);
                 Vector3 bottomRight = new Vector3(vj.boundaries.x + vj.boundaries.width, vj.boundaries.y);
+
+                // Convert the anchors if the canvas is a different screen space.
+                Canvas c = vj.GetRootCanvas();
+                if(c != null && c.renderMode != RenderMode.ScreenSpaceOverlay) {
+                    RectTransform cr = rootCanvas.transform as RectTransform;
+                    Camera cc = rootCanvas.worldCamera;
+                    RectTransformUtility.ScreenPointToWorldPointInRectangle(cr, bottomLeft, cc, out bottomLeft);
+                    RectTransformUtility.ScreenPointToWorldPointInRectangle(cr, topLeft, cc, out topLeft);
+                    RectTransformUtility.ScreenPointToWorldPointInRectangle(cr, topRight, cc, out topRight);
+                    RectTransformUtility.ScreenPointToWorldPointInRectangle(cr, bottomRight, cc, out bottomRight);
+                }
 
                 // Draw the boundary lines
                 Handles.DrawLine(bottomLeft, topLeft);
@@ -311,19 +268,16 @@ namespace Terresquall {
                 Vector3 center = new Vector3(vj.boundaries.x + vj.boundaries.width / 2, vj.boundaries.y + vj.boundaries.height / 2);
 
                 // Add a draggable handle in the center to move the boundaries
-                Handles.color = Color.white; //Changes the color of the draggable handles
+                Handles.color = Color.yellow;
+                float size = GetHandleSize();
                 EditorGUI.BeginChangeCheck();
 #if UNITY_2022_1_OR_NEWER
-                //Square handles
-                //Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.RectangleHandleCap);
-
                 //Circle Handles
-                Vector3 newCenter = Handles.FreeMoveHandle(center, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newCenter = Handles.FreeMoveHandle(center, size, Vector3.zero, Handles.CircleHandleCap);
 #else
-                Vector3 newCenter = Handles.FreeMoveHandle(center, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newCenter = Handles.FreeMoveHandle(center, Quaternion.identity, size, Vector3.zero, Handles.CircleHandleCap);
 #endif
-                if (EditorGUI.EndChangeCheck())
-                {
+                if (EditorGUI.EndChangeCheck()) {
                     Undo.RecordObject(vj, "Move Joystick Boundaries");
 
                     // Move the boundaries based on the handle's new position
@@ -339,37 +293,23 @@ namespace Terresquall {
                 // Add draggable handles for the corners
                 EditorGUI.BeginChangeCheck();
 #if UNITY_2022_1_OR_NEWER
-                //Square handles
-                //Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, 5f, Vector3.zero, Handles.RectangleHandleCap);
-
                 //Circle handles
-                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, size, Vector3.zero, Handles.CircleHandleCap);
 #else
-                //Square handles
-                //Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
-                //Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, Quaternion.identity, 5f, Vector3.zero, Handles.RectangleHandleCap);
-
                 //Circle handles
-                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
-                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, Quaternion.identity, 5f, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomLeft = Handles.FreeMoveHandle(bottomLeft, Quaternion.identity, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopLeft = Handles.FreeMoveHandle(topLeft, Quaternion.identity, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newTopRight = Handles.FreeMoveHandle(topRight, Quaternion.identity, size, Vector3.zero, Handles.CircleHandleCap);
+                Vector3 newBottomRight = Handles.FreeMoveHandle(bottomRight, Quaternion.identity, size, Vector3.zero, Handles.CircleHandleCap);
 #endif
-                if (EditorGUI.EndChangeCheck())
-                {
+                if (EditorGUI.EndChangeCheck()) {
                     Undo.RecordObject(vj, "Resize Joystick Boundaries");
 
                     // Determine which handle moved and apply appropriate changes
-                    if (newBottomLeft != bottomLeft)
-                    {
+                    if (newBottomLeft != bottomLeft) {
                         // Bottom left affects x, y, width, height
                         float deltaX = newBottomLeft.x - bottomLeft.x;
                         float deltaY = newBottomLeft.y - bottomLeft.y;
@@ -377,26 +317,20 @@ namespace Terresquall {
                         vj.boundaries.y += deltaY;
                         vj.boundaries.width -= deltaX;
                         vj.boundaries.height -= deltaY;
-                    }
-                    else if (newTopLeft != topLeft)
-                    {
+                    } else if (newTopLeft != topLeft) {
                         // Top left affects x and width (moving left edge) and height (moving top edge)
                         float deltaX = newTopLeft.x - topLeft.x;
                         float deltaY = newTopLeft.y - topLeft.y;
                         vj.boundaries.x += deltaX;
                         vj.boundaries.width -= deltaX;
                         vj.boundaries.height += deltaY;
-                    }
-                    else if (newTopRight != topRight)
-                    {
+                    } else if (newTopRight != topRight) {
                         // Top right affects width and height
                         float deltaX = newTopRight.x - topRight.x;
                         float deltaY = newTopRight.y - topRight.y;
                         vj.boundaries.width += deltaX;
                         vj.boundaries.height += deltaY;
-                    }
-                    else if (newBottomRight != bottomRight)
-                    {
+                    } else if (newBottomRight != bottomRight) {
                         // Bottom right affects width (moving right edge) and y, height (moving bottom edge)
                         float deltaX = newBottomRight.x - bottomRight.x;
                         float deltaY = newBottomRight.y - bottomRight.y;
@@ -414,19 +348,14 @@ namespace Terresquall {
             }
 
             // Draw the direction anchors of the joystick.
-            if (vj.directions > 0)
-            {
+            if (vj.directions > 0) {
                 Handles.color = Color.blue;
                 float partition = 360f / vj.directions;
-                for (int i = 0; i < vj.directions; i++)
-                {
+                for (int i = 0; i < vj.directions; i++) {
                     Handles.DrawLine(vj.transform.position, vj.transform.position + Quaternion.Euler(0, 0, i * partition + vj.angleOffset) * Vector2.right * radius, 2f);
                 }
             }
         }
-
-
-
 
         // Function to return gcd of a and b
         int GCD(int a, int b) {
@@ -457,7 +386,7 @@ namespace Terresquall {
             return result;
         }
 
-        void RecordSizeChangeUndo(Object[] arguments) {
+        void RecordSizeChangeUndo(UnityEngine.Object[] arguments) {
             for (int i = 0; i < arguments.Length; i++) {
                 Undo.RecordObject(arguments[i], "Undo Virtual Joystick Size Change");
             }
