@@ -212,6 +212,20 @@ namespace Terresquall {
                 }
 
                 GUILayout.EndHorizontal();
+                //Checks if Joystick's Pivot is centred
+                if (rectTransform != null && (Mathf.Abs(rectTransform.pivot.x - 0.5f) > 0.01f || Mathf.Abs(rectTransform.pivot.y - 0.5f) > 0.01f))
+                {
+                    //displays warning and button to recentre pivot
+                    EditorGUILayout.HelpBox("Your pivot is not centred (should be 0.5, 0.5). This can cause the joystick to break.", MessageType.Warning);
+                    if (GUILayout.Button("Fix: Centre Pivot"))
+                    {
+                        Undo.RecordObject(rectTransform, "Center Pivot");
+                        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+                        EditorUtility.SetDirty(rectTransform);
+                    }
+                    EditorGUILayout.Space();
+                }
+
                 EditorGUI.EndChangeCheck();
             }
         }
