@@ -78,8 +78,8 @@ namespace Terresquall {
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
-        public const string VERSION = "1.1.5";
-        public const string DATE = "8 June 2025";
+        public const string VERSION = "1.1.7";
+        public const string DATE = "20 August 2025";
 
         Vector2Int lastScreen;
         protected Canvas rootCanvas;
@@ -256,6 +256,19 @@ namespace Terresquall {
             //}
         }
 
+        // Will be expanded upon in future.
+        // Currently just blocks interactions if we are in a CanvasGroup.
+        public bool IsInteractable() {
+            // Check all CanvasGroups in the Hierarchy to see if any
+            // one of them is disabled.
+            CanvasGroup[] groups = GetComponentsInParent<CanvasGroup>(true);
+            foreach(CanvasGroup g in groups) {
+                if(!g.interactable) return false;
+                if(g.enabled && g.ignoreParentGroups) break;
+            }
+            return true;
+        }
+
         protected void SetPosition(Vector2 screenPosition) {
             Vector2 position;
 
@@ -428,6 +441,9 @@ namespace Terresquall {
         // Takes the mouse's or finger's position and registers OnPointerDown()
         // if the position hits any part of our Joystick.
         void CheckForInteraction(Vector2 position, int pointerId = -1)  {
+
+            if(!IsInteractable()) return;
+
             // Create PointerEventData
             PointerEventData data = new PointerEventData(null);
             data.position = position;
@@ -450,6 +466,9 @@ namespace Terresquall {
         }
 
         void CheckForDrag() { 
+
+            if(!IsInteractable()) return;
+
             // Used if using the old Input Manager
             // If the screen has changed, reset the joystick.
             if (lastScreen.x != Screen.width || lastScreen.y != Screen.height) {
@@ -539,6 +558,8 @@ namespace Terresquall {
         }
 
         public void Uproot(Vector2 newPos, int newPointerId = -1)  {
+
+            if(!IsInteractable()) return;
 
             // Skip if we don't move far enough from the joystick's current position
             if (Vector2.Distance(transform.position, newPos) < GetRadius()) return;
