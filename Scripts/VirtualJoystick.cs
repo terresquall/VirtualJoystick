@@ -5,6 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Linq;
+using UnityEngine.InputSystem.LowLevel;
+
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -42,6 +44,10 @@ namespace Terresquall {
             return InputMode.oldInputManager;
 #endif
         }
+
+#if ENABLE_INPUT_SYSTEM
+        VirtualJoystickDevice inputSystemDevice;
+#endif
 
         [Header("Settings")]
         [Tooltip("Disables the joystick if not on a mobile platform.")]
@@ -226,10 +232,9 @@ namespace Terresquall {
                         float adjustedRadius = radius * canvasScaleFactor;
 
                         return adjustedRadius;
-                    } else {
-                        return radius * t.rect.width * 0.5f;
                     }
                 }
+                return radius * Mathf.Max(t.rect.width, t.rect.height) * 0.5f;
             }
 
             // Default radius if RectTransform or Canvas is not found
@@ -366,6 +371,12 @@ namespace Terresquall {
         }
 
         void OnEnable() {
+#if ENABLE_INPUT_SYSTEM
+            inputSystemDevice = InputSystem.AddDevice<VirtualJoystickDevice>($"VirtualJoystick{ID}");
+            if (inputSystemDevice == null)
+                Debug.LogError($"Unable to add Input System device for Virtual Joystick named {name}.");
+#endif
+
             // If we are not on mobile, and this is mobile only, disable.
             if (!Application.isMobilePlatform && onlyOnMobile) {
                 gameObject.SetActive(false);
@@ -412,6 +423,13 @@ namespace Terresquall {
                 instances.Remove(ID);
             else
                 Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
+
+ #if ENABLE_INPUT_SYSTEM
+            if (inputSystemDevice != null) {
+                InputSystem.RemoveDevice(inputSystemDevice);
+                inputSystemDevice = null;
+            }
+#endif
         }
 
         void Update() {
@@ -436,6 +454,16 @@ namespace Terresquall {
                 if (consolePrintAxis)
                     Debug.Log(output);
             }
+
+            // Output joystick values to any Input Action devices and update.
+#if ENABLE_INPUT_SYSTEM
+            if(inputSystemDevice != null) {
+                using (StateEvent.From(inputSystemDevice, out InputEventPtr eventPtr)) {
+                    inputSystemDevice.stick.WriteValueIntoEvent(axis, eventPtr);
+                    InputSystem.QueueEvent(eventPtr);
+                }
+            }
+#endif
         }
 
         // Takes the mouse's or finger's position and registers OnPointerDown()
