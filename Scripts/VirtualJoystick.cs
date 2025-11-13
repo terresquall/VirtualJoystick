@@ -46,7 +46,7 @@ namespace Terresquall {
         }
 
 #if ENABLE_INPUT_SYSTEM
-        VirtualJoystickDevice inputSystemDevice;
+        Devices.VirtualJoystick inputSystemDevice;
 #endif
 
         [Header("Settings")]
@@ -372,9 +372,11 @@ namespace Terresquall {
 
         void OnEnable() {
 #if ENABLE_INPUT_SYSTEM
-            inputSystemDevice = InputSystem.AddDevice<VirtualJoystickDevice>($"VirtualJoystick{ID}");
+            inputSystemDevice = InputSystem.AddDevice<Devices.VirtualJoystick>($"VirtualJoystick{ID}");
             if (inputSystemDevice == null)
                 Debug.LogError($"Unable to add Input System device for Virtual Joystick named {name}.");
+            else
+                InputSystem.SetDeviceUsage(inputSystemDevice, ID.ToString());
 #endif
 
             // If we are not on mobile, and this is mobile only, disable.

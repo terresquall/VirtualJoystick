@@ -8,29 +8,29 @@ using UnityEngine.Scripting;
 using UnityEditor;
 #endif
 
-namespace Terresquall {
+namespace Terresquall.Devices {
 #if UNITY_EDITOR
     [InitializeOnLoad]
 #endif
     [Preserve]
     [InputControlLayout(displayName = "Virtual Joystick")]
-    public class VirtualJoystickDevice : Joystick {
+    public class VirtualJoystick : Joystick {
 
 #if UNITY_EDITOR
-        static VirtualJoystickDevice() {
+        static VirtualJoystick() {
             Initialize();
         }
 #endif
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void Initialize() {
-            InputSystem.RegisterLayout<VirtualJoystickDevice>();
+            InputSystem.RegisterLayout<VirtualJoystick>();
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AddDeviceIfMissing() {
-            if (InputSystem.GetDevice<VirtualJoystickDevice>() == null) {
-                InputSystem.AddDevice<VirtualJoystickDevice>();
+            if (InputSystem.GetDevice<VirtualJoystick>() == null) {
+                InputSystem.AddDevice<VirtualJoystick>();
                 Debug.Log("[VirtualJoystickDevice] Added virtual joystick device");
             }
         }
