@@ -26,14 +26,6 @@ namespace Terresquall.Devices {
         private static void Initialize() {
             InputSystem.RegisterLayout<VirtualJoystick>();
         }
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void AddDeviceIfMissing() {
-            if (InputSystem.GetDevice<VirtualJoystick>() == null) {
-                InputSystem.AddDevice<VirtualJoystick>();
-                Debug.Log("[VirtualJoystickDevice] Added virtual joystick device");
-            }
-        }
     }
 }
 #endif

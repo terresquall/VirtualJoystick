@@ -84,8 +84,8 @@ namespace Terresquall {
 
         internal static readonly Dictionary<int, VirtualJoystick> instances = new Dictionary<int, VirtualJoystick>();
 
-        public const string VERSION = "1.1.7";
-        public const string DATE = "20 August 2025";
+        public const string VERSION = "1.2.0";
+        public const string DATE = "20 November 2025";
 
         Vector2Int lastScreen;
         protected Canvas rootCanvas;
@@ -453,13 +453,13 @@ namespace Terresquall {
             // If a joystick is toggled and we are debugging, output to console.
             if (axis.sqrMagnitude > 0) {
                 string output = string.Format("Virtual Joystick ({0}): {1}", name, axis);
-                if (consolePrintAxis)
-                    Debug.Log(output);
+                if (consolePrintAxis) Debug.Log(output);
             }
 
             // Output joystick values to any Input Action devices and update.
 #if ENABLE_INPUT_SYSTEM
-            if(inputSystemDevice != null) {
+            Vector2 delta = GetAxisDelta();
+            if(inputSystemDevice != null && delta.sqrMagnitude > 0) {
                 using (StateEvent.From(inputSystemDevice, out InputEventPtr eventPtr)) {
                     inputSystemDevice.stick.WriteValueIntoEvent(axis, eventPtr);
                     InputSystem.QueueEvent(eventPtr);
