@@ -77,6 +77,13 @@ namespace Terresquall {
         public bool snapsToTouch = false;
         public Rect boundaries;
 
+#if ENABLE_INPUT_SYSTEM
+        [Header("Input System")]
+        [Tooltip("Add an input device for this Joystick, so that it can be bound to an Input Action.")]
+        public bool addInputDevice = true;
+        public string usage = "Primary2DMotion";
+#endif
+
         // Private variables.
         internal Vector2 desiredPosition, axis, origin, lastAxis;
         internal Color originalColor; // Stores the original color of the Joystick.

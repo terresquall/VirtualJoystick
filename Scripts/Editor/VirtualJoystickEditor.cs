@@ -208,22 +208,21 @@ namespace Terresquall {
                      decreaseSize = GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight);
 
                 if(increaseSize || decreaseSize) {
-                    // Calculate the sizes needed for the increment / decrement.
-                    int gcd = Mathf.RoundToInt(FindGCD((int)rectTransform.sizeDelta.x, (int)joystick.controlStick.rectTransform.sizeDelta.x));
-                    Vector2 denominator = new Vector2(gcd, gcd);
-
+                    
                     // Record actions for all elements.
                     RectTransform[] affected = rectTransform.GetComponentsInChildren<RectTransform>();
                     RecordSizeChangeUndo(affected);
 
                     // Increase / decrease size actions.
-                    if(increaseSize) {
-                        foreach(RectTransform r in affected)
-                            r.sizeDelta += r.sizeDelta / denominator;
-                    } else if(decreaseSize) {
-                        foreach(RectTransform r in affected)
-                            r.sizeDelta -= r.sizeDelta / denominator;
+                    foreach(RectTransform r in affected) {
+                        Vector2 newSize;
+                        if(increaseSize) newSize = r.rect.size * 1.15f;
+                        else newSize = r.rect.size *0.85f;
+
+                        r.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal,newSize.x);
+                        r.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newSize.y);
                     }
+
                 }
 
                 GUILayout.EndHorizontal();
@@ -232,7 +231,7 @@ namespace Terresquall {
             }
         }
 
-
+        
         void OnSceneGUI() {
             VirtualJoystick vj = (VirtualJoystick)target;
 
@@ -371,35 +370,6 @@ namespace Terresquall {
                     Handles.DrawLine(vj.transform.position, vj.transform.position + Quaternion.Euler(0, 0, i * partition + vj.angleOffset) * Vector2.right * radius, 2f);
                 }
             }
-        }
-
-        // Function to return gcd of a and b
-        int GCD(int a, int b) {
-            if (b == 0) return a;
-            return GCD(b, a % b);
-        }
-
-        // Function to find gcd of array of numbers
-        int FindGCD(params int[] numbers) {
-            if (numbers.Length == 0) {
-                Debug.LogError("No numbers provided");
-                return 0; // or handle the error in an appropriate way
-            }
-
-            int result = numbers[0];
-            for (int i = 1; i < numbers.Length; i++) {
-
-                result = GCD(result, numbers[i]);
-
-                if (result == 1) {
-                    return 1;
-                } else if (result <= 0) {
-                    Debug.LogError("The size value for one or more of the Joystick elements is not more than 0");
-                    // You might want to handle this error in an appropriate way
-                    return 0; // or handle the error in an appropriate way
-                }
-            }
-            return result;
         }
 
         void RecordSizeChangeUndo(UnityEngine.Object[] arguments) {
