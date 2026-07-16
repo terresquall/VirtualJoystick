@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System;
 using System.Linq;
-using UnityEngine.InputSystem.LowLevel;
 
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -46,7 +45,13 @@ namespace Terresquall {
         }
 
 #if ENABLE_INPUT_SYSTEM
-        Devices.VirtualJoystick inputSystemDevice;
+        [SerializeField]
+        [Tooltip(
+            "Sends this joystick's axis to the " +
+            "New Input System."
+        )]
+        private VirtualJoystickInputSystemBridge
+            inputSystemBridge;
 #endif
 
         [Header("Settings")]
@@ -79,9 +84,12 @@ namespace Terresquall {
 
 #if ENABLE_INPUT_SYSTEM
         [Header("Input System")]
-        [Tooltip("Add an input device for this Joystick, so that it can be bound to an Input Action.")]
+
+        [Tooltip(
+            "Send this joystick's axis to the " +
+            "New Input System through the Bridge."
+        )]
         public bool addInputDevice = true;
-        public string usage = "Primary2DMotion";
 #endif
 
         // Private variables.
@@ -377,45 +385,91 @@ namespace Terresquall {
             return new Rect(boundaries.x, boundaries.y, boundaries.width, boundaries.height);
         }
 
-        void OnEnable() {
-#if ENABLE_INPUT_SYSTEM
-            inputSystemDevice = InputSystem.AddDevice<Devices.VirtualJoystick>($"VirtualJoystick{ID}");
-            if (inputSystemDevice == null)
-                Debug.LogError($"Unable to add Input System device for Virtual Joystick named {name}.");
-            else
-                InputSystem.SetDeviceUsage(inputSystemDevice, ID.ToString());
-#endif
-
-            // If we are not on mobile, and this is mobile only, disable.
-            if (!Application.isMobilePlatform && onlyOnMobile) {
+        void OnEnable()
+        {
+            // If we are not on mobile, and this is mobile only,
+            // disable the joystick.
+            if (
+                !Application.isMobilePlatform &&
+                onlyOnMobile
+            )
+            {
                 gameObject.SetActive(false);
-                Debug.Log($"Your Virtual Joystick \"{name}\" is disabled because Only On Mobile is checked, and you are not on a mobile platform or mobile emualation.", gameObject);
+
+                Debug.Log(
+                    $"Your Virtual Joystick \"{name}\" is disabled " +
+                    $"because Only On Mobile is checked, and you are " +
+                    $"not on a mobile platform or mobile emualation.",
+                    gameObject
+                );
+
                 return;
             }
 
-            // Gets the Canvas that this joystick is on.
-            rootCanvas = GetRootCanvas();
-            if (!rootCanvas) {
+#if ENABLE_INPUT_SYSTEM
+            if (inputSystemBridge == null)
+            {
+                inputSystemBridge =
+                    GetComponent<
+                        VirtualJoystickInputSystemBridge
+                    >();
+            }
+
+            if (inputSystemBridge != null)
+            {
+                inputSystemBridge.enabled =
+                    addInputDevice;
+            }
+            else if (addInputDevice)
+            {
                 Debug.LogError(
-                    $"Your Virtual Joystick \"{name})\" is not attached to a Canvas, so it won't work. It has been disabled.",
+                    $"Virtual Joystick \"{name}\" needs a " +
+                    $"{nameof(VirtualJoystickInputSystemBridge)} " +
+                    $"component to output to the New Input System.",
                     gameObject
                 );
+            }
+#endif
+
+            // Gets the Canvas that this joystick is on.
+            rootCanvas = GetRootCanvas();
+
+            if (!rootCanvas)
+            {
+                Debug.LogError(
+                    $"Your Virtual Joystick \"{name})\" is not " +
+                    $"attached to a Canvas, so it won't work. " +
+                    $"It has been disabled.",
+                    gameObject
+                );
+
                 enabled = false;
             }
 
             origin = desiredPosition = transform.position;
+
             StartCoroutine(Activate());
+
             originalColor = controlStick.color;
 
-            // Record the screen's attributes so we can detect changes to screen size,
-            // such a phone changing orientations.
-            lastScreen = new Vector2Int(Screen.width, Screen.height);
+            lastScreen = new Vector2Int(
+                Screen.width,
+                Screen.height
+            );
 
-            // Add this instance to the List.
             if (!instances.ContainsKey(ID))
+            {
                 instances.Add(ID, this);
+            }
             else
-                Debug.LogWarning("You have multiple Virtual Joysticks with the same ID on the Scene! You may not be able to retrieve input from some of them.", this);
+            {
+                Debug.LogWarning(
+                    "You have multiple Virtual Joysticks with " +
+                    "the same ID on the Scene! You may not be " +
+                    "able to retrieve input from some of them.",
+                    this
+                );
+            }
         }
 
         // Added in Version 1.0.2.
@@ -427,16 +481,27 @@ namespace Terresquall {
             origin = desiredPosition = transform.position;
         }
 
-        void OnDisable() {
+        void OnDisable()
+        {
             if (instances.ContainsKey(ID))
+            {
                 instances.Remove(ID);
+            }
             else
-                Debug.LogWarning("Unable to remove disabled joystick from the global Virtual Joystick list. You may have changed the ID of your joystick on runtime.", this);
+            {
+                Debug.LogWarning(
+                    "Unable to remove disabled joystick from " +
+                    "the global Virtual Joystick list. You may " +
+                    "have changed the ID of your joystick on runtime.",
+                    this
+                );
+            }
 
- #if ENABLE_INPUT_SYSTEM
-            if (inputSystemDevice != null) {
-                InputSystem.RemoveDevice(inputSystemDevice);
-                inputSystemDevice = null;
+#if ENABLE_INPUT_SYSTEM
+            if (inputSystemBridge != null)
+            {
+                inputSystemBridge.SendAxis(Vector2.zero);
+                inputSystemBridge.enabled = false;
             }
 #endif
         }
@@ -466,11 +531,14 @@ namespace Terresquall {
             // Output joystick values to any Input Action devices and update.
 #if ENABLE_INPUT_SYSTEM
             Vector2 delta = GetAxisDelta();
-            if(inputSystemDevice != null && delta.sqrMagnitude > 0) {
-                using (StateEvent.From(inputSystemDevice, out InputEventPtr eventPtr)) {
-                    inputSystemDevice.stick.WriteValueIntoEvent(axis, eventPtr);
-                    InputSystem.QueueEvent(eventPtr);
-                }
+
+            if (
+                addInputDevice &&
+                inputSystemBridge != null &&
+                delta.sqrMagnitude > 0f
+            )
+            {
+                inputSystemBridge.SendAxis(axis);
             }
 #endif
         }
