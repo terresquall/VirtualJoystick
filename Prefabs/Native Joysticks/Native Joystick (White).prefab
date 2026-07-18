@@ -32,7 +32,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8834734170784175513}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -104,6 +103,7 @@ GameObject:
   - component: {fileID: 8834734170784175525}
   - component: {fileID: 8834734170784175524}
   - component: {fileID: 8834734170784175514}
+  - component: {fileID: -2739409833696889329}
   m_Layer: 5
   m_Name: Native Joystick (White)
   m_TagString: Untagged
@@ -125,7 +125,6 @@ RectTransform:
   m_Children:
   - {fileID: 8834734169634807593}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -185,6 +184,7 @@ MonoBehaviour:
   ID: 0
   controlStick: {fileID: 8834734169634807594}
   consolePrintAxis: 0
+  inputSystemBridge: {fileID: 0}
   onlyOnMobile: 0
   dragColor: {r: 0.9, g: 0.9, b: 0.9, a: 1}
   sensitivity: 1000
@@ -200,3 +200,19 @@ MonoBehaviour:
     y: 0
     width: 0
     height: 0
+  addInputDevice: 1
+  currentPointerId: -2
+  totalMemoryFrames: 99
+--- !u!114 &-2739409833696889329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8834734170784175512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ac85bdc190fc6b45a60da68e675a92b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ControlPath: <Gamepad>/leftStick
