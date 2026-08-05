@@ -65,9 +65,7 @@ namespace Terresquall {
 
         [Tooltip("Joystick automatically snaps to the edge when outside the deadzone.")]
         public bool edgeSnap;
-        [Tooltip("Number of directions of the joystick. " +
-            "\nKeep at 0 for a free joystick. " +
-            "\nWorks best with multiples of 4")]
+        [Tooltip("Number of directions of the joystick. Keep at 0 for a free joystick.")]
         [Range(0, 20)] public int directions = 0;
 
         [Tooltip("Use this to adjust the angle that the directions are pointed towards.")]
