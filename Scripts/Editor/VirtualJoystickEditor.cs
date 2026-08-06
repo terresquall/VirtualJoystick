@@ -99,12 +99,25 @@ namespace Terresquall {
         }
 
         public override void OnInspectorGUI() {
+
+            VirtualJoystickEditorLocalization.DrawLanguageSelector();
+            EditorGUILayout.Space();
+
             //Checks if Joystick's Pivot is centred
             if (rectTransform != null && (Mathf.Abs(rectTransform.pivot.x - 0.5f) > 0.01f || Mathf.Abs(rectTransform.pivot.y - 0.5f) > 0.01f)) {
                 //displays warning and button to recentre pivot
-                EditorGUILayout.HelpBox("Your pivot is not centred (should be 0.5, 0.5). This can cause the joystick to be unusable.", MessageType.Error);
-                Debug.LogError("Your pivot is not centred (should be 0.5, 0.5). This can cause the joystick to be unusable.");
-                if (GUILayout.Button("Fix: Centre Pivot")) {
+                string pivotWarning =
+                    VirtualJoystickEditorLocalization.PivotWarning;
+
+                EditorGUILayout.HelpBox(
+                    pivotWarning,
+                    MessageType.Error
+                );
+
+                Debug.LogError(pivotWarning);
+
+                if (GUILayout.Button(
+                    VirtualJoystickEditorLocalization.FixCentrePivot)) {
                     Undo.RecordObject(rectTransform, "Center Pivot");
                     rectTransform.pivot = new Vector2(0.5f, 0.5f);
                     EditorUtility.SetDirty(rectTransform);
@@ -116,15 +129,24 @@ namespace Terresquall {
             // Draw a help text box if this is not attached to a Canvas.
             if (!EditorUtility.IsPersistent(target)) {
                 if (!rootCanvas)
-                    EditorGUILayout.HelpBox("This joystick needs to be parented to a Canvas, or it won't work!", MessageType.Error);
+                    EditorGUILayout.HelpBox(
+                        VirtualJoystickEditorLocalization.CanvasRequired,
+                        MessageType.Error
+                    );
                 else if (rootCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
-                    EditorGUILayout.HelpBox("This joystick is parented to a Canvas that is not set to Screen Space - Overlay. It may be buggy or fail to work entirely.", MessageType.Error);
+                    EditorGUILayout.HelpBox(
+                        VirtualJoystickEditorLocalization.WrongCanvasMode,
+                        MessageType.Error
+                    );
             }
 
             // Show this only when both input systems are used.
 #if ENABLE_INPUT_SYSTEM
 #if ENABLE_LEGACY_INPUT_MANAGER
-            EditorGUILayout.HelpBox("Both of Unity's Input Systems are enabled on this project. Virtual Joystick will default to using the old Input Manager to maintain compatibility with Unity Remote.", MessageType.Info);
+            EditorGUILayout.HelpBox(
+                VirtualJoystickEditorLocalization.BothInputSystems,
+                MessageType.Info
+            );
 #endif
 #endif
 
@@ -155,14 +177,35 @@ namespace Terresquall {
                             break;
                     }
 
+                    string sectionHeader =
+                        VirtualJoystickEditorLocalization.SectionHeader(property.name);
+
+                    if (!string.IsNullOrEmpty(sectionHeader)) {
+                        EditorGUILayout.Space();
+                        EditorGUILayout.LabelField(
+                            sectionHeader,
+                            EditorStyles.boldLabel
+                        );
+                    }
+
                     EditorGUI.BeginChangeCheck();
 
                     // Print different properties based on what the property is.
                     if (property.name == "angleOffset") {
                         float maxAngleOffset = 360f / directions / 2;
-                        EditorGUILayout.Slider(property, -maxAngleOffset, maxAngleOffset, new GUIContent("Angle Offset"));
+
+                        EditorGUILayout.Slider(
+                            property,
+                            -maxAngleOffset,
+                            maxAngleOffset,
+                            VirtualJoystickEditorLocalization.PropertyContent(property)
+                        );
                     } else {
-                        EditorGUILayout.PropertyField(property, true);
+                        EditorGUILayout.PropertyField(
+                            property,
+                            VirtualJoystickEditorLocalization.PropertyContent(property),
+                            true
+                        );
                     }
 
                     EditorGUI.EndChangeCheck();
@@ -170,13 +213,23 @@ namespace Terresquall {
                     // If the property is an ID, show a button allowing us to reassign the IDs.
                     if (property.name == "ID" && !EditorUtility.IsPersistent(target)) {
                         if (!HasUniqueID(joystick)) {
-                            EditorGUILayout.HelpBox("This Virtual Joystick doesn't have a unique ID. Please assign a unique ID or click on the button below.", MessageType.Warning);
-                            if (GUILayout.Button("Generate Unique Joystick ID")) {
+                            EditorGUILayout.HelpBox(
+                                VirtualJoystickEditorLocalization.NonUniqueID,
+                                MessageType.Warning
+                            );
+
+                            if (GUILayout.Button(
+                                VirtualJoystickEditorLocalization.GenerateUniqueID)) {
                                 ReassignThisID(joystick);
                             }
+
                             EditorGUILayout.Space();
                         } else if (HasRepeatIDs()) {
-                            EditorGUILayout.HelpBox("At least one of your Virtual Joysticks doesn't have a unique ID. Please ensure that all of them have unique IDs, or they may not be able to collect input properly.", MessageType.Warning);
+                            EditorGUILayout.HelpBox(
+                                VirtualJoystickEditorLocalization.RepeatedIDs,
+                                MessageType.Warning
+                            );
+
                             EditorGUILayout.Space();
                         }
                     }
@@ -190,23 +243,39 @@ namespace Terresquall {
             if (joystick) {
 
                 if (!joystick.controlStick) {
-                    EditorGUILayout.HelpBox("There is no Control Stick assigned. This joystick won't work.", MessageType.Warning);
+                    EditorGUILayout.HelpBox(
+                        VirtualJoystickEditorLocalization.NoControlStick,
+                        MessageType.Warning
+                    );
+
                     return;
                 }
 
                 if (!joystick.controlStick.transform.IsChildOf(joystick.transform)) {
-                    EditorGUILayout.HelpBox("The control stick of this joystick is not a child of this joystick.", MessageType.Warning);
+                    EditorGUILayout.HelpBox(
+                        VirtualJoystickEditorLocalization.ControlStickNotChild,
+                        MessageType.Warning
+                    );
+
                     return;
                 }
 
                 // Add the heading for the size adjustments.
                 EditorGUI.BeginChangeCheck();
-                EditorGUILayout.LabelField("Size Adjustments");
+                EditorGUILayout.LabelField(
+                    VirtualJoystickEditorLocalization.SizeAdjustments
+                );
+
                 GUILayout.BeginHorizontal();
 
-                // Create the Increase / Decrease Size buttons and code the actions.
-                bool increaseSize = GUILayout.Button("Increase Size", EditorStyles.miniButtonLeft),
-                     decreaseSize = GUILayout.Button("Decrease Size", EditorStyles.miniButtonRight);
+                bool increaseSize = GUILayout.Button(
+                        VirtualJoystickEditorLocalization.IncreaseSize,
+                        EditorStyles.miniButtonLeft
+                    ),
+                    decreaseSize = GUILayout.Button(
+                        VirtualJoystickEditorLocalization.DecreaseSize,
+                        EditorStyles.miniButtonRight
+                    );
 
                 if (increaseSize || decreaseSize) {
 
@@ -459,7 +528,7 @@ namespace Terresquall {
                 // an earlier script reload.
                 RemoveDynamicMenuItem(menuPath);
 
-                bool registered = AddDynamicMenuItem(menuPath,priority++,() => CreateJoystick(capturedPrefabPath));
+                bool registered = AddDynamicMenuItem(menuPath, priority++, () => CreateJoystick(capturedPrefabPath));
                 if (registered) registeredHierarchyMenuItems.Add(menuPath);
                 else registrationFailed = true;
             }
@@ -479,7 +548,7 @@ namespace Terresquall {
         static string GetPrefabsFolderPath([CallerFilePath] string sourceFilePath = "") {
             if (!string.IsNullOrEmpty(cachedPrefabsFolderPath) && AssetDatabase.IsValidFolder(cachedPrefabsFolderPath))
                 return cachedPrefabsFolderPath;
-            
+
             if (string.IsNullOrEmpty(sourceFilePath)) {
                 Debug.LogError("Unable to locate VirtualJoystickEditor.cs.");
                 return null;
@@ -493,8 +562,8 @@ namespace Terresquall {
                 string possibleAssetRoot = NormaliseFullPath(directory.FullName);
                 if (!IsSameOrChildPath(possibleAssetRoot, projectRootPath)) break;
 
-                string scriptsFullPath = NormaliseFullPath( Path.Combine(possibleAssetRoot, SCRIPTS_FOLDER_NAME) );
-                string prefabsFullPath = NormaliseFullPath( Path.Combine(possibleAssetRoot, PREFABS_FOLDER_NAME) );
+                string scriptsFullPath = NormaliseFullPath(Path.Combine(possibleAssetRoot, SCRIPTS_FOLDER_NAME));
+                string prefabsFullPath = NormaliseFullPath(Path.Combine(possibleAssetRoot, PREFABS_FOLDER_NAME));
 
                 // The correct Asset root must contain both:
                 //
@@ -503,7 +572,7 @@ namespace Terresquall {
                 //
                 // This prevents the search from accidentally using an unrelated Assets/Prefabs folder.
                 if (IsSameOrChildPath(sourceFullPath, scriptsFullPath) && Directory.Exists(prefabsFullPath)) {
-                    string prefabsAssetPath = GetProjectRelativePath(prefabsFullPath,projectRootPath);
+                    string prefabsAssetPath = GetProjectRelativePath(prefabsFullPath, projectRootPath);
                     if (!string.IsNullOrEmpty(prefabsAssetPath) && AssetDatabase.IsValidFolder(prefabsAssetPath)) {
                         cachedPrefabsFolderPath = prefabsAssetPath;
                         return cachedPrefabsFolderPath;
@@ -539,7 +608,7 @@ namespace Terresquall {
             string normalisedFullPath = NormaliseFullPath(fullPath);
             string normalisedProjectRoot = NormaliseFullPath(projectRootPath);
 
-            if ( !IsSameOrChildPath(normalisedFullPath, normalisedProjectRoot ) )
+            if (!IsSameOrChildPath(normalisedFullPath, normalisedProjectRoot))
                 return null;
 
             string relativePath = normalisedFullPath.Substring(normalisedProjectRoot.Length).TrimStart(
@@ -701,7 +770,7 @@ namespace Terresquall {
             Canvas canvas = canvasObject.GetComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
 
-            Undo.RegisterCreatedObjectUndo(canvasObject,"Create Canvas");
+            Undo.RegisterCreatedObjectUndo(canvasObject, "Create Canvas");
             CreateEventSystem();
 
             return canvas;
@@ -716,14 +785,14 @@ namespace Terresquall {
 #endif
 
             if (existingEventSystem) return;
-            GameObject eventSystemObject = new GameObject("EventSystem",typeof(EventSystem));
+            GameObject eventSystemObject = new GameObject("EventSystem", typeof(EventSystem));
 
 #if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
             eventSystemObject.AddComponent<UnityEngine.InputSystem.UI.InputSystemUIInputModule>();
 #else
             eventSystemObject.AddComponent<StandaloneInputModule>();
 #endif
-            Undo.RegisterCreatedObjectUndo(eventSystemObject,"Create EventSystem");
+            Undo.RegisterCreatedObjectUndo(eventSystemObject, "Create EventSystem");
         }
 
         static void OpenPrefabsFolder() {
@@ -768,7 +837,7 @@ namespace Terresquall {
                 return;
             }
 
-            int folderInstanceID = GetProjectFolderInstanceID(folderPath,folderAsset);
+            int folderInstanceID = GetProjectFolderInstanceID(folderPath, folderAsset);
             if (folderInstanceID == 0) {
                 Debug.LogWarning($"Unable to obtain the Project Browser ID for folder: {folderPath}");
                 SelectAndPingFolder(folderAsset);
@@ -777,7 +846,7 @@ namespace Terresquall {
 
             BindingFlags instanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             MethodInfo initialiseMethod = projectBrowserType.GetMethod("Init", instanceFlags, null, Type.EmptyTypes, null);
-            FieldInfo viewModeField = projectBrowserType.GetField("m_ViewMode",instanceFlags);
+            FieldInfo viewModeField = projectBrowserType.GetField("m_ViewMode", instanceFlags);
 
             try {
                 projectBrowser.Show();
@@ -791,7 +860,7 @@ namespace Terresquall {
                     Selection.activeObject = folderAsset;
                     AssetDatabase.OpenAsset(folderInstanceID);
                 } else {
-                    OpenFolderInTwoColumnProjectBrowser(projectBrowserType,projectBrowser,folderInstanceID,folderAsset);
+                    OpenFolderInTwoColumnProjectBrowser(projectBrowserType, projectBrowser, folderInstanceID, folderAsset);
                 }
 
                 projectBrowser.Repaint();
@@ -808,12 +877,12 @@ namespace Terresquall {
             }
         }
 
-        static void OpenFolderInTwoColumnProjectBrowser(Type projectBrowserType,EditorWindow projectBrowser,int folderInstanceID,UnityEngine.Object folderAsset) {
+        static void OpenFolderInTwoColumnProjectBrowser(Type projectBrowserType, EditorWindow projectBrowser, int folderInstanceID, UnityEngine.Object folderAsset) {
             BindingFlags instanceFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
             MethodInfo setFolderSelectionMethod = projectBrowserType.GetMethod(
-                "SetFolderSelection", instanceFlags, null, 
-                new Type[] {typeof(int[]),typeof(bool)},null
+                "SetFolderSelection", instanceFlags, null,
+                new Type[] { typeof(int[]), typeof(bool) }, null
             );
 
             if (setFolderSelectionMethod == null) {
@@ -822,7 +891,7 @@ namespace Terresquall {
                 return;
             }
 
-            setFolderSelectionMethod.Invoke(projectBrowser,new object[]{new[] { folderInstanceID },true});
+            setFolderSelectionMethod.Invoke(projectBrowser, new object[] { new[] { folderInstanceID }, true });
         }
 
         static EditorWindow GetProjectBrowserWindow(Type projectBrowserType) {
@@ -833,7 +902,7 @@ namespace Terresquall {
 
             BindingFlags staticFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
-            FieldInfo lastInteractedField = projectBrowserType.GetField("s_LastInteractedProjectBrowser",staticFlags);
+            FieldInfo lastInteractedField = projectBrowserType.GetField("s_LastInteractedProjectBrowser", staticFlags);
             EditorWindow lastInteractedWindow = lastInteractedField?.GetValue(null) as EditorWindow;
 
             if (lastInteractedWindow) return lastInteractedWindow;
@@ -848,7 +917,7 @@ namespace Terresquall {
             return EditorWindow.GetWindow(projectBrowserType);
         }
 
-        static int GetProjectFolderInstanceID(string folderPath,UnityEngine.Object folderAsset) {
+        static int GetProjectFolderInstanceID(string folderPath, UnityEngine.Object folderAsset) {
             BindingFlags staticFlags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
 
             MethodInfo getFolderIDMethod = typeof(AssetDatabase).GetMethod(
@@ -858,7 +927,7 @@ namespace Terresquall {
 
             if (getFolderIDMethod != null) {
                 try {
-                    object result = getFolderIDMethod.Invoke(null,new object[] { folderPath });
+                    object result = getFolderIDMethod.Invoke(null, new object[] { folderPath });
 
                     if (result is int) {
                         int folderInstanceID = (int)result;

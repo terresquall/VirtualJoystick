@@ -7,15 +7,42 @@ namespace Terresquall {
     public class VirtualJoystickEdgeFeedbackEditor : Editor {
 
         public override void OnInspectorGUI() {
-            // Draw the default inspector
-            DrawDefaultInspector();
 
-            // Get the target component
-            VirtualJoystickEdgeFeedback edgeFeedback = (VirtualJoystickEdgeFeedback)target;
+            VirtualJoystickEditorLocalization.DrawLanguageSelector();
+            EditorGUILayout.Space();
 
-            // Check if AudioSource is not detected and display a warning message
+            serializedObject.Update();
+
+            SerializedProperty property = serializedObject.GetIterator();
+
+            if (property.NextVisible(true)) {
+                do {
+                    if (property.name == "m_Script") {
+                        EditorGUI.BeginDisabledGroup(true);
+                        EditorGUILayout.PropertyField(property, true);
+                        EditorGUI.EndDisabledGroup();
+                        continue;
+                    }
+
+                    EditorGUILayout.PropertyField(
+                        property,
+                        VirtualJoystickEditorLocalization.EdgeFeedbackPropertyContent(property),
+                        true
+                    );
+
+                } while (property.NextVisible(false));
+            }
+
+            serializedObject.ApplyModifiedProperties();
+
+            VirtualJoystickEdgeFeedback edgeFeedback =
+                (VirtualJoystickEdgeFeedback)target;
+
             if (!edgeFeedback.GetComponent<AudioSource>()) {
-                EditorGUILayout.HelpBox("If you would like your feedback to include sound, attach an Audio Source to this GameObject and assign a clip to the Audio Source component. Otherwise, you can ignore this message.", MessageType.Warning);
+                EditorGUILayout.HelpBox(
+                    VirtualJoystickEditorLocalization.EdgeFeedbackAudioWarning,
+                    MessageType.Warning
+                );
             }
         }
     }

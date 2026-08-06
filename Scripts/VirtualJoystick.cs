@@ -23,7 +23,7 @@ namespace Terresquall {
         [Tooltip("The component that the user will drag around for joystick input.")]
         public Image controlStick;
 
-        [Header("Debug")]
+        //Debug
         [Tooltip("Prints to the console the control stick's direction within the joystick.")]
         public bool consolePrintAxis = false;
 
@@ -49,7 +49,7 @@ namespace Terresquall {
         Devices.VirtualJoystick inputSystemDevice;
 #endif
 
-        [Header("Settings")]
+        //Settings
         [Tooltip("Disables the joystick if not on a mobile platform.")]
         public bool onlyOnMobile = true;
         [Tooltip("Colour of the control stick while it is being dragged.")]
@@ -76,7 +76,7 @@ namespace Terresquall {
         public Rect boundaries;
 
 #if ENABLE_INPUT_SYSTEM
-        [Header("Input System")]
+        //Input System
         [Tooltip("Add an input device for this Joystick, so that it can be bound to an Input Action.")]
         public bool addInputDevice = true;
         public string usage = "Primary2DMotion";
